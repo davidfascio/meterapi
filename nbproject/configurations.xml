@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationDescriptor version="95">
+  <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
+    <logicalFolder name="HeaderFiles"
+                   displayName="Header Files"
+                   projectFiles="true">
+      <itemPath>ComSerialInterface.h</itemPath>
+      <itemPath>EventsEngine.h</itemPath>
+      <itemPath>G155MeterInterface.h</itemPath>
+      <itemPath>GenericTypeDefs.h</itemPath>
+      <itemPath>MeterCommons.h</itemPath>
+      <itemPath>MeterControl.h</itemPath>
+      <itemPath>MeterInterface.h</itemPath>
+      <itemPath>MeterProtocolHandler.h</itemPath>
+      <itemPath>Meters_Table.h</itemPath>
+      <itemPath>SystemEvents.h</itemPath>
+      <itemPath>SystemQueue.h</itemPath>
+      <itemPath>Utility.h</itemPath>
+    </logicalFolder>
+    <logicalFolder name="ResourceFiles"
+                   displayName="Resource Files"
+                   projectFiles="true">
+    </logicalFolder>
+    <logicalFolder name="SourceFiles"
+                   displayName="Source Files"
+                   projectFiles="true">
+      <itemPath>ComSerialInterface.c</itemPath>
+      <itemPath>EventsEngine.c</itemPath>
+      <itemPath>G155MeterInterface.c</itemPath>
+      <itemPath>MeterControl.c</itemPath>
+      <itemPath>MeterInterface.c</itemPath>
+      <itemPath>MeterProtocolHandler.c</itemPath>
+      <itemPath>Meters_Table.c</itemPath>
+      <itemPath>SystemQueue.c</itemPath>
+      <itemPath>Utility.c</itemPath>
+      <itemPath>main.c</itemPath>
+    </logicalFolder>
+    <logicalFolder name="TestFiles"
+                   displayName="Test Files"
+                   projectFiles="false"
+                   kind="TEST_LOGICAL_FOLDER">
+    </logicalFolder>
+    <logicalFolder name="ExternalFiles"
+                   displayName="Important Files"
+                   projectFiles="false"
+                   kind="IMPORTANT_FILES_FOLDER">
+      <itemPath>Makefile</itemPath>
+    </logicalFolder>
+  </logicalFolder>
+  <projectmakefile>Makefile</projectmakefile>
+  <confs>
+    <conf name="Debug" type="1">
+      <toolsSet>
+        <compilerSet>default</compilerSet>
+        <dependencyChecking>true</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <compileType>
+      </compileType>
+      <item path="ComSerialInterface.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="ComSerialInterface.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="EventsEngine.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="EventsEngine.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="G155MeterInterface.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="G155MeterInterface.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="GenericTypeDefs.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="MeterCommons.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="MeterControl.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="MeterControl.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="MeterInterface.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="MeterInterface.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="MeterProtocolHandler.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="MeterProtocolHandler.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Meters_Table.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="Meters_Table.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="SystemEvents.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="SystemQueue.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="SystemQueue.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Utility.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="Utility.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="main.c" ex="false" tool="0" flavor2="0">
+      </item>
+    </conf>
+    <conf name="Release" type="1">
+      <toolsSet>
+        <compilerSet>default</compilerSet>
+        <dependencyChecking>true</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <compileType>
+        <cTool>
+          <developmentMode>5</developmentMode>
+        </cTool>
+        <ccTool>
+          <developmentMode>5</developmentMode>
+        </ccTool>
+        <fortranCompilerTool>
+          <developmentMode>5</developmentMode>
+        </fortranCompilerTool>
+        <asmTool>
+          <developmentMode>5</developmentMode>
+        </asmTool>
+      </compileType>
+      <item path="ComSerialInterface.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="ComSerialInterface.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="EventsEngine.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="EventsEngine.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="G155MeterInterface.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="G155MeterInterface.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="GenericTypeDefs.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="MeterCommons.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="MeterControl.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="MeterControl.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="MeterInterface.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="MeterInterface.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="MeterProtocolHandler.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="MeterProtocolHandler.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Meters_Table.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="Meters_Table.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="SystemEvents.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="SystemQueue.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="SystemQueue.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Utility.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="Utility.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="main.c" ex="false" tool="0" flavor2="0">
+      </item>
+    </conf>
+  </confs>
+</configurationDescriptor>
