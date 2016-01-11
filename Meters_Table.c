@@ -5,7 +5,7 @@
 
 Meters_Table            Meters_Table1;
 sSM _tAddDelMeterSM = {0,0,0,0};
-BYTE macLongAddrByteInverse[MAC_SIZE] = {0x24, 0xda, 0xb6, 0x0a, 0x02, 0x00, 0x07, 0x13};
+BYTE macLongAddrByteInverse[MAC_SIZE] = {0x24, 0xda, 0xb6, 0x0a, 0x02, 0x00, 0x07, 0x0A};
 /*Add_Del State Machine*/
 void vfnAddDelMeterIdleState(void);
 void vfnAddDelMeterAddMeterState(void);
@@ -231,10 +231,31 @@ void vfnAddDelMeterEndState(void){
 
 BYTE MeterTable_GetMeterTypeByMeterId(BYTE meterId){
     
+    BYTE index;
+    BYTE meterTypeFromTable;
+    BYTE meterTypeFromAPI;
+    
     if (meterId > NUM_MAX_METERS)
         return METER_TABLE_METER_ID_ERROR_CODE;
   
-    return Meters_Table1.Meter_DEV[meterId].Type;    
+    index = 0;
+    meterTypeFromTable = Meters_Table1.Meter_DEV[meterId].Type;    
+    
+    while(TRUE){
+        
+        meterTypeFromAPI = MeterInterface_GetMeterTypeByIndex(index);
+        
+        if( meterTypeFromTable == meterTypeFromAPI)
+            break;
+        
+        if( (meterTypeFromAPI == METER_INTERFACE_NO_METER_TYPE_ERROR_CODE) ||
+            (meterTypeFromAPI == METER_INTERFACE_METER_TYPE_INDEX_OVERFLOW_ERROR_CODE))
+            break;
+        
+        index++;
+    }
+    
+    return meterTypeFromAPI;     
 }
 
 BYTE MeterTable_GetModbusIdByMeterId(BYTE meterId){
@@ -288,7 +309,7 @@ BYTE findAvailableMeterId(void){
     if(index == NUM_MAX_METERS)
         return METER_TABLE_NO_METER_ID_FOUND;
     
-    return ++index;
+    return index;
 }
 
 BYTE findAvailableModbusId(void){
@@ -388,7 +409,7 @@ BYTE MeterTable_AddNewMeterBySerialNumber(BYTE meterType, BYTE modbusId, BYTE * 
 //******************************************************************************
 // API Meter Control Function
 //******************************************************************************
-BYTE MeterTable_Handler(BYTE meterType, BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE command)
+BYTE MeterTable_ResponseHandler(BYTE meterType, BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE command)
 {
     
     BYTE response[METER_TABLE_MAX_RESPONSE_SIZE];
@@ -397,7 +418,7 @@ BYTE MeterTable_Handler(BYTE meterType, BYTE modbusId, BYTE * serialNumber, WORD
     
     METER_COMMAND_ID_FUNCTION_API_PTR meterCommandIdFunctionAPI_ptr = MeterInterface_GetMeterCommandIdFunctionAPI(meterType);
     
-    error_code = meterCommandIdFunctionAPI_ptr->meterHandler_Callback(modbusId, serialNumber, serialNumberLen, command, response, &responseLen );
+    error_code = meterCommandIdFunctionAPI_ptr->meterHandler_ResponseProcessCallback(modbusId, serialNumber, serialNumberLen, command, response, &responseLen );
     
     switch(command){
         
@@ -411,6 +432,47 @@ BYTE MeterTable_Handler(BYTE meterType, BYTE modbusId, BYTE * serialNumber, WORD
     }
     
     return METER_TABLE_METER_NO_ERROR_CODE;
+}
+
+void MeterTable_ReceiveHandler(void){
+    
+    BYTE index = 0;
+    BYTE meterType;
+    METER_COMMAND_ID_FUNCTION_API_PTR meterCommandIdFunctionAPI_ptr = NULL;    
+    BYTE * buffer_ptr;
+    WORD buffersize;
+    BYTE error_code;
+    
+    buffer_ptr = ComSerialInterface_GetBuffer();    
+    buffersize = ComSerialInterface_GetBufferSize();
+    
+    if ((buffersize == 0) || (buffer_ptr == NULL))
+        return;
+    
+    while(TRUE){
+        
+        meterType = MeterInterface_GetMeterTypeByIndex(index);   
+        
+        if( (meterType == METER_INTERFACE_NO_METER_TYPE_ERROR_CODE) ||
+            (meterType == METER_INTERFACE_METER_TYPE_INDEX_OVERFLOW_ERROR_CODE))
+            break;
+        
+        meterCommandIdFunctionAPI_ptr = MeterInterface_GetMeterCommandIdFunctionAPI(meterType);
+        error_code = meterCommandIdFunctionAPI_ptr->meterHandler_ReceiveProcessCallback(buffer_ptr, buffersize);
+        
+        if(error_code == METER_TABLE_METER_NO_ERROR_CODE){
+            
+            MeterControl_SetDataAvailable(TRUE);
+            
+            break;
+        }            
+        
+        index++;
+    } 
+    
+    printf("Arrived Data: ");
+    ComSerialInterface_PrintData(buffer_ptr, buffersize);
+    ComSerialInterface_CleanBuffer();
 }
 
 void MeterTable_SendCommand(    BYTE command ,
@@ -474,7 +536,7 @@ void MeterTable_SendCommandByIdentificator( BYTE modbusId,
     
     if ((MeterControl_IsAnswerRequired() == TRUE) && (MeterControl_IsDataAvailable() == TRUE)) {
         
-        if(MeterTable_Handler(meterType, modbusId, serialNumber, serialNumberLen, command) != 
+        if(MeterTable_ResponseHandler(meterType, modbusId, serialNumber, serialNumberLen, command) != 
                 METER_TABLE_METER_NO_ERROR_CODE){
          
             MeterControl_SetDataAvailable(FALSE);
@@ -546,8 +608,9 @@ BYTE API_MeterTable_SendCommand(BYTE meterId, BYTE commandId){
         
         meterType = MeterTable_GetMeterTypeByMeterId(meterId);
 
-        if(meterType == METER_TABLE_METER_ID_ERROR_CODE)
-            return METER_TABLE_METER_ID_ERROR_CODE;
+        if ((meterType == METER_TABLE_METER_ID_ERROR_CODE) || 
+            (meterType == METER_INTERFACE_NO_METER_TYPE_ERROR_CODE))
+            return meterType;
         
         return API_MeterTable_ExcecuteCommand(meterId, commandId, meterType);    
     }

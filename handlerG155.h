@@ -9,20 +9,21 @@
 #define	HANDLER_H
 //******************************************************************************
 // General defines
-#ifndef TRUE
-#define TRUE                                                    (1)
-#endif /* TRUE*/
+//#ifndef TRUE
+//#define TRUE                                                    (1)
+//#endif /* TRUE*/
+//
+//#ifndef FALSE
+//#define FALSE                                                   (0)
+//#endif /*FALSE*/
+//
+//typedef unsigned short int      WORD;                           /* 16-bit unsigned */
+//typedef unsigned char           BYTE;                           /* 8-bit unsigned  */
+//typedef unsigned char           boolean;                        /* TRUE or FALSE*/
+//typedef signed char             CHAR;                           /* 8-bit signed  */
 
-#ifndef FALSE
-#define FALSE                                                   (0)
-#endif /*FALSE*/
-
-typedef unsigned short int      WORD;                           /* 16-bit unsigned */
-typedef unsigned char           BYTE;                           /* 8-bit unsigned  */
-typedef unsigned char           boolean;                        /* TRUE or FALSE*/
-typedef signed char             CHAR;                           /* 8-bit signed  */
-
-
+#include "GenericTypeDefs.h"
+#include "MeterCommons.h"
 //******************************************************************************
 // API Defines
 #define HANDLER_G155_WINDOW                                     (50)
@@ -38,7 +39,7 @@ typedef signed char             CHAR;                           /* 8-bit signed 
 #define HANDLER_G155_NOT_A_MULTIPLE_FCN                         (0)
 
 // Command Id defines
-#define NO_COMMAND_MTR                                          (0)
+/*#define NO_COMMAND_MTR                                          (0)
 #define Dis_MTR                                                 (1)
 #define Con_MTR                                                 (2)
 #define Res_MTR                                                 (3)
@@ -46,7 +47,7 @@ typedef signed char             CHAR;                           /* 8-bit signed 
 #define PSW_MTR                                                 (5)
 #define SEND_MAC_BROADCAST_MTR                                  (6)
 #define ASSIGN_MODBUS_ID_MTR                                    (7)
-#define REQUEST_SERIAL_NUMBER_MTR                               (8)
+#define REQUEST_SERIAL_NUMBER_MTR                               (8)*/
 
 // Error Codes
 #define NO_ERROR_NUMERATION                                     (1)   
@@ -110,7 +111,7 @@ typedef signed char             CHAR;                           /* 8-bit signed 
 #define HANDLER_G155_LIMIT_MIN_ID                               (0X00)
 #define HANDLER_G155_LIMIT_MAX_ID                               (0XFE)
 
-
+#define HANDLER_G155_SERIAL_NUMBER_OFFSET                       (10)
 
 //******************************************************************************
 // Struct data
@@ -134,7 +135,7 @@ typedef struct{
 //******************************************************************************
 // API
 WORD API_G155_Recieve_handler(BYTE* ptBuffer, WORD buffersize);
-WORD API_G155_Meter_response_handler( BYTE modbusId, BYTE numeracion, BYTE * response, WORD * responseLen);
+WORD API_G155_Meter_response_handler( BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE command, BYTE * response, WORD * responseLen);
 BYTE hadler_API_modbus(BYTE * buffer, WORD bufferSize);
 
 WORD wfnCRC_CALC_G155(BYTE *ptFRAME, WORD wSizeFrame, WORD wCRCStart);

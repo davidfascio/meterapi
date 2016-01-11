@@ -28,6 +28,7 @@ DWORD ComSerialInterface_WriteData(BYTE * data, DWORD dataLen);
 DWORD ComSerialInterface_ReadData(BYTE * data, DWORD dataLen);
 void ComSerialInterface_Check(void);
 
+void ComSerialInterface_PrintData(BYTE * frame, WORD frameLen);
 BYTE * ComSerialInterface_GetBuffer( void);    
 WORD ComSerialInterface_GetBufferSize(void);
 

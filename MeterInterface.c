@@ -8,7 +8,8 @@ METER_COMMAND_ID_FUNCTION_API meterCommandIdFunctionAPIList [] =
         0,                                                      /*  SerialNumber Broadcast Len                           */
         _2200_MSEC_,                                            /*  Stabilization Time Value                             */
         G155MeterInterface_CommandIdFunctionList,               /*  Pointer to Command Id Function List per Meter Type   */
-        G155MeterInterface_Handler},                            /*  Pointer to Meter Handler                             */
+        API_G155_Meter_response_handler,                        /*  Pointer to Meter Response Handler                             */
+        API_G155_Recieve_handler},                              /*  Pointer to Meter Receive  Handler                             */
     
    
         
@@ -17,7 +18,7 @@ METER_COMMAND_ID_FUNCTION_API meterCommandIdFunctionAPIList [] =
 
 #define METER_COMMAND_ID_FUNCTION_API_LIST_SIZE                 ( sizeof(meterCommandIdFunctionAPIList) / sizeof(METER_COMMAND_ID_FUNCTION_API) )
 
-BYTE MeterInterface_GetMeterTypeByIndex(BYTE index){
+WORD MeterInterface_GetMeterTypeByIndex(BYTE index){
     
     METER_COMMAND_ID_FUNCTION_API_PTR meterCommandIdFunctionAPI_ptr = meterCommandIdFunctionAPIList;
     

@@ -131,19 +131,13 @@ void G155MeterInterface_SendFrame(  BYTE modbusId,
     if(framebuilt == FALSE)
         return;
             
-    G155MeterInterface_PrintData(frame, frameLen);    
+    G155MeterInterface_SendData(frame, frameLen);    
 }
 
-void G155MeterInterface_PrintData(BYTE* frame, BYTE frameLen){
+void G155MeterInterface_SendData(BYTE* frame, BYTE frameLen){ 
     
-    BYTE index;
-    BYTE * frame_ptr = frame;
-    
-    for(index = 0; index < frameLen; index++)
-        printf("%02X ", *frame_ptr++);
-    
-    printf("\n");
-    
+    printf("Sent Data: ");
+    ComSerialInterface_PrintData(frame, frameLen);
     ComSerialInterface_WriteData(frame, frameLen);
 }
 

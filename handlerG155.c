@@ -300,7 +300,7 @@ WORD API_G155_Recieve_handler(BYTE* buffer, WORD buffersize){
  } 
 
 
-WORD API_G155_Meter_response_handler( BYTE modbusId, BYTE numeration, BYTE * response, WORD * responseLen){
+WORD API_G155_Meter_response_handler( BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE command, BYTE * response, WORD * responseLen){
 
     /* Validating modbus id*/
     
@@ -310,7 +310,7 @@ WORD API_G155_Meter_response_handler( BYTE modbusId, BYTE numeration, BYTE * res
 
     /*Validating numeration*/ 
      
-     switch(numeration){
+     switch(command){
 
         case NO_COMMAND_MTR: // No command Meter
             
@@ -396,9 +396,12 @@ WORD API_G155_Meter_response_handler( BYTE modbusId, BYTE numeration, BYTE * res
         case REQUEST_SERIAL_NUMBER_MTR: // Request Serial Number Meter
 
              if ((g155_control.fcn == HANDLER_G155_IS_A_FCN) && (g155_control.dataSize == HANDLER_G155_FCN_MTR_SN_DATA_SIZE)){
-
-                 memcpy(response, g155_control.data, g155_control.dataSize);//copy data & data size
-                 *responseLen = g155_control.dataSize;
+                 
+                 BYTE serial_number[Lenght_Meter_ID];
+                 memset(serial_number, '0', sizeof(serial_number));
+                 memcpy(serial_number + HANDLER_G155_SERIAL_NUMBER_OFFSET, g155_control.data, g155_control.dataSize);
+                 memcpy(response, serial_number , sizeof(serial_number) );//copy data & data size
+                 *responseLen = sizeof(serial_number);
 
                  return NO_ERROR_NUMERATION;
              }

@@ -108,22 +108,39 @@ DWORD ComSerialInterface_WritePort( HANDLE hSerial, BYTE * buffer, DWORD buffers
 HANDLE ComSerialInterfaceHandler = NULL;
 
 
-
+void ComSerialInterface_PrintData(BYTE * frame, WORD frameLen){
+    
+    BYTE index;
+    BYTE * frame_ptr = frame;
+    
+    
+    for(index = 0; index < frameLen; index++)
+        printf("%02X ", *frame_ptr++);
+    
+    printf("\n");
+}
 DWORD ComSerialInterface_WriteData(BYTE * data, DWORD dataLen){
     
-    if(ComSerialInterfaceHandler == NULL)
+    if(ComSerialInterfaceHandler == NULL){
+        
+        printf("Serial Port is closed\n");
         return 0;
+    }
     
     return ComSerialInterface_WritePort(ComSerialInterfaceHandler, data, dataLen);
 }
 
 DWORD ComSerialInterface_ReadData(BYTE * data, DWORD dataLen){
     
-    if(ComSerialInterfaceHandler == NULL)
+    if(ComSerialInterfaceHandler == NULL){
+    
+        //printf("Serial Port is closed\n");
         return 0;
+    }
     
     return ComSerialInterface_ReadPort(ComSerialInterfaceHandler, data, dataLen);
 }
+
 
 #define COM_SERIAL_INTERFACE_BUFFER_SIZE                                    (100)
 #define COM_SERIAL_INTERFACE_BUFFER_WINDOW_SIZE                              (1)

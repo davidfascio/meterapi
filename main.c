@@ -15,7 +15,7 @@
 #include "G155MeterInterface.h"
 #include "Meters_Table.h"
 #include "ComSerialInterface.h"
-#include "MeterProtocolHandler.h"
+
 
 /*
  * 
@@ -97,13 +97,13 @@ void vfnTime_Out_Meter_Response_OneShot(void){
 
 void vfnUART_Char_Received_OneShot(void){
     
-    MeterProtocolHandler();
+    MeterTable_ReceiveHandler();
 }
 
 void vfnTimer(void){
     
     //Sleep(1);
-    //usleep(1000);
+    usleep(100);
     /*clock_t now, then;
     long pause = CLOCKS_PER_SEC /1000;
     
@@ -176,30 +176,35 @@ int main(int argc, char** argv) {
     vfnPeriodicTimerEnable(LED_TOGGLE_MAIN_PERTASK);
     vfnPeriodicTimerEnable(GO_TO_READ_MTR_PERTASK);    //Crea la rutina de leer medidores
     
+    //MeterControl_Setup( METER_CONTROL_NO_METER_ID, G155_TYPE, REQUEST_SERIAL_NUMBER_MTR, 0);        
     while(TRUE){
         
         vfnEventsEngine();
         vfnTimer();        
         ComSerialInterface_Check();
+        
+        //API_MeterTable_ExcecuteNewBaptismProcess();
     }
     
     return (EXIT_SUCCESS);
 }
 
 BYTE counter;
-BYTE number []= {1,1,1,1,1};
-BYTE command[] = {1,2,3,4,5};
+//BYTE number []= {1,1,1,1,1};
+BYTE command[] = {Dis_MTR,Con_MTR,READ_MODE,REQUEST_SERIAL_NUMBER_MTR};
 
+BYTE AppModbusId = 1;
 void vfnGO_TO_READ_MTR_PeriodTask(void){
  
-    /*API_MeterTable_SendCommand(number[counter], command[counter]);
+    /*API_MeterTable_SendCommand(0, command[counter]);
     
     counter++;
-    if(counter == 5)
+    if(counter == 4)
         counter = 0;
-    */
+    
+    API_MeterTable_ExcecuteBaptismProccess();*/
     API_MeterTable_ExcecuteBaptismProccess();
-    //API_MeterTable_ExcecuteBaptismProccess();
+    //G155MeterInterface_RequestSerialNumber(AppModbusId++, NULL, 0, NULL, 0);
     //(void)CMD_To_Scorpio ((BYTE)NULL,READ_MODE); 
 }
 

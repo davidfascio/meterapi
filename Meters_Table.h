@@ -23,7 +23,7 @@
 #define BROADCAST_MDB_ESP                                       0xF7
 
 #define METER_TABLE_METER_NO_ERROR_CODE                     (0)
-#define METER_TABLE_METER_ID_ERROR_CODE                     (0)
+#define METER_TABLE_METER_ID_ERROR_CODE                     (0xFE)
 #define METER_TABLE_SERIAL_NUMBER_ERROR_CODE                (-1)
 #define METER_TABLE_COULD_NOT_SAVE_SERIAL_NUMBER_IN_NVM     (-2)
 #define METER_TABLE_METER_ALREADY_EXISTS                    (-3)
@@ -134,7 +134,8 @@ BYTE MeterTable_UpdateMeter(BYTE meterId, BYTE meterType, BYTE modbusId, BYTE * 
 BYTE MeterTable_AddNewMeterBySerialNumber(BYTE meterType, BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen);
 
 
-BYTE MeterTable_Handler(BYTE meterType, BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE command);
+BYTE MeterTable_ResponseHandler(BYTE meterType, BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE command);
+void MeterTable_ReceiveHandler(void);
 
 BOOL MeterTable_IsCommandMeterAPIBusy(void);
 void MeterTable_SetCommandMeterAPIBusy(BOOL state);
@@ -148,6 +149,7 @@ typedef struct{
 } QUEUE_INFO, * QUEUE_INFO_PTR;
 
 BYTE API_MeterTable_QueueInfoCheck(void);
+void API_MeterTable_ExcecuteNewBaptismProcess(void);
 
 #endif	/* __METERS_TABLE_H__ */
 

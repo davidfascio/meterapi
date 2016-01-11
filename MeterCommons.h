@@ -56,11 +56,12 @@ typedef struct{
     WORD broadcastSerialNumberLen;
     WORD stabilizationTimeoutValue;
     COMMAND_ID_FUNCTION_PTR commandIdFunctionList;    
-    BYTE (* meterHandler_Callback)( BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE command, BYTE * response, WORD * responseLen);    
+    WORD (* meterHandler_ResponseProcessCallback)( BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE command, BYTE * response, WORD * responseLen);    
+    WORD (* meterHandler_ReceiveProcessCallback)( BYTE * buffer, WORD  bufferLen);    
     
 } METER_COMMAND_ID_FUNCTION_API, * METER_COMMAND_ID_FUNCTION_API_PTR;
 
-#define METER_COMMAND_ID_FUNCTION_API_NULL                  { METER_INTERFACE_NO_METER_TYPE, 0, NULL, 0, 0, NULL, NULL }
+#define METER_COMMAND_ID_FUNCTION_API_NULL                  { METER_INTERFACE_NO_METER_TYPE, 0, NULL, 0, 0, NULL, NULL , NULL }
 
 
 #endif	/* __METER_COMMONS_H__ */

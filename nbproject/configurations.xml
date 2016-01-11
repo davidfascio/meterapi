@@ -11,11 +11,11 @@
       <itemPath>MeterCommons.h</itemPath>
       <itemPath>MeterControl.h</itemPath>
       <itemPath>MeterInterface.h</itemPath>
-      <itemPath>MeterProtocolHandler.h</itemPath>
       <itemPath>Meters_Table.h</itemPath>
       <itemPath>SystemEvents.h</itemPath>
       <itemPath>SystemQueue.h</itemPath>
       <itemPath>Utility.h</itemPath>
+      <itemPath>handlerG155.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
@@ -29,10 +29,10 @@
       <itemPath>G155MeterInterface.c</itemPath>
       <itemPath>MeterControl.c</itemPath>
       <itemPath>MeterInterface.c</itemPath>
-      <itemPath>MeterProtocolHandler.c</itemPath>
       <itemPath>Meters_Table.c</itemPath>
       <itemPath>SystemQueue.c</itemPath>
       <itemPath>Utility.c</itemPath>
+      <itemPath>handlerG155.c</itemPath>
       <itemPath>main.c</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
@@ -81,10 +81,6 @@
       </item>
       <item path="MeterInterface.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="MeterProtocolHandler.c" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="MeterProtocolHandler.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="Meters_Table.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="Meters_Table.h" ex="false" tool="3" flavor2="0">
@@ -98,6 +94,10 @@
       <item path="Utility.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="Utility.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="handlerG155.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="handlerG155.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="main.c" ex="false" tool="0" flavor2="0">
       </item>
@@ -146,10 +146,6 @@
       </item>
       <item path="MeterInterface.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="MeterProtocolHandler.c" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="MeterProtocolHandler.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="Meters_Table.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="Meters_Table.h" ex="false" tool="3" flavor2="0">
@@ -163,6 +159,10 @@
       <item path="Utility.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="Utility.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="handlerG155.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="handlerG155.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="main.c" ex="false" tool="0" flavor2="0">
       </item>

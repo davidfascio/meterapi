@@ -13,12 +13,13 @@
 //******************************************************************************
 #include "MeterCommons.h"
 #include "G155MeterInterface.h"
+#include "handlerG155.h"
 
 //******************************************************************************
 // Defines
 //******************************************************************************
-#define METER_INTERFACE_METER_TYPE_INDEX_OVERFLOW_ERROR_CODE                (-1)
-#define METER_INTERFACE_NO_METER_TYPE_ERROR_CODE                            (-2)
+#define METER_INTERFACE_METER_TYPE_INDEX_OVERFLOW_ERROR_CODE                (0xFE)
+#define METER_INTERFACE_NO_METER_TYPE_ERROR_CODE                            (0xFD)
 
 
 //******************************************************************************
@@ -30,7 +31,7 @@
 //******************************************************************************
 // Meter Interface Function
 //******************************************************************************
-BYTE MeterInterface_GetMeterTypeByIndex(BYTE index);
+WORD MeterInterface_GetMeterTypeByIndex(BYTE index);
 METER_COMMAND_ID_FUNCTION_API_PTR MeterInterface_GetMeterCommandIdFunctionAPI(BYTE meterType);
 COMMAND_ID_FUNCTION_PTR MeterInterface_GetCommandIdFunction(METER_COMMAND_ID_FUNCTION_API_PTR meterCommandIdFunctionAPI, BYTE command);
 WORD MeterInterface_GetStabilizationTimeoutValue(BYTE meterType);

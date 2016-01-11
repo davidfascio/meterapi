@@ -40,10 +40,10 @@ OBJECTFILES= \
 	${OBJECTDIR}/G155MeterInterface.o \
 	${OBJECTDIR}/MeterControl.o \
 	${OBJECTDIR}/MeterInterface.o \
-	${OBJECTDIR}/MeterProtocolHandler.o \
 	${OBJECTDIR}/Meters_Table.o \
 	${OBJECTDIR}/SystemQueue.o \
 	${OBJECTDIR}/Utility.o \
+	${OBJECTDIR}/handlerG155.o \
 	${OBJECTDIR}/main.o
 
 
@@ -96,11 +96,6 @@ ${OBJECTDIR}/MeterInterface.o: MeterInterface.c
 	${RM} "$@.d"
 	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/MeterInterface.o MeterInterface.c
 
-${OBJECTDIR}/MeterProtocolHandler.o: MeterProtocolHandler.c 
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} "$@.d"
-	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/MeterProtocolHandler.o MeterProtocolHandler.c
-
 ${OBJECTDIR}/Meters_Table.o: Meters_Table.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
@@ -115,6 +110,11 @@ ${OBJECTDIR}/Utility.o: Utility.c
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Utility.o Utility.c
+
+${OBJECTDIR}/handlerG155.o: handlerG155.c 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/handlerG155.o handlerG155.c
 
 ${OBJECTDIR}/main.o: main.c 
 	${MKDIR} -p ${OBJECTDIR}
