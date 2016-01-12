@@ -134,9 +134,8 @@ typedef struct{
 
 //******************************************************************************
 // API
-WORD API_G155_Recieve_handler(BYTE* ptBuffer, WORD buffersize);
+WORD API_G155_Recieve_handler( BYTE * buffer, WORD  buffersize, METER_DESCRIPTOR_PTR meterDescriptor, BYTE * commandCallBack);
 WORD API_G155_Meter_response_handler( BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE command, BYTE * response, WORD * responseLen);
-BYTE hadler_API_modbus(BYTE * buffer, WORD bufferSize);
 
 WORD wfnCRC_CALC_G155(BYTE *ptFRAME, WORD wSizeFrame, WORD wCRCStart);
 BYTE Handler_FlagCheck_G155(BYTE * ptbFrame, WORD wSizeFrame, BYTE * flag_state);

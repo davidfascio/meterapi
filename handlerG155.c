@@ -258,7 +258,7 @@ BYTE Handler_IdCheck_G155(BYTE* id_data){
       
 }
 
-WORD API_G155_Recieve_handler(BYTE* buffer, WORD buffersize){   
+WORD API_G155_Recieve_handler( BYTE * buffer, WORD  buffersize, METER_DESCRIPTOR_PTR meterDescriptor, BYTE * commandCallBack){   
     
     WORD crc;    
     BYTE  fcn;
@@ -296,6 +296,9 @@ WORD API_G155_Recieve_handler(BYTE* buffer, WORD buffersize){
     g155_control.flag = flag;
     g155_control.fcn = fcn;
     memcpy(g155_control.data,data,size);
+    
+    * commandCallBack = NO_COMMAND_MTR;
+    
     return HANDLER_G155_NO_ERROR;
  } 
 
@@ -417,13 +420,3 @@ WORD API_G155_Meter_response_handler( BYTE modbusId, BYTE * serialNumber, WORD s
 
 }
 
-BYTE hadler_API_modbus(BYTE * buffer, WORD bufferSize){
-    BYTE error_code;
-
-    error_code = API_G155_Recieve_handler(buffer, bufferSize);
-
-    if (error_code == HANDLER_G155_NO_ERROR){
-
-        //Metercontrol_SetDataAvailable(TRUE);
-    }
-}

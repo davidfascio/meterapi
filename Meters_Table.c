@@ -442,6 +442,8 @@ void MeterTable_ReceiveHandler(void){
     BYTE * buffer_ptr;
     WORD buffersize;
     BYTE error_code;
+    METER_DESCRIPTOR meterDescriptor;
+    BYTE commandCallBack;
     
     buffer_ptr = ComSerialInterface_GetBuffer();    
     buffersize = ComSerialInterface_GetBufferSize();
@@ -458,12 +460,12 @@ void MeterTable_ReceiveHandler(void){
             break;
         
         meterCommandIdFunctionAPI_ptr = MeterInterface_GetMeterCommandIdFunctionAPI(meterType);
-        error_code = meterCommandIdFunctionAPI_ptr->meterHandler_ReceiveProcessCallback(buffer_ptr, buffersize);
+        error_code = meterCommandIdFunctionAPI_ptr->meterHandler_ReceiveProcessCallback(buffer_ptr, buffersize, &meterDescriptor, &commandCallBack );
         
         if(error_code == METER_TABLE_METER_NO_ERROR_CODE){
             
             MeterControl_SetDataAvailable(TRUE);
-            //API_MeterTable_ExcecuteCommand( METER_CONTROL_NO_METER_ID, BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE commandId, BYTE meterType);
+            API_MeterTable_ExcecuteCommand( meterDescriptor.modbusId, meterDescriptor.serialNumber, meterDescriptor.serialNumberLen,commandCallBack, meterType);
             
             break;
         }            

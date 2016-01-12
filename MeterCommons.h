@@ -48,22 +48,6 @@ typedef struct{
 
 #define COMMAND_ID_FUNCTION_NULL                            {NO_COMMAND_MTR, NULL}
 
-
-typedef struct{
-    
-    BYTE meterType; 
-    BYTE broadcastId;
-    BYTE * broadcastSerialNumber;
-    WORD broadcastSerialNumberLen;
-    WORD stabilizationTimeoutValue;
-    COMMAND_ID_FUNCTION_PTR commandIdFunctionList;    
-    WORD (* meterHandler_ResponseProcessCallback)( BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE command, BYTE * response, WORD * responseLen);    
-    WORD (* meterHandler_ReceiveProcessCallback)( BYTE * buffer, WORD  bufferLen);    
-    
-} METER_COMMAND_ID_FUNCTION_API, * METER_COMMAND_ID_FUNCTION_API_PTR;
-
-#define METER_COMMAND_ID_FUNCTION_API_NULL                  { METER_INTERFACE_NO_METER_TYPE, 0, NULL, 0, 0, NULL, NULL , NULL }
-
 typedef struct{
 
     BYTE modbusId;
@@ -81,5 +65,21 @@ WORD MeterDescriptor_GetSerialNumber(METER_DESCRIPTOR_PTR meterDescriptor, BYTE 
 
 void MeterDescriptor_SetMeterType(METER_DESCRIPTOR_PTR meterDescriptor, BYTE meterType);
 BYTE MeterDescriptor_GetMeterType(METER_DESCRIPTOR_PTR meterDescriptor);
+
+
+typedef struct{
+    
+    BYTE meterType; 
+    BYTE broadcastId;
+    BYTE * broadcastSerialNumber;
+    WORD broadcastSerialNumberLen;
+    WORD stabilizationTimeoutValue;
+    COMMAND_ID_FUNCTION_PTR commandIdFunctionList;    
+    WORD (* meterHandler_ResponseProcessCallback)( BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE command, BYTE * response, WORD * responseLen);    
+    WORD (* meterHandler_ReceiveProcessCallback)( BYTE * buffer, WORD  bufferLen, METER_DESCRIPTOR_PTR meterDescriptor, BYTE * commandCallBack);    
+    
+} METER_COMMAND_ID_FUNCTION_API, * METER_COMMAND_ID_FUNCTION_API_PTR;
+
+#define METER_COMMAND_ID_FUNCTION_API_NULL                  { METER_INTERFACE_NO_METER_TYPE, 0, NULL, 0, 0, NULL, NULL , NULL }
 
 #endif	/* __METER_COMMONS_H__ */
