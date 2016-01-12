@@ -40,7 +40,7 @@ typedef enum{
 
 typedef struct {
     
-    BYTE meterId;                           // Maybe this field wont be necessary for meter control struct
+    //BYTE meterId;                           // Maybe this field wont be necessary for meter control struct
     METER_DESCRIPTOR meterDescriptor;        
     BYTE commandId;
     BYTE retries;
@@ -54,7 +54,7 @@ typedef struct {
 //******************************************************************************
 // Meter Control Function
 //******************************************************************************
-void MeterControl_Setup( BYTE meterId, BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE meterType, BYTE commandId, WORD stabilizationTimeoutValue);
+void MeterControl_Setup( BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE meterType, BYTE commandId, WORD stabilizationTimeoutValue);
 void MeterControl_Reset(WORD stabilizationTimeoutValue);
 void MeterControl_Clear(void);
 
@@ -70,7 +70,6 @@ BYTE MeterControl_GetCommandId(void);
 BYTE MeterControl_GetMeterType(void);
 BYTE MeterControl_GetRetries(void);
 void MeterControl_SetRetries(BYTE retries);
-BYTE MeterControl_GetMeterId(void);
 
 BYTE MeterControl_GetModbusId(void);
 WORD MeterControl_GetSerialNumber(BYTE * serialNumber, WORD serialNumberLen);

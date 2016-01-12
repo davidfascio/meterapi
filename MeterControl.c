@@ -2,10 +2,10 @@
 
 METER_CONTROL meterControl;
 
-void MeterControl_Setup( BYTE meterId, BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE meterType, BYTE commandId, WORD stabilizationTimeoutValue)
+void MeterControl_Setup(BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE meterType, BYTE commandId, WORD stabilizationTimeoutValue)
 //void MeterControl_Setup( BYTE meterId, BYTE meterType, BYTE commandId, WORD stabilizationTimeoutValue)
 {   
-    meterControl.meterId   = meterId;
+    //meterControl.meterId   = meterId;
     
     MeterDescriptor_SetModbusId(&meterControl.meterDescriptor, modbusId);
     MeterDescriptor_SetSerialNumber(&meterControl.meterDescriptor, serialNumber, serialNumberLen);
@@ -72,11 +72,6 @@ BYTE MeterControl_GetRetries(void){
 void MeterControl_SetRetries(BYTE retries){
     
     meterControl.retries = retries;
-}
-
-BYTE MeterControl_GetMeterId(void){
-    
-    return meterControl.meterId;
 }
 
 BYTE MeterControl_GetModbusId(void){
