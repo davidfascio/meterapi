@@ -169,9 +169,9 @@ int main(int argc, char** argv) {
     ComSerialInterface_Init();
     
     // Fill
-    Meters_Table1.Meter_DEV[1].Type = G155_TYPE;
-    Meters_Table1.Meter_DEV[1].Signature = 'p' + 5;
-    memset(Meters_Table1.Meter_DEV[1].Serial_Num,'0',Lenght_Meter_ID);
+    Meters_Table1.Meter_DEV[0].Type = G155_TYPE;
+    Meters_Table1.Meter_DEV[0].Signature = 'p' + 5;
+    memset(Meters_Table1.Meter_DEV[0].Serial_Num,'0',Lenght_Meter_ID);
     
     vfnPeriodicTimerEnable(LED_TOGGLE_MAIN_PERTASK);
     vfnPeriodicTimerEnable(GO_TO_READ_MTR_PERTASK);    //Crea la rutina de leer medidores
@@ -196,14 +196,15 @@ BYTE command[] = {Dis_MTR,Con_MTR,READ_MODE,REQUEST_SERIAL_NUMBER_MTR};
 BYTE AppModbusId = 1;
 void vfnGO_TO_READ_MTR_PeriodTask(void){
  
-    /*API_MeterTable_SendCommand(0, command[counter]);
+    API_MeterTable_SendCommand(0, command[counter]);
+    
     
     counter++;
     if(counter == 4)
         counter = 0;
     
-    API_MeterTable_ExcecuteBaptismProccess();*/
     API_MeterTable_ExcecuteBaptismProccess();
+    //API_MeterTable_ExcecuteBaptismProccess();
     //G155MeterInterface_RequestSerialNumber(AppModbusId++, NULL, 0, NULL, 0);
     //(void)CMD_To_Scorpio ((BYTE)NULL,READ_MODE); 
 }

@@ -463,6 +463,7 @@ void MeterTable_ReceiveHandler(void){
         if(error_code == METER_TABLE_METER_NO_ERROR_CODE){
             
             MeterControl_SetDataAvailable(TRUE);
+            //API_MeterTable_ExcecuteCommand( METER_CONTROL_NO_METER_ID, BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE commandId, BYTE meterType);
             
             break;
         }            
@@ -489,8 +490,10 @@ void MeterTable_SendCommand(    BYTE command ,
     BYTE serialNumber[Lenght_Meter_ID];
     BYTE serialNumberLen;
     
-    modbusId = MeterTable_GetModbusIdByMeterId(MeterControl_GetMeterId());
-    serialNumberLen = MeterTable_GetSerialNumberByMeterId(MeterControl_GetMeterId(), serialNumber, sizeof(serialNumber));
+    modbusId = MeterControl_GetModbusId();
+    //modbusId = MeterTable_GetModbusIdByMeterId(MeterControl_GetMeterId());
+    serialNumberLen = MeterControl_GetSerialNumber(serialNumber, sizeof(serialNumber));
+    //serialNumberLen = MeterTable_GetSerialNumberByMeterId(MeterControl_GetMeterId(), serialNumber, sizeof(serialNumber));
     
     MeterTable_SendCommandByIdentificator(  modbusId,
                                             serialNumber,
@@ -583,12 +586,9 @@ void MeterTable_SendCommandByIdentificator( BYTE modbusId,
 
 void MeterTable_SendNextCommand(WORD stabilizationTimeoutValue, BYTE nextState ) {
               
-    MeterControl_Setup( MeterControl_GetMeterId(), 
-                        MeterControl_GetMeterType(), 
-                        MeterControl_GetCommandId(),                         
-                        stabilizationTimeoutValue); 
-    
+    MeterControl_Reset(stabilizationTimeoutValue);    
     MeterTable_SetStateMachine( nextState);
+    
     printf("Command Processed Successfully\n");
 }
 
@@ -603,6 +603,9 @@ BYTE API_MeterTable_SendCommand(BYTE meterId, BYTE commandId){
     
     BYTE meterType;
     BYTE index;
+    BYTE modbusId;
+    WORD serialNumberLen;
+    BYTE serialNumber[Lenght_Meter_ID];
     
     if(meterId != METER_TABLE_BROADCAST_METER_ID){
         
@@ -612,7 +615,9 @@ BYTE API_MeterTable_SendCommand(BYTE meterId, BYTE commandId){
             (meterType == METER_INTERFACE_NO_METER_TYPE_ERROR_CODE))
             return meterType;
         
-        return API_MeterTable_ExcecuteCommand(meterId, commandId, meterType);    
+        modbusId = MeterTable_GetModbusIdByMeterId(meterId);
+        serialNumberLen = MeterTable_GetSerialNumberByMeterId(meterId, serialNumber, sizeof(serialNumber));
+        return API_MeterTable_ExcecuteCommand(meterId, modbusId, serialNumber, serialNumberLen, commandId, meterType);    
     }
     
     index = 0;
@@ -624,7 +629,7 @@ BYTE API_MeterTable_SendCommand(BYTE meterId, BYTE commandId){
             (meterType == METER_INTERFACE_METER_TYPE_INDEX_OVERFLOW_ERROR_CODE))
             break;
         
-        API_MeterTable_ExcecuteCommand(meterId, commandId, meterType);    
+        API_MeterTable_ExcecuteCommand(meterId, 0, NULL, 0, commandId, meterType);    
         index++;
     }
     
@@ -649,7 +654,7 @@ void MeterTable_SetCommandMeterAPIBusy(BOOL state){
 BYTE API_MeterTable_QueueInfoCheck(void){
     
     QUEUE_ELEMENT_PTR queueElement_ptr = NULL;
-    QUEUE_INFO queueInfo;
+    METER_CONTROL queueInfo;
     
     if(queueControlList != NULL){
         
@@ -657,12 +662,12 @@ BYTE API_MeterTable_QueueInfoCheck(void){
         
         if(queueElement_ptr != NULL){
             
-            if(queueElement_ptr->infoSize == sizeof(QUEUE_INFO)){
+            if(queueElement_ptr->infoSize == sizeof(METER_CONTROL)){
                 
                 memcpy((BYTE *) &queueInfo, (BYTE *) queueElement_ptr->info, queueElement_ptr->infoSize);
                 QueueList_RemoveElement(queueControlList);
                 
-                API_MeterTable_ExcecuteCommand(queueInfo.meterId, queueInfo.commandId, queueInfo.meterType);
+                API_MeterTable_ExcecuteCommand(queueInfo.meterId, queueInfo.modbusId, queueInfo.serialNumber, queueInfo.serialNumberLen, queueInfo.commandId, queueInfo.meterType);
                 return METER_TABLE_METER_NO_ERROR_CODE;
             }
         }
@@ -670,9 +675,11 @@ BYTE API_MeterTable_QueueInfoCheck(void){
     
     return METER_TABLE_EMPTY_QUEUE;
 }
-BYTE API_MeterTable_ExcecuteCommand(BYTE meterId, BYTE commandId, BYTE meterType){
+
+BYTE API_MeterTable_ExcecuteCommand(BYTE meterId, BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE commandId, BYTE meterType){
+//BYTE API_MeterTable_ExcecuteCommand(BYTE meterId, BYTE commandId, BYTE meterType){
     
-    QUEUE_INFO queueInfo;
+    METER_CONTROL queueInfo;
     BYTE error_code;
     
     if( MeterTable_IsCommandMeterAPIBusy() == TRUE){
@@ -683,13 +690,16 @@ BYTE API_MeterTable_ExcecuteCommand(BYTE meterId, BYTE commandId, BYTE meterType
         queueInfo.meterId   = meterId;
         queueInfo.commandId = commandId;
         queueInfo.meterType = meterType;
+        queueInfo.modbusId = modbusId;
+        queueInfo.serialNumberLen = serialNumberLen;
+        memcpy(queueInfo.serialNumber, serialNumber, serialNumberLen);
         
         QueueList_AddElement(queueControlList, (BYTE *) &queueInfo, sizeof(queueInfo));        
         
         return METER_TABLE_COMMAND_METER_API_BUSY;
     }
     
-    error_code = MeterTable_ExcecuteCommand(meterId, commandId, meterType);
+    error_code = MeterTable_ExcecuteCommand(meterId, modbusId, serialNumber, serialNumberLen, commandId, meterType);
     
     if(error_code == TRUE)
         MeterTable_SetCommandMeterAPIBusy(TRUE);
@@ -697,7 +707,8 @@ BYTE API_MeterTable_ExcecuteCommand(BYTE meterId, BYTE commandId, BYTE meterType
     return error_code;
 }
 
-BYTE MeterTable_ExcecuteCommand(BYTE meterId, BYTE commandId, BYTE meterType){
+BYTE MeterTable_ExcecuteCommand(BYTE meterId, BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE commandId, BYTE meterType){
+//BYTE MeterTable_ExcecuteCommand(BYTE meterId, BYTE commandId, BYTE meterType){
      
     BYTE nextState;    
     
@@ -722,7 +733,7 @@ BYTE MeterTable_ExcecuteCommand(BYTE meterId, BYTE commandId, BYTE meterType){
             return FALSE;
     }
     
-    MeterControl_Setup( meterId, meterType, commandId, 0);        
+    MeterControl_Setup( meterId, modbusId, serialNumber, serialNumberLen, meterType, commandId, 0);        
     MeterTable_SetStateMachine(nextState);
     
     return TRUE;    
@@ -730,5 +741,14 @@ BYTE MeterTable_ExcecuteCommand(BYTE meterId, BYTE commandId, BYTE meterType){
 
 void API_MeterTable_ExcecuteBaptismProccess(void){
        
-    API_MeterTable_ExcecuteCommand(METER_CONTROL_NO_METER_ID, SEND_MAC_BROADCAST_MTR, G155_TYPE);
+    API_MeterTable_ExcecuteCommand(METER_CONTROL_NO_METER_ID, 0, NULL, 0, SEND_MAC_BROADCAST_MTR, G155_TYPE);
 }
+
+
+/*
+ * It is necessary to add modbusId, SerialNumber and SerialNumberLen 
+ * into MeterControl struct.
+ * 
+ * In case that meter does not need to be calling by serial number or modbusId,
+ * those values should be filled with NULL and ZERO values.
+ */

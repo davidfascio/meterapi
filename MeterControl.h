@@ -13,7 +13,7 @@
 //******************************************************************************
 
 #include "EventsEngine.h"
-#include "MeterInterface.h"
+//#include "MeterInterface.h"
 
 //******************************************************************************
 // Error Codes
@@ -23,6 +23,8 @@
 #define METER_CONTROL_DEFAULT_NUMBER_OF_RETRIES                       (3)
 
 #define METER_CONTROL_NO_METER_ID                                     (0xFF)
+
+#define METER_CONTROL_MAX_SERIAL_NUMBER_SIZE                          (20)
 //******************************************************************************
 // Data types
 //******************************************************************************
@@ -37,7 +39,10 @@ typedef enum{
 
 typedef struct {
     
-    BYTE meterId;
+    BYTE meterId;                           // Maybe this field wont be necessary for meter control struct
+    BYTE modbusId;
+    BYTE serialNumber[METER_CONTROL_MAX_SERIAL_NUMBER_SIZE];
+    WORD serialNumberLen;
     BYTE meterType;    
     BYTE commandId;
     BYTE retries;
@@ -51,11 +56,8 @@ typedef struct {
 //******************************************************************************
 // Meter Control Function
 //******************************************************************************
-void MeterControl_Setup(    BYTE meterId, 
-                            BYTE meterType, 
-                            BYTE commandId,                             
-                            WORD stabilizationTimeoutValue);
-
+void MeterControl_Setup( BYTE meterId, BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE meterType, BYTE commandId, WORD stabilizationTimeoutValue);
+void MeterControl_Reset(WORD stabilizationTimeoutValue);
 void MeterControl_Clear(void);
 
 void MeterControl_SetDataAvailable(BOOL dataAvailable);
@@ -71,6 +73,9 @@ BYTE MeterControl_GetMeterType(void);
 BYTE MeterControl_GetRetries(void);
 void MeterControl_SetRetries(BYTE retries);
 BYTE MeterControl_GetMeterId(void);
+
+BYTE MeterControl_GetModbusId(void);
+WORD MeterControl_GetSerialNumber(BYTE * serialNumber, WORD serialNumberLen);
 
 //void MeterControl_SetMeterType(BYTE meterType);
 METER_TIMEOUT MeterControl_GetStabilizationTimeout(void);

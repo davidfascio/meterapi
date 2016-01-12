@@ -8,7 +8,7 @@
 #ifndef __SYSTEM_QUEUE_H__
 #define	__SYSTEM_QUEUE_H__
 
-#define SYSTEM_QUEUE_MAX_INFO_SIZE                                      (20)
+#define SYSTEM_QUEUE_MAX_INFO_SIZE                                      (100)
 
 typedef struct _queue_element{
     

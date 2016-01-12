@@ -2,18 +2,27 @@
 
 METER_CONTROL meterControl;
 
-
-void MeterControl_Setup(                BYTE meterId, 
-                                        BYTE meterType, 
-                                        BYTE commandId,                                         
-                                        WORD stabilizationTimeoutValue)
+void MeterControl_Setup( BYTE meterId, BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE meterType, BYTE commandId, WORD stabilizationTimeoutValue)
+//void MeterControl_Setup( BYTE meterId, BYTE meterType, BYTE commandId, WORD stabilizationTimeoutValue)
 {   
     meterControl.meterId   = meterId;
+    meterControl.modbusId = modbusId;
+    meterControl.serialNumberLen = serialNumberLen;
+    memcpy(meterControl.serialNumber, serialNumber, serialNumberLen);
     meterControl.commandId = commandId;
     meterControl.meterType = meterType;
     meterControl.retries   = 0;
     meterControl.answerRequired = FALSE;
     //meterControl.timeout = METER_TIMEOUT_EXPIRED;    
+    meterControl.dataAvailable = FALSE;
+    MeterControl_StopResponseTimeout();
+    MeterControl_InitializeStabilizationTimeout(stabilizationTimeoutValue);
+}
+
+void MeterControl_Reset(WORD stabilizationTimeoutValue){
+    
+    meterControl.retries = 0;
+    meterControl.answerRequired = FALSE;
     meterControl.dataAvailable = FALSE;
     MeterControl_StopResponseTimeout();
     MeterControl_InitializeStabilizationTimeout(stabilizationTimeoutValue);
@@ -67,6 +76,21 @@ void MeterControl_SetRetries(BYTE retries){
 BYTE MeterControl_GetMeterId(void){
     
     return meterControl.meterId;
+}
+
+BYTE MeterControl_GetModbusId(void){
+    
+    return meterControl.modbusId;
+}
+
+WORD MeterControl_GetSerialNumber(BYTE * serialNumber, WORD serialNumberLen){
+    
+    if (serialNumberLen > METER_CONTROL_MAX_SERIAL_NUMBER_SIZE)
+        return 0;   
+    
+    memset(serialNumber, 0, serialNumberLen);
+    memcpy(serialNumber, meterControl.serialNumber, meterControl.serialNumberLen);        
+    return meterControl.serialNumberLen;    
 }
 
 METER_TIMEOUT MeterControl_GetStabilizationTimeout(void){

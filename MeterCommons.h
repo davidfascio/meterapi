@@ -33,6 +33,7 @@
 #define REQUEST_SERIAL_NUMBER_MTR                                       (8)
 
 #define Lenght_Meter_ID                                                 (16)
+#define METER_DESCRIPTOR_MAX_SERIAL_NUMBER_SIZE                         (20)
 
 //******************************************************************************
 // Data types
@@ -63,5 +64,12 @@ typedef struct{
 
 #define METER_COMMAND_ID_FUNCTION_API_NULL                  { METER_INTERFACE_NO_METER_TYPE, 0, NULL, 0, 0, NULL, NULL , NULL }
 
+typedef struct{
+
+    BYTE modbusId;
+    BYTE serialNumber[METER_DESCRIPTOR_MAX_SERIAL_NUMBER_SIZE];
+    WORD serialNumberLen;
+    
+} METER_DESCRIPTOR, * METER_DESCRIPTOR_PTR;
 
 #endif	/* __METER_COMMONS_H__ */
