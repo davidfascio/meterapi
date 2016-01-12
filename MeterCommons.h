@@ -69,7 +69,17 @@ typedef struct{
     BYTE modbusId;
     BYTE serialNumber[METER_DESCRIPTOR_MAX_SERIAL_NUMBER_SIZE];
     WORD serialNumberLen;
+    BYTE meterType;
     
 } METER_DESCRIPTOR, * METER_DESCRIPTOR_PTR;
+
+void MeterDescriptor_SetModbusId(METER_DESCRIPTOR_PTR meterDescriptor, BYTE modbusId);
+BYTE MeterDescriptor_GetModbusId(METER_DESCRIPTOR_PTR meterDescriptor);
+
+void MeterDescriptor_SetSerialNumber(METER_DESCRIPTOR_PTR meterDescriptor, BYTE * serialNumber, WORD serialNumberLen);
+WORD MeterDescriptor_GetSerialNumber(METER_DESCRIPTOR_PTR meterDescriptor, BYTE * serialNumber, WORD serialNumberLen);
+
+void MeterDescriptor_SetMeterType(METER_DESCRIPTOR_PTR meterDescriptor, BYTE meterType);
+BYTE MeterDescriptor_GetMeterType(METER_DESCRIPTOR_PTR meterDescriptor);
 
 #endif	/* __METER_COMMONS_H__ */

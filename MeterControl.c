@@ -6,11 +6,12 @@ void MeterControl_Setup( BYTE meterId, BYTE modbusId, BYTE * serialNumber, WORD 
 //void MeterControl_Setup( BYTE meterId, BYTE meterType, BYTE commandId, WORD stabilizationTimeoutValue)
 {   
     meterControl.meterId   = meterId;
-    meterControl.modbusId = modbusId;
-    meterControl.serialNumberLen = serialNumberLen;
-    memcpy(meterControl.serialNumber, serialNumber, serialNumberLen);
-    meterControl.commandId = commandId;
-    meterControl.meterType = meterType;
+    
+    MeterDescriptor_SetModbusId(&meterControl.meterDescriptor, modbusId);
+    MeterDescriptor_SetSerialNumber(&meterControl.meterDescriptor, serialNumber, serialNumberLen);
+    MeterDescriptor_SetMeterType(&meterControl.meterDescriptor, meterType);
+        
+    meterControl.commandId = commandId;    
     meterControl.retries   = 0;
     meterControl.answerRequired = FALSE;
     //meterControl.timeout = METER_TIMEOUT_EXPIRED;    
@@ -60,7 +61,7 @@ BYTE MeterControl_GetCommandId(void){
 
 BYTE MeterControl_GetMeterType(void){
     
-    return meterControl.meterType;
+    return MeterDescriptor_GetMeterType(&meterControl.meterDescriptor);            
 }
 
 BYTE MeterControl_GetRetries(void){
@@ -80,17 +81,12 @@ BYTE MeterControl_GetMeterId(void){
 
 BYTE MeterControl_GetModbusId(void){
     
-    return meterControl.modbusId;
+    return MeterDescriptor_GetModbusId(&meterControl.meterDescriptor);  
 }
 
 WORD MeterControl_GetSerialNumber(BYTE * serialNumber, WORD serialNumberLen){
     
-    if (serialNumberLen > METER_CONTROL_MAX_SERIAL_NUMBER_SIZE)
-        return 0;   
-    
-    memset(serialNumber, 0, serialNumberLen);
-    memcpy(serialNumber, meterControl.serialNumber, meterControl.serialNumberLen);        
-    return meterControl.serialNumberLen;    
+    return MeterDescriptor_GetSerialNumber(&meterControl.meterDescriptor, serialNumber, serialNumberLen);
 }
 
 METER_TIMEOUT MeterControl_GetStabilizationTimeout(void){

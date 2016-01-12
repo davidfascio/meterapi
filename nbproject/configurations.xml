@@ -27,6 +27,7 @@
       <itemPath>ComSerialInterface.c</itemPath>
       <itemPath>EventsEngine.c</itemPath>
       <itemPath>G155MeterInterface.c</itemPath>
+      <itemPath>MeterCommons.c</itemPath>
       <itemPath>MeterControl.c</itemPath>
       <itemPath>MeterInterface.c</itemPath>
       <itemPath>Meters_Table.c</itemPath>
@@ -70,6 +71,8 @@
       <item path="G155MeterInterface.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="GenericTypeDefs.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="MeterCommons.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="MeterCommons.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -135,6 +138,8 @@
       <item path="G155MeterInterface.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="GenericTypeDefs.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="MeterCommons.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="MeterCommons.h" ex="false" tool="3" flavor2="0">
       </item>

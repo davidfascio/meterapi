@@ -667,7 +667,7 @@ BYTE API_MeterTable_QueueInfoCheck(void){
                 memcpy((BYTE *) &queueInfo, (BYTE *) queueElement_ptr->info, queueElement_ptr->infoSize);
                 QueueList_RemoveElement(queueControlList);
                 
-                API_MeterTable_ExcecuteCommand(queueInfo.meterId, queueInfo.modbusId, queueInfo.serialNumber, queueInfo.serialNumberLen, queueInfo.commandId, queueInfo.meterType);
+                API_MeterTable_ExcecuteCommand(queueInfo.meterId, queueInfo.meterDescriptor.modbusId, queueInfo.meterDescriptor.serialNumber, queueInfo.meterDescriptor.serialNumberLen, queueInfo.commandId, queueInfo.meterDescriptor.meterType);
                 return METER_TABLE_METER_NO_ERROR_CODE;
             }
         }
@@ -689,10 +689,10 @@ BYTE API_MeterTable_ExcecuteCommand(BYTE meterId, BYTE modbusId, BYTE * serialNu
         
         queueInfo.meterId   = meterId;
         queueInfo.commandId = commandId;
-        queueInfo.meterType = meterType;
-        queueInfo.modbusId = modbusId;
-        queueInfo.serialNumberLen = serialNumberLen;
-        memcpy(queueInfo.serialNumber, serialNumber, serialNumberLen);
+        
+        MeterDescriptor_SetMeterType(&queueInfo.meterDescriptor, meterType);
+        MeterDescriptor_SetModbusId(&queueInfo.meterDescriptor, modbusId);
+        MeterDescriptor_SetSerialNumber(&queueInfo.meterDescriptor, serialNumber, serialNumberLen);        
         
         QueueList_AddElement(queueControlList, (BYTE *) &queueInfo, sizeof(queueInfo));        
         

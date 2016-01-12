@@ -13,6 +13,7 @@
 //******************************************************************************
 
 #include "EventsEngine.h"
+#include "MeterCommons.h"
 //#include "MeterInterface.h"
 
 //******************************************************************************
@@ -24,7 +25,7 @@
 
 #define METER_CONTROL_NO_METER_ID                                     (0xFF)
 
-#define METER_CONTROL_MAX_SERIAL_NUMBER_SIZE                          (20)
+//#define METER_CONTROL_MAX_SERIAL_NUMBER_SIZE                          (20)
 //******************************************************************************
 // Data types
 //******************************************************************************
@@ -40,10 +41,7 @@ typedef enum{
 typedef struct {
     
     BYTE meterId;                           // Maybe this field wont be necessary for meter control struct
-    BYTE modbusId;
-    BYTE serialNumber[METER_CONTROL_MAX_SERIAL_NUMBER_SIZE];
-    WORD serialNumberLen;
-    BYTE meterType;    
+    METER_DESCRIPTOR meterDescriptor;        
     BYTE commandId;
     BYTE retries;
     BOOL answerRequired;

@@ -38,6 +38,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/ComSerialInterface.o \
 	${OBJECTDIR}/EventsEngine.o \
 	${OBJECTDIR}/G155MeterInterface.o \
+	${OBJECTDIR}/MeterCommons.o \
 	${OBJECTDIR}/MeterControl.o \
 	${OBJECTDIR}/MeterInterface.o \
 	${OBJECTDIR}/Meters_Table.o \
@@ -85,6 +86,11 @@ ${OBJECTDIR}/G155MeterInterface.o: G155MeterInterface.c
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/G155MeterInterface.o G155MeterInterface.c
+
+${OBJECTDIR}/MeterCommons.o: MeterCommons.c 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/MeterCommons.o MeterCommons.c
 
 ${OBJECTDIR}/MeterControl.o: MeterControl.c 
 	${MKDIR} -p ${OBJECTDIR}
