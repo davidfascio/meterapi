@@ -19,3 +19,14 @@ WORD wfnCRC_CALC (BYTE *ptFRAME, WORD wSizeFrame, WORD wCRCStart){
     //wCRCStart = (wCRCStart >> 8) | (wCRCStart << 8);
     return (wCRCStart);
 }
+
+
+void inverted_memcpy(BYTE * data1, BYTE * data2, WORD data_size){
+    
+    while (data_size){
+        
+        data_size--;
+        * data1 = *(data2 + data_size);
+        data1++;
+    }
+}

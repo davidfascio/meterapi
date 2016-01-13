@@ -114,6 +114,5 @@ void G155MeterInterface_Update(void);
 
 extern COMMAND_ID_FUNCTION G155MeterInterface_CommandIdFunctionList [];
 
-void G155MeterInterface_SendData(BYTE* frame, BYTE frameLen);
 #endif	/* __G155_METER_INTERFACE_H__ */
 

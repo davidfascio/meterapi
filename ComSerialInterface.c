@@ -166,6 +166,13 @@ void ComSerialInterface_CleanBuffer(void){
     memset(ComSerialInterfaceBuffer, 0 , sizeof(ComSerialInterfaceBuffer));
 }
 
+void ComSerialInterface_SendData(BYTE* frame, BYTE frameLen){ 
+    
+    printf("Sent Data: ");
+    ComSerialInterface_PrintData(frame, frameLen);
+    ComSerialInterface_WriteData(frame, frameLen);
+}
+
 void ComSerialInterface_Check(void){
     
     BYTE * ComSerialInterfaceBuffer_ptr = ComSerialInterfaceBuffer + ComSerialInterfaceBufferUsed;

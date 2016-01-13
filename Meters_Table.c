@@ -116,7 +116,7 @@ void vfnAddDelMeterSendReadState(void){
                             NULL,                                               /*  data                        */
                             0,                                                  /*  dataLen                     */
                             TRUE,                                               /*  answerRequired              */
-                            _500_MSEC_,                                         /*  timeoutValue                */
+                            _1000_MSEC_,                                         /*  timeoutValue                */
                             METER_CONTROL_DEFAULT_NUMBER_OF_RETRIES,            /*  maxNumberOfRetries          */
                             0,                                                  /*  stabilizationTimeoutValue   */
                             _ADDDELMETER_END_STATE);                            /*  nextState                   */
@@ -129,7 +129,7 @@ void vfnAddDelMeterSendPSWState(void){
                             NULL,                                               /*  data                        */
                             0,                                                  /*  dataLen                     */
                             TRUE,                                               /*  answerRequired              */
-                            _500_MSEC_,                                         /*  timeoutValue                */
+                            _1000_MSEC_,                                         /*  timeoutValue                */
                             METER_CONTROL_DEFAULT_NUMBER_OF_RETRIES,            /*  maxNumberOfRetries          */
                             0,                                                  /*  stabilizationTimeoutValue   */
                             _ADDDELMETER_SEND_CMD_STATE);                       /*  nextState                   */
@@ -141,7 +141,7 @@ void vfnAddDelMeterSendCMDState(void){
                             NULL,                                                                       /*  data                        */
                             0,                                                                          /*  dataLen                     */
                             TRUE,                                                                       /*  answerRequired              */
-                            _500_MSEC_,                                                                 /*  timeoutValue                */
+                            _1000_MSEC_,                                                                 /*  timeoutValue                */
                             METER_CONTROL_DEFAULT_NUMBER_OF_RETRIES,                                    /*  maxNumberOfRetries          */
                             MeterInterface_GetStabilizationTimeoutValue(MeterControl_GetMeterType()),   /*  stabilizationTimeoutValue   */
                             _ADDDELMETER_SEND_READ_STATE);                                              /*  nextState                   */
@@ -465,7 +465,7 @@ void MeterTable_ReceiveHandler(void){
         if(error_code == METER_TABLE_METER_NO_ERROR_CODE){
             
             MeterControl_SetDataAvailable(TRUE);
-            API_MeterTable_ExcecuteCommand( meterDescriptor.modbusId, meterDescriptor.serialNumber, meterDescriptor.serialNumberLen,commandCallBack, meterType);
+            //API_MeterTable_ExcecuteCommand( meterDescriptor.modbusId, meterDescriptor.serialNumber, meterDescriptor.serialNumberLen,commandCallBack, meterType);
             
             break;
         }            

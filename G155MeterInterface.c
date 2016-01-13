@@ -131,15 +131,10 @@ void G155MeterInterface_SendFrame(  BYTE modbusId,
     if(framebuilt == FALSE)
         return;
             
-    G155MeterInterface_SendData(frame, frameLen);    
+    ComSerialInterface_SendData(frame, frameLen);    
 }
 
-void G155MeterInterface_SendData(BYTE* frame, BYTE frameLen){ 
-    
-    printf("Sent Data: ");
-    ComSerialInterface_PrintData(frame, frameLen);
-    ComSerialInterface_WriteData(frame, frameLen);
-}
+
 
 void G155MeterInterface_SendPassword( BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE * data, WORD dataLen)
 {

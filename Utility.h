@@ -19,6 +19,7 @@ typedef struct {
 } sSM;
 
 WORD wfnCRC_CALC (BYTE *ptFRAME, WORD wSizeFrame, WORD wCRCStart);
+void inverted_memcpy(BYTE * data1, BYTE * data2, WORD data_size);
 
 #endif	/* __UTILITY_H__ */
 

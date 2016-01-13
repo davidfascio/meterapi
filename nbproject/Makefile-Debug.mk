@@ -42,6 +42,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/MeterControl.o \
 	${OBJECTDIR}/MeterInterface.o \
 	${OBJECTDIR}/Meters_Table.o \
+	${OBJECTDIR}/ScorpioMeterInterface.o \
 	${OBJECTDIR}/SystemQueue.o \
 	${OBJECTDIR}/Utility.o \
 	${OBJECTDIR}/handlerG155.o \
@@ -106,6 +107,11 @@ ${OBJECTDIR}/Meters_Table.o: Meters_Table.c
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Meters_Table.o Meters_Table.c
+
+${OBJECTDIR}/ScorpioMeterInterface.o: ScorpioMeterInterface.c 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/ScorpioMeterInterface.o ScorpioMeterInterface.c
 
 ${OBJECTDIR}/SystemQueue.o: SystemQueue.c 
 	${MKDIR} -p ${OBJECTDIR}

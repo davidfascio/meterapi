@@ -26,6 +26,7 @@ void ComSerialInterface_CleanBuffer(void);
 void ComSerialInterface_Init(void);
 DWORD ComSerialInterface_WriteData(BYTE * data, DWORD dataLen);
 DWORD ComSerialInterface_ReadData(BYTE * data, DWORD dataLen);
+void ComSerialInterface_SendData(BYTE* frame, BYTE frameLen);
 void ComSerialInterface_Check(void);
 
 void ComSerialInterface_PrintData(BYTE * frame, WORD frameLen);
