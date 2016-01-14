@@ -45,7 +45,7 @@ const sPeriodicTimers taPeriodicTimers[] =
 {
     {vfnToogling, _500_MSEC_ },
     //{vfnLED_TOGGLE_NWK_ON_PeriodTask,_500_MSEC_},
-    {vfnGO_TO_READ_MTR_PeriodTask,_3000_MSEC_ },
+    {vfnGO_TO_READ_MTR_PeriodTask,_500_MSEC_ },
     {NULL,_1000_MSEC_ }
 };
 
@@ -192,12 +192,12 @@ int main(int argc, char** argv) {
 
 BYTE counter;
 //BYTE number []= {1,1,1,1,1};
-BYTE command[] = {Dis_MTR,Con_MTR,READ_MODE,REQUEST_SERIAL_NUMBER_MTR};
+BYTE command[] = {Dis_MTR,Con_MTR,Dis_MTR, Con_MTR};
 
 BYTE AppModbusId = 1;
 void vfnGO_TO_READ_MTR_PeriodTask(void){
  
-    API_MeterTable_SendCommand(0, command[counter]);
+    API_MeterTable_SendCommand(METER_TABLE_BROADCAST_METER_ID, command[counter]);
     
     
     counter++;

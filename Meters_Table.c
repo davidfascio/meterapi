@@ -128,7 +128,7 @@ void vfnAddDelMeterSendPSWState(void){
     MeterTable_SendCommand( PSW_MTR,                                            /*  command                     */
                             NULL,                                               /*  data                        */
                             0,                                                  /*  dataLen                     */
-                            TRUE,                                               /*  answerRequired              */
+                            (MeterControl_IsBroadcastSent() ? FALSE : TRUE),                                               /*  answerRequired              */
                             _1000_MSEC_,                                         /*  timeoutValue                */
                             METER_CONTROL_DEFAULT_NUMBER_OF_RETRIES,            /*  maxNumberOfRetries          */
                             0,                                                  /*  stabilizationTimeoutValue   */
@@ -140,11 +140,11 @@ void vfnAddDelMeterSendCMDState(void){
     MeterTable_SendCommand( MeterControl_GetCommandId(),                                                /*  command                     */
                             NULL,                                                                       /*  data                        */
                             0,                                                                          /*  dataLen                     */
-                            TRUE,                                                                       /*  answerRequired              */
-                            _1000_MSEC_,                                                                 /*  timeoutValue                */
-                            METER_CONTROL_DEFAULT_NUMBER_OF_RETRIES,                                    /*  maxNumberOfRetries          */
-                            MeterInterface_GetStabilizationTimeoutValue(MeterControl_GetMeterType()),   /*  stabilizationTimeoutValue   */
-                            _ADDDELMETER_SEND_READ_STATE);                                              /*  nextState                   */
+                            (MeterControl_IsBroadcastSent() ? FALSE : TRUE),                                                                   /*  answerRequired              */
+                            _1000_MSEC_,                                                                                                       /*  timeoutValue                */
+                            METER_CONTROL_DEFAULT_NUMBER_OF_RETRIES,                                                                           /*  maxNumberOfRetries          */
+                            (MeterControl_IsBroadcastSent() ? 0 : MeterInterface_GetStabilizationTimeoutValue(MeterControl_GetMeterType())),   /*  stabilizationTimeoutValue   */
+                            (MeterControl_IsBroadcastSent() ? _ADDDELMETER_END_STATE : _ADDDELMETER_SEND_READ_STATE ));                        /*  nextState                   */
 }
 
 void vfnAddDelMeterSendMACBroadcastState(void){
@@ -609,6 +609,10 @@ BYTE API_MeterTable_SendCommand(BYTE meterId, BYTE commandId){
     WORD serialNumberLen;
     BYTE serialNumber[Lenght_Meter_ID];
     
+    BYTE broadcastId;
+    BYTE broadcastSerialNumber[Lenght_Meter_ID];
+    WORD broadcastSerialNumberLen;
+    
     if(meterId != METER_TABLE_BROADCAST_METER_ID){
         
         meterType = MeterTable_GetMeterTypeByMeterId(meterId);
@@ -619,7 +623,8 @@ BYTE API_MeterTable_SendCommand(BYTE meterId, BYTE commandId){
         
         modbusId = MeterTable_GetModbusIdByMeterId(meterId);
         serialNumberLen = MeterTable_GetSerialNumberByMeterId(meterId, serialNumber, sizeof(serialNumber));
-        return API_MeterTable_ExcecuteCommand(modbusId, serialNumber, serialNumberLen, commandId, meterType);    
+        
+        return API_MeterTable_ExcecuteCommand(modbusId, serialNumber, serialNumberLen, commandId, meterType, FALSE);    
     }
     
     index = 0;
@@ -631,7 +636,10 @@ BYTE API_MeterTable_SendCommand(BYTE meterId, BYTE commandId){
             (meterType == METER_INTERFACE_METER_TYPE_INDEX_OVERFLOW_ERROR_CODE))
             break;
         
-        API_MeterTable_ExcecuteCommand(0, NULL, 0, commandId, meterType);    
+        broadcastId = MeterInterface_GetBroadcastId(meterType);
+        broadcastSerialNumberLen = MeterInterface_GetBroadcastSerialNumber(meterType, broadcastSerialNumber, sizeof(broadcastSerialNumber));
+        
+        API_MeterTable_ExcecuteCommand(broadcastId, broadcastSerialNumber, broadcastSerialNumberLen, commandId, meterType, TRUE);    
         index++;
     }
     
@@ -669,7 +677,7 @@ BYTE API_MeterTable_QueueInfoCheck(void){
                 memcpy((BYTE *) &queueInfo, (BYTE *) queueElement_ptr->info, queueElement_ptr->infoSize);
                 QueueList_RemoveElement(queueControlList);
                 
-                API_MeterTable_ExcecuteCommand(queueInfo.meterDescriptor.modbusId, queueInfo.meterDescriptor.serialNumber, queueInfo.meterDescriptor.serialNumberLen, queueInfo.commandId, queueInfo.meterDescriptor.meterType);
+                API_MeterTable_ExcecuteCommand(queueInfo.meterDescriptor.modbusId, queueInfo.meterDescriptor.serialNumber, queueInfo.meterDescriptor.serialNumberLen, queueInfo.commandId, queueInfo.meterDescriptor.meterType, queueInfo.broadcastSent);
                 return METER_TABLE_METER_NO_ERROR_CODE;
             }
         }
@@ -678,7 +686,7 @@ BYTE API_MeterTable_QueueInfoCheck(void){
     return METER_TABLE_EMPTY_QUEUE;
 }
 
-BYTE API_MeterTable_ExcecuteCommand(BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE commandId, BYTE meterType){
+BYTE API_MeterTable_ExcecuteCommand(BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE commandId, BYTE meterType, BOOL broadcastSent){
 //BYTE API_MeterTable_ExcecuteCommand(BYTE meterId, BYTE commandId, BYTE meterType){
     
     METER_CONTROL queueInfo;
@@ -690,7 +698,7 @@ BYTE API_MeterTable_ExcecuteCommand(BYTE modbusId, BYTE * serialNumber, WORD ser
             queueControlList = QueueList_New();        
         
         queueInfo.commandId = commandId;
-        
+        queueInfo.broadcastSent = broadcastSent;
         MeterDescriptor_SetMeterType(&queueInfo.meterDescriptor, meterType);
         MeterDescriptor_SetModbusId(&queueInfo.meterDescriptor, modbusId);
         MeterDescriptor_SetSerialNumber(&queueInfo.meterDescriptor, serialNumber, serialNumberLen);        
@@ -700,7 +708,7 @@ BYTE API_MeterTable_ExcecuteCommand(BYTE modbusId, BYTE * serialNumber, WORD ser
         return METER_TABLE_COMMAND_METER_API_BUSY;
     }
     
-    error_code = MeterTable_ExcecuteCommand(modbusId, serialNumber, serialNumberLen, commandId, meterType);
+    error_code = MeterTable_ExcecuteCommand(modbusId, serialNumber, serialNumberLen, commandId, meterType, broadcastSent);
     
     if(error_code == TRUE)
         MeterTable_SetCommandMeterAPIBusy(TRUE);
@@ -708,7 +716,7 @@ BYTE API_MeterTable_ExcecuteCommand(BYTE modbusId, BYTE * serialNumber, WORD ser
     return error_code;
 }
 
-BYTE MeterTable_ExcecuteCommand(BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE commandId, BYTE meterType){
+BYTE MeterTable_ExcecuteCommand(BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE commandId, BYTE meterType, BOOL broadcastSent){
 //BYTE MeterTable_ExcecuteCommand(BYTE meterId, BYTE commandId, BYTE meterType){
      
     BYTE nextState;    
@@ -734,7 +742,7 @@ BYTE MeterTable_ExcecuteCommand(BYTE modbusId, BYTE * serialNumber, WORD serialN
             return FALSE;
     }
     
-    MeterControl_Setup(modbusId, serialNumber, serialNumberLen, meterType, commandId, 0);        
+    MeterControl_Setup(modbusId, serialNumber, serialNumberLen, meterType, commandId, broadcastSent, 0);        
     MeterTable_SetStateMachine(nextState);
     
     return TRUE;    
@@ -742,7 +750,7 @@ BYTE MeterTable_ExcecuteCommand(BYTE modbusId, BYTE * serialNumber, WORD serialN
 
 void API_MeterTable_ExcecuteBaptismProccess(void){
        
-    API_MeterTable_ExcecuteCommand(0, NULL, 0, SEND_MAC_BROADCAST_MTR, G155_TYPE);
+    API_MeterTable_ExcecuteCommand(0, NULL, 0, SEND_MAC_BROADCAST_MTR, G155_TYPE, FALSE);
 }
 
 

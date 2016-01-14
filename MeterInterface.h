@@ -37,6 +37,7 @@ WORD MeterInterface_GetMeterTypeByIndex(BYTE index);
 METER_COMMAND_ID_FUNCTION_API_PTR MeterInterface_GetMeterCommandIdFunctionAPI(BYTE meterType);
 COMMAND_ID_FUNCTION_PTR MeterInterface_GetCommandIdFunction(METER_COMMAND_ID_FUNCTION_API_PTR meterCommandIdFunctionAPI, BYTE command);
 WORD MeterInterface_GetStabilizationTimeoutValue(BYTE meterType);
-
+BYTE MeterInterface_GetBroadcastId(BYTE meterType);
+WORD MeterInterface_GetBroadcastSerialNumber(BYTE meterType, BYTE * broadcastSerialNumber, WORD broadcastSerialNumberLen);
 #endif	/* __METER_INTERFACE_H__ */
 

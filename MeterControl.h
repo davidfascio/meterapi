@@ -44,6 +44,7 @@ typedef struct {
     METER_DESCRIPTOR meterDescriptor;        
     BYTE commandId;
     BYTE retries;
+    BOOL broadcastSent;
     BOOL answerRequired;
     BOOL dataAvailable;
     METER_TIMEOUT responseTimeout;
@@ -54,7 +55,7 @@ typedef struct {
 //******************************************************************************
 // Meter Control Function
 //******************************************************************************
-void MeterControl_Setup( BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE meterType, BYTE commandId, WORD stabilizationTimeoutValue);
+void MeterControl_Setup(BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE meterType, BYTE commandId, BOOL broadcastSent, WORD stabilizationTimeoutValue);
 void MeterControl_Reset(WORD stabilizationTimeoutValue);
 void MeterControl_Clear(void);
 
@@ -85,6 +86,9 @@ void MeterControl_ExpireResponseTimeout(void);
 void MeterControl_InitializeStabilizationTimeout(WORD timeoutValue);
 void MeterControl_StopStabilizationTimeout(void);
 void MeterControl_ExpireStabilizationTimeout(void);
+
+void MeterControl_SetBroadcastSent(BOOL broadcastSent);
+BOOL MeterControl_IsBroadcastSent(void);
 
 #endif	/* __METER_CONTROL_H__ */
 

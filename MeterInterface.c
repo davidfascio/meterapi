@@ -94,4 +94,30 @@ WORD MeterInterface_GetStabilizationTimeoutValue(BYTE meterType){
     return meterCommandIdFunctionAPI_ptr->stabilizationTimeoutValue;
 }
 
+BYTE MeterInterface_GetBroadcastId(BYTE meterType){
+    
+    METER_COMMAND_ID_FUNCTION_API_PTR meterCommandIdFunctionAPI_ptr = 
+                        MeterInterface_GetMeterCommandIdFunctionAPI(meterType);
+    
+    if(meterCommandIdFunctionAPI_ptr == NULL)
+        return 0;
+    
+    return meterCommandIdFunctionAPI_ptr->broadcastId;
+}
 
+WORD MeterInterface_GetBroadcastSerialNumber(BYTE meterType, BYTE * broadcastSerialNumber, WORD broadcastSerialNumberLen){
+    
+    METER_COMMAND_ID_FUNCTION_API_PTR meterCommandIdFunctionAPI_ptr = 
+                        MeterInterface_GetMeterCommandIdFunctionAPI(meterType);
+    
+    if(meterCommandIdFunctionAPI_ptr == NULL)
+        return 0;
+    
+    if(broadcastSerialNumberLen > meterCommandIdFunctionAPI_ptr->broadcastSerialNumberLen)
+        return 0;
+    
+    memset(broadcastSerialNumber, 0, broadcastSerialNumberLen);
+    memcpy(broadcastSerialNumber, meterCommandIdFunctionAPI_ptr->broadcastSerialNumber, meterCommandIdFunctionAPI_ptr->broadcastSerialNumberLen);
+    
+    return meterCommandIdFunctionAPI_ptr->broadcastSerialNumberLen;
+}

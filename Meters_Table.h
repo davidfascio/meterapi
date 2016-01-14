@@ -121,9 +121,9 @@ void MeterTable_SendCommandByIdentificator( BYTE modbusId,
 void MeterTable_SendNextCommand(WORD stabilizationTimeoutValue, BYTE nextState);
 void MeterTable_ErrorReset(void);
 BYTE API_MeterTable_SendCommand(BYTE meterId, BYTE commandId);
-BYTE API_MeterTable_ExcecuteCommand(BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE commandId, BYTE meterType);
+BYTE API_MeterTable_ExcecuteCommand(BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE commandId, BYTE meterType, BOOL broadcastSent);
 //BYTE API_MeterTable_ExcecuteCommand(BYTE meterId, BYTE commandId, BYTE meterType);
-BYTE MeterTable_ExcecuteCommand(BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE commandId, BYTE meterType);
+BYTE MeterTable_ExcecuteCommand(BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE commandId, BYTE meterType, BOOL broadcastSent);
 //BYTE MeterTable_ExcecuteCommand(BYTE meterId, BYTE commandId, BYTE meterType);
 
 //******************************************************************************

@@ -20,8 +20,8 @@ COMMAND_ID_FUNCTION ScorpioMeterInterface_CommandIdFunctionList [] =
 BOOL ScorpioMeterInterface_BuildFrame(  BYTE * serialNumber,
                                         WORD serialNumberLen,
                                         WORD commandFunction,
-                                        BYTE registerAddress, 
-                                        BYTE registerAmount, 
+                                        WORD registerAddress, 
+                                        WORD registerAmount, 
                                         BYTE * data, 
                                         BYTE dataLen, 
                                         BYTE * frame, 
@@ -39,10 +39,10 @@ BOOL ScorpioMeterInterface_BuildFrame(  BYTE * serialNumber,
     inverted_memcpy(frame_ptr, (BYTE *) &commandFunction, SCORPIO_METER_INTERFACE_COMMAND_FUNCTION_HEADER_SIZE);
     frame_ptr += SCORPIO_METER_INTERFACE_COMMAND_FUNCTION_HEADER_SIZE;
     
-    inverted_memcpy(frame_ptr, &registerAddress, SCORPIO_METER_INTERFACE_REGISTER_ADDRESS_HEADER_SIZE);
+    inverted_memcpy(frame_ptr, (BYTE *) &registerAddress, SCORPIO_METER_INTERFACE_REGISTER_ADDRESS_HEADER_SIZE);
     frame_ptr += SCORPIO_METER_INTERFACE_REGISTER_ADDRESS_HEADER_SIZE;            
     
-    inverted_memcpy(frame_ptr, &registerAmount, SCORPIO_METER_INTERFACE_REGISTER_AMOUNT_HEADER_SIZE);
+    inverted_memcpy(frame_ptr, (BYTE *) &registerAmount, SCORPIO_METER_INTERFACE_REGISTER_AMOUNT_HEADER_SIZE);
     frame_ptr += SCORPIO_METER_INTERFACE_REGISTER_AMOUNT_HEADER_SIZE;
     
     switch(commandFunction){
@@ -79,8 +79,8 @@ BOOL ScorpioMeterInterface_BuildFrame(  BYTE * serialNumber,
 void ScorpioMeterInterface_SendFrame(BYTE * serialNumber,
                                      WORD serialNumberLen,
                                      WORD commandFunction,
-                                     BYTE registerAddress, 
-                                     BYTE registerAmount, 
+                                     WORD registerAddress, 
+                                     WORD registerAmount, 
                                      BYTE * data, 
                                      BYTE dataLen )
 {
@@ -121,6 +121,8 @@ void ScorpioMeterInterface_SendPassword(BYTE modbusId, BYTE * serialNumber, WORD
     
     bufferLen = buffer_ptr - buffer;
     
+    printf("Sending PASSWORD Command\n");
+    
     ScorpioMeterInterface_SendFrame(serialNumber, 
                                     serialNumberLen, 
                                     SCORPIO_METER_INTERFACE_WRITE_COMMAND_FUNCTION,
@@ -143,6 +145,8 @@ void ScorpioMeterInterface_Disconnect(BYTE modbusId, BYTE * serialNumber, WORD s
             
     bufferLen = buffer_ptr - buffer;
     
+    printf("Sending DISCONNECT Command\n");
+    
     ScorpioMeterInterface_SendFrame(serialNumber, 
                                     serialNumberLen, 
                                     SCORPIO_METER_INTERFACE_WRITE_COMMAND_FUNCTION,
@@ -164,6 +168,8 @@ void ScorpioMeterInterface_Connect(BYTE modbusId, BYTE * serialNumber, WORD seri
     buffer_ptr += sizeof(relayStatus);
             
     bufferLen = buffer_ptr - buffer;
+    
+    printf("Sending CONNECT Command\n");
     
     ScorpioMeterInterface_SendFrame(serialNumber, 
                                     serialNumberLen, 

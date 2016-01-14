@@ -2,7 +2,7 @@
 
 METER_CONTROL meterControl;
 
-void MeterControl_Setup(BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE meterType, BYTE commandId, WORD stabilizationTimeoutValue)
+void MeterControl_Setup(BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE meterType, BYTE commandId, BOOL broadcastSent, WORD stabilizationTimeoutValue)
 //void MeterControl_Setup( BYTE meterId, BYTE meterType, BYTE commandId, WORD stabilizationTimeoutValue)
 {   
     //meterControl.meterId   = meterId;
@@ -13,6 +13,7 @@ void MeterControl_Setup(BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen
         
     meterControl.commandId = commandId;    
     meterControl.retries   = 0;
+    meterControl.broadcastSent = broadcastSent;
     meterControl.answerRequired = FALSE;
     //meterControl.timeout = METER_TIMEOUT_EXPIRED;    
     meterControl.dataAvailable = FALSE;
@@ -136,4 +137,14 @@ void MeterControl_StopStabilizationTimeout(void){
 void MeterControl_ExpireStabilizationTimeout(void){
     vfnOneShotDisable(TIME_OUT_METER_STABILIZE_ONESHOT);
     meterControl.stabilizationTimeout = METER_TIMEOUT_EXPIRED;
+}
+
+void MeterControl_SetBroadcastSent(BOOL broadcastSent){
+
+    meterControl.broadcastSent = broadcastSent;
+}
+
+BOOL MeterControl_IsBroadcastSent(void){
+    
+    return meterControl.broadcastSent;
 }
