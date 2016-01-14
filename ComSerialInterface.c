@@ -142,7 +142,7 @@ DWORD ComSerialInterface_ReadData(BYTE * data, DWORD dataLen){
 }
 
 
-#define COM_SERIAL_INTERFACE_BUFFER_SIZE                                    (100)
+#define COM_SERIAL_INTERFACE_BUFFER_SIZE                                    (500)
 #define COM_SERIAL_INTERFACE_BUFFER_WINDOW_SIZE                              (1)
 
 BYTE ComSerialInterfaceBuffer[COM_SERIAL_INTERFACE_BUFFER_SIZE];

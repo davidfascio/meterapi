@@ -79,14 +79,97 @@
 #define SCORPIO_METER_INTERFACE_SYSTEM_FLAGS_REGISTER_ADDRESS               (0x0023)
 #define SCORPIO_METER_INTERFACE_SYSTEM_FLAGS_REGISTER_ADDRESS_SIZE               (2)
 
-#define SCORPIO_METER_INTERFACE_ACTIVE_POWER_REGISTER_ADDRESS               (0x0025)
-#define SCORPIO_METER_INTERFACE_ACTIVE_POWER_REGISTER_ADDRESS_SIZE               (2)
+#define SCORPIO_METER_INTERFACE_ACTIVE_ENERGY_REGISTER_ADDRESS               (0x0025)
+#define SCORPIO_METER_INTERFACE_ACTIVE_ENERGY_REGISTER_ADDRESS_SIZE               (2)
 
-#define SCORPIO_METER_INTERFACE_REACTIVE_POWER_REGISTER_ADDRESS             (0x0027)
-#define SCORPIO_METER_INTERFACE_REACTIVE_POWER_REGISTER_ADDRESS_SIZE             (2)
+#define SCORPIO_METER_INTERFACE_REACTIVE_ENERGY_REGISTER_ADDRESS             (0x0027)
+#define SCORPIO_METER_INTERFACE_REACTIVE_ENERGY_REGISTER_ADDRESS_SIZE             (2)
 
-#define SCORPIO_METER_INTERFACE_NEG_ACTIVE_POWER_REGISTER_ADDRESS           (0x0029)
-#define SCORPIO_METER_INTERFACE_NEG_ACTIVE_POWER_REGISTER_ADDRESS_SIZE           (2)
+#define SCORPIO_METER_INTERFACE_NEG_ACTIVE_ENERGY_REGISTER_ADDRESS           (0x0029)
+#define SCORPIO_METER_INTERFACE_NEG_ACTIVE_ENERGY_REGISTER_ADDRESS_SIZE           (2)
+
+#define SCORPIO_METER_INTERFACE_NEG_REACTIVE_ENERGY_REGISTER_ADDRESS         (0x002B)
+#define SCORPIO_METER_INTERFACE_NEG_REACTIVE_ENERGY_REGISTER_ADDRESS_SIZE         (2)
+
+#define SCORPIO_METER_INTERFACE_TIME_STAMP_REGISTER_ADDRESS                 (0x002D)
+#define SCORPIO_METER_INTERFACE_TIME_STAMP_REGISTER_ADDRESS_SIZE                 (2)
+
+#define SCORPIO_METER_INTERFACE_LOCAL_TIME_STAMP_REGISTER_ADDRESS           (0x002F)
+#define SCORPIO_METER_INTERFACE_LOCAL_TIME_STAMP_REGISTER_ADDRESS_SIZE           (2)
+
+#define SCORPIO_METER_INTERFACE_FREQUENCY_REGISTER_ADDRESS                  (0x0031)
+#define SCORPIO_METER_INTERFACE_FREQUENCY_REGISTER_ADDRESS_SIZE                  (2)
+
+#define SCORPIO_METER_INTERFACE_VOLTAGE_PHASE_A_REGISTER_ADDRESS            (0x0033)
+#define SCORPIO_METER_INTERFACE_VOLTAGE_PHASE_A_REGISTER_ADDRESS_SIZE            (2)
+
+#define SCORPIO_METER_INTERFACE_VOLTAGE_PHASE_B_REGISTER_ADDRESS            (0x0035)
+#define SCORPIO_METER_INTERFACE_VOLTAGE_PHASE_B_REGISTER_ADDRESS_SIZE            (2)
+
+#define SCORPIO_METER_INTERFACE_VOLTAGE_PHASE_C_REGISTER_ADDRESS            (0x0037)
+#define SCORPIO_METER_INTERFACE_VOLTAGE_PHASE_C_REGISTER_ADDRESS_SIZE            (2)
+
+#define SCORPIO_METER_INTERFACE_CURRENT_PHASE_A_REGISTER_ADDRESS            (0x0039)
+#define SCORPIO_METER_INTERFACE_CURRENT_PHASE_A_REGISTER_ADDRESS_SIZE            (2)
+
+#define SCORPIO_METER_INTERFACE_CURRENT_PHASE_B_REGISTER_ADDRESS            (0x003B)
+#define SCORPIO_METER_INTERFACE_CURRENT_PHASE_B_REGISTER_ADDRESS_SIZE            (2)
+
+#define SCORPIO_METER_INTERFACE_CURRENT_PHASE_C_REGISTER_ADDRESS            (0x003D)
+#define SCORPIO_METER_INTERFACE_CURRENT_PHASE_C_REGISTER_ADDRESS_SIZE            (2)
+
+#define SCORPIO_METER_INTERFACE_POWER_FACTOR_REGISTER_ADDRESS               (0x003F)
+#define SCORPIO_METER_INTERFACE_POWER_FACTOR_REGISTER_ADDRESS_SIZE               (2)
+
+#define SCORPIO_METER_INTERFACE_POWER_FACTOR_PHASE_A_REGISTER_ADDRESS       (0x0041)
+#define SCORPIO_METER_INTERFACE_POWER_FACTOR_PHASE_A_REGISTER_ADDRESS_SIZE       (2)
+
+#define SCORPIO_METER_INTERFACE_POWER_FACTOR_PHASE_B_REGISTER_ADDRESS       (0x0043)
+#define SCORPIO_METER_INTERFACE_POWER_FACTOR_PHASE_B_REGISTER_ADDRESS_SIZE       (2)
+
+#define SCORPIO_METER_INTERFACE_POWER_FACTOR_PHASE_C_REGISTER_ADDRESS       (0x0045)
+#define SCORPIO_METER_INTERFACE_POWER_FACTOR_PHASE_C_REGISTER_ADDRESS_SIZE       (2)
+
+#define SCORPIO_METER_INTERFACE_ROLLER_DEMAND_1_REGISTER_ADDRESS            (0x0047)
+#define SCORPIO_METER_INTERFACE_ROLLER_DEMAND_1_REGISTER_ADDRESS_SIZE            (2)
+#define SCORPIO_METER_INTERFACE_ROLLER_DEMAND_TIME_1_REGISTER_ADDRESS       (0x0049)
+#define SCORPIO_METER_INTERFACE_ROLLER_DEMAND_TIME_1_REGISTER_ADDRESS_SIZE       (2)
+
+#define SCORPIO_METER_INTERFACE_ROLLER_DEMAND_2_REGISTER_ADDRESS            (0x004B)
+#define SCORPIO_METER_INTERFACE_ROLLER_DEMAND_2_REGISTER_ADDRESS_SIZE            (2)
+#define SCORPIO_METER_INTERFACE_ROLLER_DEMAND_TIME_2_REGISTER_ADDRESS       (0x004D)
+#define SCORPIO_METER_INTERFACE_ROLLER_DEMAND_TIME_2_REGISTER_ADDRESS_SIZE       (2)
+
+#define SCORPIO_METER_INTERFACE_ROLLER_DEMAND_3_REGISTER_ADDRESS            (0x004F)
+#define SCORPIO_METER_INTERFACE_ROLLER_DEMAND_3_REGISTER_ADDRESS_SIZE            (2)
+#define SCORPIO_METER_INTERFACE_ROLLER_DEMAND_TIME_3_REGISTER_ADDRESS       (0x0051)
+#define SCORPIO_METER_INTERFACE_ROLLER_DEMAND_TIME_3_REGISTER_ADDRESS_SIZE       (2)
+
+#define SCORPIO_METER_INTERFACE_ROLLER_DEMAND_4_REGISTER_ADDRESS            (0x0053)
+#define SCORPIO_METER_INTERFACE_ROLLER_DEMAND_4_REGISTER_ADDRESS_SIZE            (2)
+#define SCORPIO_METER_INTERFACE_ROLLER_DEMAND_TIME_4_REGISTER_ADDRESS       (0x0055)
+#define SCORPIO_METER_INTERFACE_ROLLER_DEMAND_TIME_4_REGISTER_ADDRESS_SIZE       (2)
+
+#define SCORPIO_METER_INTERFACE_ROLLER_DEMAND_TIME_4_REGISTER_ADDRESS       (0x0055)
+#define SCORPIO_METER_INTERFACE_ROLLER_DEMAND_TIME_4_REGISTER_ADDRESS_SIZE       (2)
+
+#define SCORPIO_METER_INTERFACE_ACTIVE_POWER_REGISTER_ADDRESS               (0x0057)
+#define SCORPIO_METER_INTERFACE_ACTIVE_POWER_REGISTER_ADDRESS_SIZE              (2)
+
+#define SCORPIO_METER_INTERFACE_REACTIVE_POWER_REGISTER_ADDRESS             (0x0059)
+#define SCORPIO_METER_INTERFACE_REACTIVE_POWER_REGISTER_ADDRESS_SIZE            (2)
+
+#define SCORPIO_METER_INTERFACE_APARENT_POWER_REGISTER_ADDRESS              (0x005B)
+#define SCORPIO_METER_INTERFACE_APARENT_POWER_REGISTER_ADDRESS_SIZE             (2)
+
+#define SCORPIO_METER_INTERFACE_ACTIVE_ENERGY_PHASE_A_REGISTER_ADDRESS      (0x005D)
+#define SCORPIO_METER_INTERFACE_ACTIVE_ENERGY_PHASE_A_REGISTER_ADDRESS_SIZE     (2)
+
+#define SCORPIO_METER_INTERFACE_ACTIVE_ENERGY_PHASE_B_REGISTER_ADDRESS      (0x005F)
+#define SCORPIO_METER_INTERFACE_ACTIVE_ENERGY_PHASE_B_REGISTER_ADDRESS_SIZE     (2)
+
+#define SCORPIO_METER_INTERFACE_ACTIVE_ENERGY_PHASE_C_REGISTER_ADDRESS      (0x0061)
+#define SCORPIO_METER_INTERFACE_ACTIVE_ENERGY_PHASE_C_REGISTER_ADDRESS_SIZE     (2)
 
 //******************************************************************************
 // Metering Value Defines
@@ -95,7 +178,48 @@
 #define SCORPIO_METER_INTERFACE_SYSTEM_FLAGS_RELAY_TURN_OFF                 (0x00000000)
 
 #define SCORPIO_METER_INTERFACE_METERING_REGISTER_ADDRESS                   SCORPIO_METER_INTERFACE_KH_REGISTER_ADDRESS
-#define SCORPIO_METER_INTERFACE_METERING_REGISTER_ADDRESS_SIZE
+
+#define SCORPIO_METER_INTERFACE_METERING_REGISTER_ADDRESS_SIZE            ( SCORPIO_METER_INTERFACE_KH_REGISTER_ADDRESS_SIZE +\
+                                                                            SCORPIO_METER_INTERFACE_ID_PROGRAM_REGISTER_ADDRESS_SIZE +\
+                                                                            SCORPIO_METER_INTERFACE_FW_VERSION_REGISTER_ADDRESS_SIZE +\
+                                                                            SCORPIO_METER_INTERFACE_TEST_TIME_REGISTER_ADDRESS_SIZE +\
+                                                                            SCORPIO_METER_INTERFACE_REMAINING_TEST_TIME_REGISTER_ADDRESS_SIZE +\
+                                                                            SCORPIO_METER_INTERFACE_RESET_TIME_REGISTER_ADDRESS_SIZE +\
+                                                                            SCORPIO_METER_INTERFACE_OFF_TIME_REGISTER_ADDRESS_SIZE +\
+                                                                            SCORPIO_METER_INTERFACE_INTERRUPTION_COUNTER_REGISTER_ADDRESS_SIZE +\
+                                                                            SCORPIO_METER_INTERFACE_SYSTEM_FLAGS_REGISTER_ADDRESS_SIZE +\
+                                                                            SCORPIO_METER_INTERFACE_ACTIVE_ENERGY_REGISTER_ADDRESS_SIZE +\
+                                                                            SCORPIO_METER_INTERFACE_REACTIVE_ENERGY_REGISTER_ADDRESS_SIZE +\
+                                                                            SCORPIO_METER_INTERFACE_NEG_ACTIVE_ENERGY_REGISTER_ADDRESS_SIZE +\
+                                                                            SCORPIO_METER_INTERFACE_NEG_REACTIVE_ENERGY_REGISTER_ADDRESS_SIZE   +\
+                                                                            SCORPIO_METER_INTERFACE_TIME_STAMP_REGISTER_ADDRESS_SIZE +\
+                                                                            SCORPIO_METER_INTERFACE_LOCAL_TIME_STAMP_REGISTER_ADDRESS_SIZE +\
+                                                                            SCORPIO_METER_INTERFACE_FREQUENCY_REGISTER_ADDRESS_SIZE +\
+                                                                            SCORPIO_METER_INTERFACE_VOLTAGE_PHASE_A_REGISTER_ADDRESS_SIZE +\
+                                                                            SCORPIO_METER_INTERFACE_VOLTAGE_PHASE_B_REGISTER_ADDRESS_SIZE +\
+                                                                            SCORPIO_METER_INTERFACE_VOLTAGE_PHASE_C_REGISTER_ADDRESS_SIZE +\
+                                                                            SCORPIO_METER_INTERFACE_CURRENT_PHASE_A_REGISTER_ADDRESS_SIZE +\
+                                                                            SCORPIO_METER_INTERFACE_CURRENT_PHASE_B_REGISTER_ADDRESS_SIZE +\
+                                                                            SCORPIO_METER_INTERFACE_CURRENT_PHASE_C_REGISTER_ADDRESS_SIZE +\
+                                                                            SCORPIO_METER_INTERFACE_POWER_FACTOR_REGISTER_ADDRESS_SIZE +\
+                                                                            SCORPIO_METER_INTERFACE_POWER_FACTOR_PHASE_A_REGISTER_ADDRESS_SIZE +\
+                                                                            SCORPIO_METER_INTERFACE_POWER_FACTOR_PHASE_B_REGISTER_ADDRESS_SIZE +\
+                                                                            SCORPIO_METER_INTERFACE_POWER_FACTOR_PHASE_C_REGISTER_ADDRESS_SIZE +\
+                                                                            SCORPIO_METER_INTERFACE_ROLLER_DEMAND_1_REGISTER_ADDRESS_SIZE +\
+                                                                            SCORPIO_METER_INTERFACE_ROLLER_DEMAND_TIME_1_REGISTER_ADDRESS_SIZE  +\
+                                                                            SCORPIO_METER_INTERFACE_ROLLER_DEMAND_2_REGISTER_ADDRESS_SIZE +\
+                                                                            SCORPIO_METER_INTERFACE_ROLLER_DEMAND_TIME_2_REGISTER_ADDRESS_SIZE +\
+                                                                            SCORPIO_METER_INTERFACE_ROLLER_DEMAND_3_REGISTER_ADDRESS_SIZE +\
+                                                                            SCORPIO_METER_INTERFACE_ROLLER_DEMAND_TIME_3_REGISTER_ADDRESS_SIZE +\
+                                                                            SCORPIO_METER_INTERFACE_ROLLER_DEMAND_4_REGISTER_ADDRESS_SIZE +\
+                                                                            SCORPIO_METER_INTERFACE_ROLLER_DEMAND_TIME_4_REGISTER_ADDRESS_SIZE +\
+                                                                            SCORPIO_METER_INTERFACE_ROLLER_DEMAND_TIME_4_REGISTER_ADDRESS_SIZE +\
+                                                                            SCORPIO_METER_INTERFACE_ACTIVE_POWER_REGISTER_ADDRESS_SIZE +\
+                                                                            SCORPIO_METER_INTERFACE_REACTIVE_POWER_REGISTER_ADDRESS_SIZE +\
+                                                                            SCORPIO_METER_INTERFACE_APARENT_POWER_REGISTER_ADDRESS_SIZE +\
+                                                                            SCORPIO_METER_INTERFACE_ACTIVE_ENERGY_PHASE_A_REGISTER_ADDRESS_SIZE +\
+                                                                            SCORPIO_METER_INTERFACE_ACTIVE_ENERGY_PHASE_B_REGISTER_ADDRESS_SIZE +\
+                                                                            SCORPIO_METER_INTERFACE_ACTIVE_ENERGY_PHASE_C_REGISTER_ADDRESS_SIZE )
 
 //******************************************************************************
 // Data types
@@ -138,6 +262,7 @@ void ScorpioMeterInterface_SendFrame(BYTE * serialNumber,
 void ScorpioMeterInterface_SendPassword(BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE * data, WORD dataLen);
 void ScorpioMeterInterface_Disconnect(BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE * data, WORD dataLen);
 void ScorpioMeterInterface_Connect(BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE * data, WORD dataLen);
+void ScorpioMeterInterface_ReadMeteringData(BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE * data, WORD dataLen);
 
 WORD API_Scorpio_Meter_response_handler( BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE command, BYTE * response, WORD * responseLen);
 WORD API_Scorpio_Recieve_handler( BYTE * buffer, WORD  buffersize, METER_DESCRIPTOR_PTR meterDescriptor, BYTE * commandCallBack);

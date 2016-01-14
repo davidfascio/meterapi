@@ -116,7 +116,7 @@ void vfnAddDelMeterSendReadState(void){
                             NULL,                                               /*  data                        */
                             0,                                                  /*  dataLen                     */
                             TRUE,                                               /*  answerRequired              */
-                            _1000_MSEC_,                                         /*  timeoutValue                */
+                            _2000_MSEC_,                                         /*  timeoutValue                */
                             METER_CONTROL_DEFAULT_NUMBER_OF_RETRIES,            /*  maxNumberOfRetries          */
                             0,                                                  /*  stabilizationTimeoutValue   */
                             _ADDDELMETER_END_STATE);                            /*  nextState                   */

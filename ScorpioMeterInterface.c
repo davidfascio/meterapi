@@ -176,25 +176,14 @@ void ScorpioMeterInterface_Connect(BYTE modbusId, BYTE * serialNumber, WORD seri
 
 
 void ScorpioMeterInterface_ReadMeteringData(BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE * data, WORD dataLen){
- 
-    BYTE buffer [SCORPIO_METER_INTERFACE_LOCAL_BUFFER_SIZE];
-    BYTE * buffer_ptr = buffer;
-    BYTE bufferLen;
-    
-    DWORD relayStatus = SCORPIO_METER_INTERFACE_SYSTEM_FLAGS_RELAY_TURN_ON;
-        
-    inverted_memcpy(buffer_ptr, (BYTE *) &relayStatus , sizeof(relayStatus));
-    buffer_ptr += sizeof(relayStatus);
-            
-    bufferLen = buffer_ptr - buffer;
-    
+         
     ScorpioMeterInterface_SendFrame(serialNumber, 
                                     serialNumberLen, 
                                     SCORPIO_METER_INTERFACE_READ_COMMAND_FUNCTION,
-                                    SCORPIO_METER_INTERFACE_SYSTEM_FLAGS_REGISTER_ADDRESS,
-                                    SCORPIO_METER_INTERFACE_SYSTEM_FLAGS_REGISTER_ADDRESS_SIZE,
-                                    (BYTE *) buffer,
-                                    bufferLen);  
+                                    SCORPIO_METER_INTERFACE_METERING_REGISTER_ADDRESS,
+                                    SCORPIO_METER_INTERFACE_METERING_REGISTER_ADDRESS_SIZE,
+                                    NULL,
+                                    0);  
 }
 
 WORD API_Scorpio_Meter_response_handler( BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE command, BYTE * response, WORD * responseLen){
