@@ -17,8 +17,8 @@ METER_COMMAND_ID_FUNCTION_API meterCommandIdFunctionAPIList [] =
         16,                                                     /*  SerialNumber Broadcast Len                           */
         _2200_MSEC_,                                            /*  Stabilization Time Value                             */
         ScorpioMeterInterface_CommandIdFunctionList,            /*  Pointer to Command Id Function List per Meter Type   */
-        API_Scorpio_Meter_response_handler,                        /*  Pointer to Meter Response Handler                             */
-        API_Scorpio_Recieve_handler},                              /*  Pointer to Meter Receive  Handler                             */
+        API_Scorpio_Meter_response_handler,                     /*  Pointer to Meter Response Handler                             */
+        API_Scorpio_Recieve_handler},                           /*  Pointer to Meter Receive  Handler                             */
     
    
         
