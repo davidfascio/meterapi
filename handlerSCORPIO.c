@@ -16,7 +16,7 @@ boolean wfnCRC_CALC_SCORPIO(BYTE *ptFRAME, WORD wSizeFrame, WORD wCRCStart){
     int count = 0;
     int index;
     
-    size = wSizeFrame-CRC; //remove 2 bytes from CRC
+    size = wSizeFrame-HANDLER_SCORPIO_CRC; //remove 2 bytes from CRC
     
     for (index = 0; index < size; index++){
         
@@ -481,7 +481,7 @@ BYTE Handler_Serial_Number_Size_Check_SCORPIO(BYTE* id_data, BYTE* data){
       
 }
 
-WORD API_SCORPIO_Recieve_handler(BYTE* buffer, WORD buffersize){
+WORD API_SCORPIO_Recieve_handler(BYTE* buffer, WORD buffersize, METER_DESCRIPTOR_PTR meterDescriptor, BYTE * commandCallBack){
     
     WORD  crc;    
     BYTE  fcn;
@@ -526,10 +526,15 @@ WORD API_SCORPIO_Recieve_handler(BYTE* buffer, WORD buffersize){
     scorpio_control.flag_system = flag_system;
     scorpio_control.fcn = fcn;
     
+    // Filling Meter Descriptor
+    memcpy(meterDescriptor->serialNumber, scorpio_control.serialNumber, scorpio_control.serialNumberLen);     
+    meterDescriptor->serialNumberLen = scorpio_control.serialNumberLen;
+    * commandCallBack = scorpio_control.fcn;
+    
     return HANDLER_SCORPIO_NO_ERROR;
  }
 
-WORD API_SCORPIO_Meter_response_handler( BYTE * serialNumber, BYTE serialNumberLen, BYTE numeration, BYTE * response, WORD * responseLen){
+WORD API_SCORPIO_Meter_response_handler( BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE command, BYTE * response, WORD * responseLen){
 
     /* Validating modbus id*/
     
@@ -543,7 +548,7 @@ WORD API_SCORPIO_Meter_response_handler( BYTE * serialNumber, BYTE serialNumberL
 
     /*Validating numeration*/ 
      
-     switch(numeration){
+     switch(command){
 
         case NO_COMMAND_MTR: // No command Meter
             
@@ -639,10 +644,10 @@ WORD API_SCORPIO_Meter_response_handler( BYTE * serialNumber, BYTE serialNumberL
              
         default:
             
-             return ERROR_NUMERATION;
+             return HANDLER_SCORPIO_ERROR_NUMERATION;
      }
 
 
-     return ERROR_NUMERATION;
+     return HANDLER_SCORPIO_ERROR_NUMERATION;
 
 }

@@ -152,6 +152,7 @@ typedef struct{
 
 BYTE API_MeterTable_QueueInfoCheck(void);
 void API_MeterTable_ExcecuteNewBaptismProcess(void);
+void API_MeterTable_ExcecuteCommandInvoke( METER_DESCRIPTOR_PTR meterDescriptor, BYTE commandCallBack);
 
 #endif	/* __METERS_TABLE_H__ */
 

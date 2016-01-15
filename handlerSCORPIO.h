@@ -10,21 +10,24 @@
 
 //******************************************************************************
 // General defines
-#ifndef TRUE
-#define TRUE                                                    (1)
-#endif /* TRUE*/
+//#ifndef TRUE
+//#define TRUE                                                    (1)
+//#endif /* TRUE*/
+//
+//#ifndef FALSE
+//#define FALSE                                                   (0)
+//#endif /*FALSE*/
+//
+//typedef unsigned short int      WORD;                           /* 16-bit unsigned */
+//typedef unsigned char           BYTE;                           /* 8-bit unsigned  */
+//typedef unsigned char           boolean;                        /* TRUE or FALSE*/
 
-#ifndef FALSE
-#define FALSE                                                   (0)
-#endif /*FALSE*/
-
-typedef unsigned short int      WORD;                           /* 16-bit unsigned */
-typedef unsigned char           BYTE;                           /* 8-bit unsigned  */
-typedef unsigned char           boolean;                        /* TRUE or FALSE*/
+#include "GenericTypeDefs.h"
+#include "MeterCommons.h"
 
 //******************************************************************************
 // API Defines
-#define HANDLER_SCORPIO_WINDOW                                     (50)
+#define HANDLER_SCORPIO_WINDOW                                     (250)
 #define HANDLER_SCORPIO_CRC_OK                                     (0)
 #define HANDLER_SCORPIO_MAX_SN_SIZE                                (16)
 #define HANDLER_SCORPIO_MIN_SN_SIZE                                (0)
@@ -40,15 +43,15 @@ typedef unsigned char           boolean;                        /* TRUE or FALSE
 #define NO_SERIAL_NUMBER_SIZE                                      (0)
 
 // Command Id defines
-#define NO_COMMAND_MTR                                             (0)
-#define Dis_MTR                                                    (1)
-#define Con_MTR                                                    (2)
-#define Res_MTR                                                    (3)
-#define READ_MODE                                                  (4)
-#define PSW_MTR                                                    (5)
-#define SEND_MAC_BROADCAST_MTR                                     (6)
-#define ASSIGN_MODBUS_ID_MTR                                       (7)
-#define REQUEST_SERIAL_NUMBER_MTR                                  (8)
+//#define NO_COMMAND_MTR                                             (0)
+//#define Dis_MTR                                                    (1)
+//#define Con_MTR                                                    (2)
+//#define Res_MTR                                                    (3)
+//#define READ_MODE                                                  (4)
+//#define PSW_MTR                                                    (5)
+//#define SEND_MAC_BROADCAST_MTR                                     (6)
+//#define ASSIGN_MODBUS_ID_MTR                                       (7)
+//#define REQUEST_SERIAL_NUMBER_MTR                                  (8)
 
 // Error Codes
 #define NO_ERROR_NUMERATION                                        (1)
@@ -60,7 +63,7 @@ typedef unsigned char           boolean;                        /* TRUE or FALSE
 #define NO_CORRECT_SIZE                                            (-5)
 #define ERROR_NO_MATCH_SERIAL_NUMBER                               (-6)
 #define ERROR_NO_MATCH_SERIAL_NUMBER_LENGTH                        (-7)
-#define ERROR_NUMERATION                                           (-8)
+#define HANDLER_SCORPIO_ERROR_NUMERATION                           (-8)
 
  
 // Buffer Offset Defines
@@ -86,7 +89,7 @@ typedef unsigned char           boolean;                        /* TRUE or FALSE
 #define HANDLER_SCORPIO_FlAG_DATA_INDEX_OFFSET                     (HANDLER_SCORPIO_FCN_SIZE_INDEX_OFFSET + 4 ) //22 JUMPS
 
 //Buffers & Others defines..
-#define CRC                                                        (2)
+#define HANDLER_SCORPIO_CRC                                                        (2)
 #define CONSTANT_AFFECTED_REGISTERS                                (0x02)
 #define BufferSize                                                 (500)
 #define lByteCRC                                                   (1)
@@ -221,8 +224,8 @@ BYTE Handler_Flag_Addr_System_Check_SCORPIO(BYTE * ptbFrame, WORD wSizeFrame, BY
 BYTE Handler_FcnCheck_SCORPIO(BYTE * function_data);
 BYTE Handler_Size_Data_Check_SCORPIO(BYTE* size_data_value, WORD wSizeFrame, BYTE* data);
 BYTE Handler_Serial_Number_Size_Check_SCORPIO(BYTE* id_data, BYTE* data);
-WORD API_SCORPIO_Recieve_handler(BYTE* ptBuffer, WORD buffersize);
-WORD API_SCORPIO_Meter_response_handler( BYTE * serialNumber, BYTE serialNumberLen, BYTE numeration, BYTE * response, WORD * responseLen);
+WORD API_SCORPIO_Recieve_handler(BYTE* buffer, WORD buffersize, METER_DESCRIPTOR_PTR meterDescriptor, BYTE * commandCallBack);
+WORD API_SCORPIO_Meter_response_handler( BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE command, BYTE * response, WORD * responseLen);
 
 
 

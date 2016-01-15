@@ -46,6 +46,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/SystemQueue.o \
 	${OBJECTDIR}/Utility.o \
 	${OBJECTDIR}/handlerG155.o \
+	${OBJECTDIR}/handlerSCORPIO.o \
 	${OBJECTDIR}/main.o
 
 
@@ -127,6 +128,11 @@ ${OBJECTDIR}/handlerG155.o: handlerG155.c
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/handlerG155.o handlerG155.c
+
+${OBJECTDIR}/handlerSCORPIO.o: handlerSCORPIO.c 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/handlerSCORPIO.o handlerSCORPIO.c
 
 ${OBJECTDIR}/main.o: main.c 
 	${MKDIR} -p ${OBJECTDIR}

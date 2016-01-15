@@ -15,7 +15,7 @@
 #include "G155MeterInterface.h"
 #include "handlerG155.h"
 #include "ScorpioMeterInterface.h"
-//#include "handlerSCORPIO.h"
+#include "handlerSCORPIO.h"
 
 //******************************************************************************
 // Defines

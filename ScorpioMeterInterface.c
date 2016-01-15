@@ -192,7 +192,7 @@ void ScorpioMeterInterface_ReadMeteringData(BYTE modbusId, BYTE * serialNumber, 
                                     0);  
 }
 
-WORD API_Scorpio_Meter_response_handler( BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE command, BYTE * response, WORD * responseLen){
+/*WORD API_Scorpio_Meter_response_handler( BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE command, BYTE * response, WORD * responseLen){
     
     return 0;
 }
@@ -202,4 +202,4 @@ WORD API_Scorpio_Recieve_handler( BYTE * buffer, WORD  buffersize, METER_DESCRIP
     *commandCallBack = 0;
     
     return 0;
-}
+}*/

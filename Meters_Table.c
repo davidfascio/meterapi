@@ -465,6 +465,7 @@ void MeterTable_ReceiveHandler(void){
         if(error_code == METER_TABLE_METER_NO_ERROR_CODE){
             
             MeterControl_SetDataAvailable(TRUE);
+            API_MeterTable_ExcecuteCommandInvoke(&meterDescriptor, commandCallBack);
             //API_MeterTable_ExcecuteCommand( meterDescriptor.modbusId, meterDescriptor.serialNumber, meterDescriptor.serialNumberLen,commandCallBack, meterType);
             
             break;
@@ -753,7 +754,18 @@ void API_MeterTable_ExcecuteBaptismProccess(void){
     API_MeterTable_ExcecuteCommand(0, NULL, 0, SEND_MAC_BROADCAST_MTR, G155_TYPE, FALSE);
 }
 
-
+void API_MeterTable_ExcecuteCommandInvoke( METER_DESCRIPTOR_PTR meterDescriptor, BYTE commandCallBack){
+    
+    printf("Serial Number: ");
+    ComSerialInterface_PrintData(meterDescriptor->serialNumber, meterDescriptor->serialNumberLen);
+    printf("\n");
+    
+    switch(commandCallBack){
+        
+        default:
+            return;
+    }
+}
 /*
  * It is necessary to add modbusId, SerialNumber and SerialNumberLen 
  * into MeterControl struct.
