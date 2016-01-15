@@ -11,7 +11,7 @@ METER_COMMAND_ID_FUNCTION_API meterCommandIdFunctionAPIList [] =
         API_G155_Meter_response_handler,                        /*  Pointer to Meter Response Handler                             */
         API_G155_Recieve_handler},                              /*  Pointer to Meter Receive  Handler                             */
         
-    {   MONO_TYPE,                                              /*  Meter Type                                           */
+    {   SCORPIO_METER_TYPE,                                     /*  Meter Type                                           */
         0x00,                                                   /*  Broadcast Id                                         */
         "0000000000000000",                                     /*  SerialNumber Broadcast                               */
         16,                                                     /*  SerialNumber Broadcast Len                           */

@@ -491,12 +491,13 @@ WORD API_SCORPIO_Recieve_handler(BYTE* buffer, WORD buffersize, METER_DESCRIPTOR
     BYTE  sn_size;
     BYTE state;
     BYTE data[SCORPIO_MAX_DATA_SIZE] = {0};
+    BYTE serialNumber[sizeSNSCORPIO];
     
     //Execute Recieve handler functions 
     
     crc             = wfnCRC_CALC_SCORPIO((BYTE *) buffer, buffersize, 0xFFFF);   
     size            = Handler_Size_Data_Check_SCORPIO( (BYTE*) buffer, buffersize, data);
-    sn_size         = Handler_Serial_Number_Size_Check_SCORPIO((BYTE*) buffer, data);
+    sn_size         = Handler_Serial_Number_Size_Check_SCORPIO((BYTE*) buffer, serialNumber);
     flag_password   = Handler_Flag_Addr_PassWord_Check_SCORPIO( (BYTE*) buffer, buffersize,(BYTE*) &state);
     flag_system     = Handler_Flag_Addr_System_Check_SCORPIO( (BYTE*) buffer, buffersize,(BYTE*) &state);
     fcn             = Handler_FcnCheck_SCORPIO( (BYTE*) buffer);
@@ -521,19 +522,34 @@ WORD API_SCORPIO_Recieve_handler(BYTE* buffer, WORD buffersize, METER_DESCRIPTOR
     scorpio_control.dataSize = size;
     memcpy(scorpio_control.data,data,size);
     scorpio_control.serialNumberLen = sn_size;
-    memcpy(scorpio_control.serialNumber,data,sn_size);
+    memcpy(scorpio_control.serialNumber,serialNumber,sn_size);
     scorpio_control.flag_password = flag_password;
     scorpio_control.flag_system = flag_system;
     scorpio_control.fcn = fcn;
     
     // Filling Meter Descriptor
-    memcpy(meterDescriptor->serialNumber, scorpio_control.serialNumber, scorpio_control.serialNumberLen);     
-    meterDescriptor->serialNumberLen = scorpio_control.serialNumberLen;
-    * commandCallBack = scorpio_control.fcn;
+    
+    MeterDescriptor_Setup(meterDescriptor, 0, scorpio_control.serialNumber, scorpio_control.serialNumberLen, SCORPIO_METER_TYPE);    
+    * commandCallBack = HandlerScorpio_GetInvokeFunctionId(scorpio_control.fcn);
     
     return HANDLER_SCORPIO_NO_ERROR;
  }
 
+BYTE HandlerScorpio_GetInvokeFunctionId(BYTE command){
+    
+    switch(command){
+        
+        case HANDLER_SCORPIO_IS_A_PUSHBUTTON_FCN: 
+             return LINK_ADDING_MTR;
+        
+        //! case HANDLER_SCORPIO_DELETING_FCN: //0x66
+        //!     return LINK_DELETING_MTR;
+            
+        default:
+            return NO_COMMAND_MTR;
+    }
+    
+}
 WORD API_SCORPIO_Meter_response_handler( BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE command, BYTE * response, WORD * responseLen){
 
     /* Validating modbus id*/

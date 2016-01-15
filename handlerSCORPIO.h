@@ -25,6 +25,12 @@
 #include "GenericTypeDefs.h"
 #include "MeterCommons.h"
 
+#define MONO_TYPE                                                           (0x81)
+#define BI_TYPE                                                             (0x82)
+#define TRI_TYPE                                                            (0x83)
+
+#define SCORPIO_METER_TYPE                                                  (MONO_TYPE)
+
 //******************************************************************************
 // API Defines
 #define HANDLER_SCORPIO_WINDOW                                     (250)
@@ -94,7 +100,7 @@
 #define BufferSize                                                 (500)
 #define lByteCRC                                                   (1)
 #define hByteCRC                                                   (2)
-#define sizeSNSCORPIO                                              (15)
+#define sizeSNSCORPIO                                              (16)
 #define SCORPIO_MAX_DATA_SIZE                                      (200)
 
 
@@ -227,7 +233,7 @@ BYTE Handler_Serial_Number_Size_Check_SCORPIO(BYTE* id_data, BYTE* data);
 WORD API_SCORPIO_Recieve_handler(BYTE* buffer, WORD buffersize, METER_DESCRIPTOR_PTR meterDescriptor, BYTE * commandCallBack);
 WORD API_SCORPIO_Meter_response_handler( BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE command, BYTE * response, WORD * responseLen);
 
-
+BYTE HandlerScorpio_GetInvokeFunctionId(BYTE command);
 
 #endif	/* HANDLERSCORPIO_H */
 

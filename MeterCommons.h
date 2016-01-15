@@ -32,6 +32,9 @@
 #define ASSIGN_MODBUS_ID_MTR                                            (7)
 #define REQUEST_SERIAL_NUMBER_MTR                                       (8)
 
+#define LINK_ADDING_MTR                                                 (9)
+#define LINK_DELETING_MTR                                               (10)
+
 #define Lenght_Meter_ID                                                 (16)
 #define METER_DESCRIPTOR_MAX_SERIAL_NUMBER_SIZE                         (20)
 
@@ -57,6 +60,7 @@ typedef struct{
     
 } METER_DESCRIPTOR, * METER_DESCRIPTOR_PTR;
 
+void MeterDescriptor_Setup(METER_DESCRIPTOR_PTR meterDescriptor, BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE meterType);
 void MeterDescriptor_SetModbusId(METER_DESCRIPTOR_PTR meterDescriptor, BYTE modbusId);
 BYTE MeterDescriptor_GetModbusId(METER_DESCRIPTOR_PTR meterDescriptor);
 

@@ -20,9 +20,7 @@
 //******************************************************************************
 
 // Valid meter type
-#define MONO_TYPE                                                           (0x81)
-#define BI_TYPE                                                             (0x82)
-#define TRI_TYPE                                                            (0x83)
+
 
 #define SCORPIO_METER_INTERFACE_COMMAND_FUNCTION_HEADER_SIZE                (2)
 #define SCORPIO_METER_INTERFACE_REGISTER_ADDRESS_HEADER_SIZE                (2)
@@ -40,6 +38,9 @@
 // SCORPIO METER INTERFACE REGISTER ADDRESSES
 //******************************************************************************
 #define SCORPIO_METER_INTERFACE_LINKER_NUMBER_REGISTER_ADDRESS              (0x0002)
+#define SCORPIO_METER_INTERFACE_LINKER_ADDDEL_METER_NUMBER_REGISTER_ADDRESS (0x0003)
+#define SCORPIO_METER_INTERFACE_LINKER_ADDDEL_METER_NUMBER_REGISTER_ADDRESS_SIZE (2)
+
 #define SCORPIO_METER_INTERFACE_CUSTOMER_SERIAL_NUMBER_REGISTER_ADDRESS     (0x0004)
 
 #define SCORPIO_METER_INTERFACE_PASSWORD_REGISTER_ADDRESS                   (0x0017)
@@ -263,6 +264,7 @@ void ScorpioMeterInterface_SendPassword(BYTE modbusId, BYTE * serialNumber, WORD
 void ScorpioMeterInterface_Disconnect(BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE * data, WORD dataLen);
 void ScorpioMeterInterface_Connect(BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE * data, WORD dataLen);
 void ScorpioMeterInterface_ReadMeteringData(BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE * data, WORD dataLen);
+void ScorpioMeterInterface_LinkAddingMeter(BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE * data, WORD dataLen);
 
 /*WORD API_Scorpio_Meter_response_handler( BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE command, BYTE * response, WORD * responseLen);
 WORD API_Scorpio_Recieve_handler( BYTE * buffer, WORD  buffersize, METER_DESCRIPTOR_PTR meterDescriptor, BYTE * commandCallBack);*/

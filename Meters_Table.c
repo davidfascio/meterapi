@@ -6,6 +6,7 @@
 Meters_Table            Meters_Table1;
 sSM _tAddDelMeterSM = {0,0,0,0};
 BYTE macLongAddrByteInverse[MAC_SIZE] = {0x24, 0xda, 0xb6, 0x0a, 0x02, 0x00, 0x07, 0x0A};
+BYTE macLongAddrByte[MAC_SIZE];
 /*Add_Del State Machine*/
 void vfnAddDelMeterIdleState(void);
 void vfnAddDelMeterAddMeterState(void);
@@ -96,6 +97,14 @@ void vfnAddDelMeterWaitConfirmPLCState(void){
 
 void vfnAddDelMeterSendLinkerONState(void){
     
+    MeterTable_SendCommand( LINK_ADDING_MTR,                                            /*  command                     */
+                            macLongAddrByte,                                               /*  data                        */
+                            SHORT_MAC_SIZE,                                                  /*  dataLen                     */
+                            TRUE,                                               /*  answerRequired              */
+                            _1000_MSEC_,                                         /*  timeoutValue                */
+                            METER_CONTROL_DEFAULT_NUMBER_OF_RETRIES,            /*  maxNumberOfRetries          */
+                            0,                                                  /*  stabilizationTimeoutValue   */
+                            _ADDDELMETER_END_STATE);                       /*  nextState                   */    
 }
 
 void vfnAddDelMeterDelMeterState(void){
@@ -738,6 +747,10 @@ BYTE MeterTable_ExcecuteCommand(BYTE modbusId, BYTE * serialNumber, WORD serialN
         case SEND_MAC_BROADCAST_MTR:
             nextState = _ADDDELMETER_SEND_MAC_BROADCAST_STATE ;  
             break;
+            
+        case LINK_ADDING_MTR:
+            nextState = _ADDDELMETER_SEND_LINK_ON_STATE;
+            break;
 
         default:            
             return FALSE;
@@ -761,6 +774,11 @@ void API_MeterTable_ExcecuteCommandInvoke( METER_DESCRIPTOR_PTR meterDescriptor,
     printf("\n");
     
     switch(commandCallBack){
+        
+        case LINK_ADDING_MTR:
+            
+            API_MeterTable_ExcecuteCommand(meterDescriptor->modbusId, meterDescriptor->serialNumber, meterDescriptor->serialNumberLen, commandCallBack, meterDescriptor->meterType, FALSE);
+            break;
         
         default:
             return;

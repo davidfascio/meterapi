@@ -18,7 +18,8 @@
 
 #define NUM_MAX_METERS                                      24
 #define SIGNATURE_MTR                                       'p'
-#define MAC_SIZE                                             8
+#define MAC_SIZE                                             (8)
+#define SHORT_MAC_SIZE                                       (4)
 #define BROADCAST_MDB                                           0x00
 #define BROADCAST_MDB_ESP                                       0xF7
 

@@ -1,5 +1,12 @@
 #include "MeterCommons.h"
 
+void MeterDescriptor_Setup(METER_DESCRIPTOR_PTR meterDescriptor, BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE meterType){
+    
+    MeterDescriptor_SetModbusId(meterDescriptor, modbusId);
+    MeterDescriptor_SetSerialNumber(meterDescriptor, serialNumber, serialNumberLen);
+    MeterDescriptor_SetMeterType(meterDescriptor, meterType);
+}
+
 void MeterDescriptor_SetModbusId(METER_DESCRIPTOR_PTR meterDescriptor, BYTE modbusId){
     
     if(meterDescriptor == NULL)

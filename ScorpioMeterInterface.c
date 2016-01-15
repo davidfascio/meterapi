@@ -14,6 +14,9 @@ COMMAND_ID_FUNCTION ScorpioMeterInterface_CommandIdFunctionList [] =
     {   READ_MODE ,                                         /* Meter Common Command Id              */
         ScorpioMeterInterface_ReadMeteringData } ,             /* Meter CommandIdFunction_Callback     */
         
+    {   LINK_ADDING_MTR ,                                         /* Meter Common Command Id              */
+        ScorpioMeterInterface_LinkAddingMeter } ,             /* Meter CommandIdFunction_Callback     */     
+        
     COMMAND_ID_FUNCTION_NULL
 };
 
@@ -182,7 +185,9 @@ void ScorpioMeterInterface_Connect(BYTE modbusId, BYTE * serialNumber, WORD seri
 
 
 void ScorpioMeterInterface_ReadMeteringData(BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE * data, WORD dataLen){
-         
+    
+    printf("Requesting METERING Command\n");
+    
     ScorpioMeterInterface_SendFrame(serialNumber, 
                                     serialNumberLen, 
                                     SCORPIO_METER_INTERFACE_READ_COMMAND_FUNCTION,
@@ -190,6 +195,19 @@ void ScorpioMeterInterface_ReadMeteringData(BYTE modbusId, BYTE * serialNumber, 
                                     SCORPIO_METER_INTERFACE_METERING_REGISTER_ADDRESS_SIZE,
                                     NULL,
                                     0);  
+}
+
+void ScorpioMeterInterface_LinkAddingMeter(BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE * data, WORD dataLen){
+
+    printf("LINK ADDING METER Command\n");
+    
+    ScorpioMeterInterface_SendFrame(serialNumber, 
+                                    serialNumberLen, 
+                                    SCORPIO_METER_INTERFACE_WRITE_COMMAND_FUNCTION,
+                                    SCORPIO_METER_INTERFACE_LINKER_ADDDEL_METER_NUMBER_REGISTER_ADDRESS,
+                                    SCORPIO_METER_INTERFACE_LINKER_ADDDEL_METER_NUMBER_REGISTER_ADDRESS_SIZE,
+                                    data,
+                                    dataLen);      
 }
 
 /*WORD API_Scorpio_Meter_response_handler( BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE command, BYTE * response, WORD * responseLen){
