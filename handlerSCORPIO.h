@@ -94,14 +94,21 @@
 #define HANDLER_SCORPIO_FlAG_WRITE_DATA_SIZE_INDEX_OFFSET          (HANDLER_SCORPIO_FCN_SIZE_INDEX_OFFSET + 3 ) //21 JUMPS
 #define HANDLER_SCORPIO_FlAG_DATA_INDEX_OFFSET                     (HANDLER_SCORPIO_FCN_SIZE_INDEX_OFFSET + 4 ) //22 JUMPS
 
+#define HANDLER_SCORPIO_ESPFCN_TYPE_REPLYDATA_HIGH_OFFSET          (HANDLER_SCORPIO_FCN_INDEX_HIGH_OFFSET + 1) //17 JUMPS
+#define HANDLER_SCORPIO_ESPFCN_TYPE_REPLYDATA_LOW_OFFSET           (HANDLER_SCORPIO_ESPFCN_TYPE_REPLYDATA_HIGH_OFFSET + 1) //18 JUMPS
+
+
+
 //Buffers & Others defines..
 #define HANDLER_SCORPIO_CRC                                                        (2)
 #define CONSTANT_AFFECTED_REGISTERS                                (0x02)
 #define BufferSize                                                 (500)
 #define lByteCRC                                                   (1)
 #define hByteCRC                                                   (2)
+#define REPLY_DATA_CRC                                             (56165)
 #define sizeSNSCORPIO                                              (16)
 #define SCORPIO_MAX_DATA_SIZE                                      (200)
+
 
 
 // Function type defines
@@ -186,6 +193,7 @@
 #define HANDLER_SCORPIO_FLAG_DATA_VALUE                            (0x10)
 #define HANDLER_SCORPIO_NO_FLAG_DATA_VALUE                         (0)
 #define HANDLER_SCORPIO_FLAG_DATA_SIZE                             (4)
+#define HANDLER_SCORPIO_FLAG_REPLY_DATA_SPACE_SIZE                 (3)
 #define HANDLER_SCORPIO_FLAG_PUSHBUTTON_SPACE_SIZE                 (0)
 #define HANDLER_SCORPIO_FLAG_WRITE_SN_SIZE                         (0x10)
 
@@ -193,8 +201,17 @@
 
 #define HANDLER_SCORPIO_FUNCTION_ID_HIGH_VALUE                     (0x00)
 #define HANDLER_SCORPIO_FUNCTION_ID_LOW_VALUE                      (0x03)
+#define HANDLER_SCORPIO_ESPFCN_TYPE_REPLYDATA_HIGH_VALUE           (0x90)
+#define HANDLER_SCORPIO_ESPFCN_TYPE_REPLYDATA_LOW_VALUE            (0x03)
+
+#define HANDLER_SCORPIO_ESPECIAL_FUNCTION_TYPEMETER_MONOPH         (0x81)
+#define HANDLER_SCORPIO_ESPECIAL_FUNCTION_TYPEMETER_BIPH           (0x82)
+#define HANDLER_SCORPIO_ESPECIAL_FUNCTION_TYPEMETER_TRIPH          (0x83)
+#define HANDLER_SCORPIO_ESPECIAL_FUNCTION_DELETE_METER             (0x66)
 #define HANDLER_SCORPIO_FUNCTION_PUSHBUTTON_ID_VALUE               (0x81)
+
 #define HANDLER_SCORPIO_FCN_PUSHBUTTON_SIZE                         (19)
+#define HANDLER_SCORPIO_ESPFCN_REPLY_DATA_SIZE                      (21)
 #define HANDLER_SCORPIO_FUNCTION_DATA_SIZE                          (21)
 #define HANDLER_SCORPIO_NO_FCN_DATA_VALUE                           (0)
 #define HANDLER_SCORPIO_FCN_SN_READ_DATA_SIZE                     (0x10)

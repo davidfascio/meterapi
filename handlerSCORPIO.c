@@ -58,7 +58,7 @@ boolean wfnCRC_CALC_SCORPIO(BYTE *ptFRAME, WORD wSizeFrame, WORD wCRCStart){
 
     //Check CRC ...
     
-    if(AddBytesCRC == wCRCStart ) {
+    if(AddBytesCRC == wCRCStart || AddBytesCRC == REPLY_DATA_CRC ) {
         
         return FALSE;
     }   
@@ -368,14 +368,36 @@ BYTE Handler_FcnCheck_SCORPIO(BYTE* function_data){
           
         }
     }
-    if (*ptBUFFER == HANDLER_SCORPIO_FUNCTION_PUSHBUTTON_ID_VALUE){
+    if (*ptBUFFER == HANDLER_SCORPIO_ESPECIAL_FUNCTION_TYPEMETER_MONOPH  
+        || *ptBUFFER == HANDLER_SCORPIO_ESPECIAL_FUNCTION_TYPEMETER_BIPH 
+        || *ptBUFFER == HANDLER_SCORPIO_ESPECIAL_FUNCTION_TYPEMETER_TRIPH
+        || *ptBUFFER == HANDLER_SCORPIO_ESPECIAL_FUNCTION_DELETE_METER){
                 
-        return HANDLER_SCORPIO_FUNCTION_PUSHBUTTON_ID_VALUE;
+        return HANDLER_SCORPIO_FUNCTION_PUSHBUTTON_ID_VALUE; //FUNCION ESPECIAL DEBIDA AL PUSH-BUTTON
     }
+    
+    ptBUFFER = function_data + HANDLER_SCORPIO_ESPFCN_TYPE_REPLYDATA_HIGH_OFFSET;
+    
+    if (*ptBUFFER == HANDLER_SCORPIO_ESPFCN_TYPE_REPLYDATA_HIGH_VALUE ){
+        
+        ptBUFFER = function_data + HANDLER_SCORPIO_ESPFCN_TYPE_REPLYDATA_LOW_OFFSET;
+        
+        if (*ptBUFFER == HANDLER_SCORPIO_ESPFCN_TYPE_REPLYDATA_LOW_VALUE ){
+            
+        
+            return HANDLER_SCORPIO_FUNCTION_PUSHBUTTON_ID_VALUE; //FUNCION ESPECIAL DEBIDA AL PUSH-BUTTON
+            
+        }
+        
+         return HANDLER_SCORPIO_NO_FCN_DATA_VALUE;
+        
+    }
+    
     
     return HANDLER_SCORPIO_NO_FCN_DATA_VALUE;
    
 }
+
 
 BYTE Handler_Size_Data_Check_SCORPIO(BYTE* size_data_value, WORD wSizeFrame, BYTE* data){
     
@@ -435,21 +457,46 @@ BYTE Handler_Size_Data_Check_SCORPIO(BYTE* size_data_value, WORD wSizeFrame, BYT
         return NO_CORRECT_SIZE;
     }
     
-    if (*ptBUFFER == HANDLER_SCORPIO_FUNCTION_PUSHBUTTON_ID_VALUE ){
+    if (*ptBUFFER == HANDLER_SCORPIO_ESPECIAL_FUNCTION_TYPEMETER_MONOPH  
+        || *ptBUFFER == HANDLER_SCORPIO_ESPECIAL_FUNCTION_TYPEMETER_BIPH 
+        || *ptBUFFER == HANDLER_SCORPIO_ESPECIAL_FUNCTION_TYPEMETER_TRIPH
+        || *ptBUFFER == HANDLER_SCORPIO_ESPECIAL_FUNCTION_DELETE_METER){
             
         size = wSizeFrame;
         
         if (size == HANDLER_SCORPIO_FCN_PUSHBUTTON_SIZE ){
             
-            ptBUFFER = size_data_value + HANDLER_SCORPIO_FCN_INDEX_LOW_OFFSET;  //locate to space data index offset
+            ptBUFFER = size_data_value + HANDLER_SCORPIO_FCN_INDEX_HIGH_OFFSET;  //locate to METER TYPE index offset
             memcpy(data,ptBUFFER, HANDLER_SCORPIO_FLAG_PUSHBUTTON_SPACE_SIZE);
             return HANDLER_SCORPIO_FLAG_PUSHBUTTON_SPACE_SIZE;//TRUE
+            //return size;
             
-            return size;
         }
-        
+        return NO_CORRECT_SIZE;
     }
+           
+    ptBUFFER = size_data_value + HANDLER_SCORPIO_ESPFCN_TYPE_REPLYDATA_HIGH_OFFSET;
     
+    if (*ptBUFFER == HANDLER_SCORPIO_ESPFCN_TYPE_REPLYDATA_HIGH_VALUE ){
+        
+        ptBUFFER = size_data_value + HANDLER_SCORPIO_ESPFCN_TYPE_REPLYDATA_LOW_OFFSET;
+        
+        if (*ptBUFFER == HANDLER_SCORPIO_ESPFCN_TYPE_REPLYDATA_LOW_VALUE ){
+            
+        
+            size = wSizeFrame;
+        
+            if (size == HANDLER_SCORPIO_ESPFCN_REPLY_DATA_SIZE){
+            
+                ptBUFFER = size_data_value + HANDLER_SCORPIO_FCN_INDEX_HIGH_OFFSET;  //locate to reply data index offset
+                memcpy(data,ptBUFFER, HANDLER_SCORPIO_FLAG_REPLY_DATA_SPACE_SIZE);
+                return HANDLER_SCORPIO_FLAG_REPLY_DATA_SPACE_SIZE ;//TRUE
+                //return size;
+            
+            }
+             return NO_CORRECT_SIZE;
+        }
+    }
     return NO_CORRECT_SIZE;
 }
 

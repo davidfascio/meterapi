@@ -7,16 +7,9 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/development/test/MetersAPI/main.c</file>
-            <file>file:/C:/development/test/MetersAPI/handlerSCORPIO.h</file>
-            <file>file:/C:/development/test/MetersAPI/Meters_Table.c</file>
-            <file>file:/C:/development/test/MetersAPI/EventsEngine.c</file>
-            <file>file:/C:/development/test/MetersAPI/MeterControl.h</file>
-            <file>file:/C:/development/test/MetersAPI/handlerSCORPIO.c</file>
-            <file>file:/C:/development/test/MetersAPI/Meters_Table.h</file>
-            <file>file:/C:/development/test/MetersAPI/handlerG155.c</file>
-            <file>file:/C:/development/test/MetersAPI/MeterInterface.c</file>
-            <file>file:/C:/development/test/MetersAPI/MeterCommons.h</file>
+            <file>file:/C:/development/meterapi/main.c</file>
+            <file>file:/C:/development/meterapi/handlerSCORPIO.h</file>
+            <file>file:/C:/development/meterapi/handlerSCORPIO.c</file>
         </group>
     </open-files>
 </project-private>
