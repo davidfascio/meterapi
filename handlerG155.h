@@ -142,6 +142,19 @@ BYTE Handler_FlagCheck_G155(BYTE * ptbFrame, WORD wSizeFrame, BYTE * flag_state)
 BYTE Handler_FcnCheck_G155(BYTE * function_data);
 BYTE Handler_SizeCheck_G155(BYTE* size_data_value, WORD wSizeFrame, BYTE* data);
 BYTE Handler_IdCheck_G155(BYTE* id_data);
+
+void G155MeterHandler_ParseToDataReading( Data_Readings_Ptr dataReading, Data_Readings_G155_Ptr g155DataReading);
+DWORD G155MeterHandler_ParseActiveEnergy(DWORD value);
+
+typedef struct __attribute__((packed,aligned(1))) _Data_Readings_G155
+{
+    WORD    FLAGS;
+    DWORD   ENERGY_REACT_TOTAL_Add;
+    WORD    POWER_ACT_SYSTEM_Add;
+    WORD    CURRENT_Add;
+    WORD    VOLTAGE_Add;
+    DWORD   ENERGY_ACT_Add;
+}Data_Readings_G155, * Data_Readings_G155_Ptr;
         
 #endif	/* HANDLER_H */
 

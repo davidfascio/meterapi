@@ -420,3 +420,31 @@ WORD API_G155_Meter_response_handler( BYTE modbusId, BYTE * serialNumber, WORD s
 
 }
 
+void G155MeterHandler_ParseToDataReading( Data_Readings_Ptr dataReading, Data_Readings_G155_Ptr g155DataReading){
+    
+    // memset(dataReading , 0xFF, sizeof(Data_Readings) );
+    dataReading->ENERGY_ACT_A_Add       =   g155DataReading->ENERGY_ACT_Add;
+    dataReading->VOLTAGE_A_Add          =   g155DataReading->VOLTAGE_Add;
+    dataReading->CURRENT_A_Add          =   g155DataReading->CURRENT_Add;
+    dataReading->ENERGY_REACT_TOTAL_Add =   g155DataReading->ENERGY_REACT_TOTAL_Add;
+    dataReading->POWER_ACT_SYSTEM_Add   =   g155DataReading->POWER_ACT_SYSTEM_Add;
+    dataReading->FLAGS_Add_LWEND        =   g155DataReading->FLAGS;
+}   
+
+#define HANDLER_G155_DWORD_INTEGER_ROTATE_VALUE                              (14)
+#define HANDLER_G155_DWORD_RATION_VALUE                                      (1000)
+#define HANDLER_G155_DWORD_DECIMAL_CONSTANT_VALUE                            (61)
+#define HANDLER_G155_DWORD_DECIMAL_MASK_VALUE                                (0x00003FFF)
+
+#define HANDLER_G155_WORD_RATION_VALUE                                       (100)
+#define HANDLER_G155_WORD_DECIMAL_CONSTANT_VALUE                             (39)
+
+DWORD G155MeterHandler_ParseActiveEnergy(DWORD value){
+    
+    DWORD activeEnergy;
+    
+    activeEnergy =  ((value >> HANDLER_G155_DWORD_INTEGER_ROTATE_VALUE) * HANDLER_G155_DWORD_RATION_VALUE) + 
+                    ((( value & HANDLER_G155_DWORD_DECIMAL_MASK_VALUE) * HANDLER_G155_DWORD_DECIMAL_CONSTANT_VALUE) / HANDLER_G155_DWORD_RATION_VALUE);
+    
+    return activeEnergy;
+}

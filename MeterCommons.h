@@ -86,4 +86,29 @@ typedef struct{
 
 #define METER_COMMAND_ID_FUNCTION_API_NULL                  { METER_INTERFACE_NO_METER_TYPE, 0, NULL, 0, 0, NULL, NULL , NULL }
 
+typedef struct  _Data_Readings
+{
+    DWORD   ENERGY_ACT_C_Add;
+    DWORD   ENERGY_ACT_B_Add;
+    DWORD   ENERGY_ACT_A_Add;
+    DWORD   POWER_ACT_SYSTEM_Add;
+    DWORD   FLAGS_Add_LWEND;
+    WORD    DELTA_REAC_Add;
+    WORD    DELTA_ACT_Add;
+    WORD    INDEX_CON_Add;
+    DWORD   ROLLER_DEMAND_Add;
+    WORD    POWER_FACTOR_Add;
+    WORD    CURRENT_C_Add;
+    WORD    CURRENT_B_Add;
+    WORD    CURRENT_A_Add;
+    WORD    VOLTAGE_C_Add;
+    WORD    VOLTAGE_B_Add;
+    WORD    VOLTAGE_A_Add;
+    WORD    FRECUENCY_Add;
+    DWORD   TIME_STAMP_Add;
+    DWORD   ENERGY_NEG_ACT_TOTAL_Add;
+    DWORD   ENERGY_NEG_REACT_TOTAL_Add;
+    DWORD   ENERGY_REACT_TOTAL_Add;
+}Data_Readings , * Data_Readings_Ptr;
+
 #endif	/* __METER_COMMONS_H__ */

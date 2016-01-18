@@ -42,30 +42,6 @@
 
 #define METER_TABLE_BROADCAST_METER_ID                      0xFF
 //typedef struct __attribute__((packed,aligned(1))) _Data_Readings
-typedef struct  _Data_Readings
-{
-    DWORD   ENERGY_ACT_C_Add;
-    DWORD   ENERGY_ACT_B_Add;
-    DWORD   ENERGY_ACT_A_Add;
-    DWORD   POWER_ACT_SYSTEM_Add;
-    DWORD   FLAGS_Add_LWEND;
-    WORD    DELTA_REAC_Add;
-    WORD    DELTA_ACT_Add;
-    WORD    INDEX_CON_Add;
-    DWORD   ROLLER_DEMAND_Add;
-    WORD    POWER_FACTOR_Add;
-    WORD    CURRENT_C_Add;
-    WORD    CURRENT_B_Add;
-    WORD    CURRENT_A_Add;
-    WORD    VOLTAGE_C_Add;
-    WORD    VOLTAGE_B_Add;
-    WORD    VOLTAGE_A_Add;
-    WORD    FRECUENCY_Add;
-    DWORD   TIME_STAMP_Add;
-    DWORD   ENERGY_NEG_ACT_TOTAL_Add;
-    DWORD   ENERGY_NEG_REACT_TOTAL_Add;
-    DWORD   ENERGY_REACT_TOTAL_Add;
-}Data_Readings;
 
 //typedef struct __attribute__((packed,aligned(1))) _Meter_Eneri
 typedef struct _Meter_Eneri
