@@ -15,7 +15,10 @@ COMMAND_ID_FUNCTION ScorpioMeterInterface_CommandIdFunctionList [] =
         ScorpioMeterInterface_ReadMeteringData } ,             /* Meter CommandIdFunction_Callback     */
         
     {   LINK_ADDING_MTR ,                                         /* Meter Common Command Id              */
-        ScorpioMeterInterface_LinkAddingMeter } ,             /* Meter CommandIdFunction_Callback     */     
+        ScorpioMeterInterface_LinkMeter } ,             /* Meter CommandIdFunction_Callback     */     
+        
+    {   LINK_DELETING_MTR,                                         /* Meter Common Command Id              */
+        ScorpioMeterInterface_LinkMeter } ,             /* Meter CommandIdFunction_Callback     */     
         
     COMMAND_ID_FUNCTION_NULL
 };
@@ -197,9 +200,12 @@ void ScorpioMeterInterface_ReadMeteringData(BYTE modbusId, BYTE * serialNumber, 
                                     0);  
 }
 
-void ScorpioMeterInterface_LinkAddingMeter(BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE * data, WORD dataLen){
+void ScorpioMeterInterface_LinkMeter(BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE * data, WORD dataLen){
 
-    printf("LINK ADDING METER Command\n");
+    printf("LINKING METER Command\n");
+    printf("SHORT MAC ADDRESS Associated: ");
+    ComSerialInterface_PrintData(data, dataLen);
+    printf("\n");
     
     ScorpioMeterInterface_SendFrame(serialNumber, 
                                     serialNumberLen, 

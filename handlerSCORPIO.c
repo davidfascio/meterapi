@@ -370,11 +370,13 @@ BYTE Handler_FcnCheck_SCORPIO(BYTE* function_data){
     }
     if (*ptBUFFER == HANDLER_SCORPIO_ESPECIAL_FUNCTION_TYPEMETER_MONOPH  
         || *ptBUFFER == HANDLER_SCORPIO_ESPECIAL_FUNCTION_TYPEMETER_BIPH 
-        || *ptBUFFER == HANDLER_SCORPIO_ESPECIAL_FUNCTION_TYPEMETER_TRIPH
-        || *ptBUFFER == HANDLER_SCORPIO_ESPECIAL_FUNCTION_DELETE_METER){
+        || *ptBUFFER == HANDLER_SCORPIO_ESPECIAL_FUNCTION_TYPEMETER_TRIPH){
                 
         return HANDLER_SCORPIO_FUNCTION_PUSHBUTTON_ID_VALUE; //FUNCION ESPECIAL DEBIDA AL PUSH-BUTTON
     }
+    
+    if(*ptBUFFER == HANDLER_SCORPIO_ESPECIAL_FUNCTION_DELETE_METER)
+        return HANDLER_SCORPIO_ESPECIAL_FUNCTION_DELETE_METER;
     
     ptBUFFER = function_data + HANDLER_SCORPIO_ESPFCN_TYPE_REPLYDATA_HIGH_OFFSET;
     
@@ -385,7 +387,7 @@ BYTE Handler_FcnCheck_SCORPIO(BYTE* function_data){
         if (*ptBUFFER == HANDLER_SCORPIO_ESPFCN_TYPE_REPLYDATA_LOW_VALUE ){
             
         
-            return HANDLER_SCORPIO_FUNCTION_PUSHBUTTON_ID_VALUE; //FUNCION ESPECIAL DEBIDA AL PUSH-BUTTON
+            return HANDLER_SCORPIO_ESPFCN_TYPE_REPLYDATA_HIGH_VALUE; //FUNCION ESPECIAL DEBIDA AL PUSH-BUTTON
             
         }
         
@@ -589,20 +591,20 @@ BYTE HandlerScorpio_GetInvokeFunctionId(BYTE command){
         case HANDLER_SCORPIO_IS_A_PUSHBUTTON_FCN: 
              return LINK_ADDING_MTR;
         
-        //! case HANDLER_SCORPIO_DELETING_FCN: //0x66
-        //!     return LINK_DELETING_MTR;
+        case HANDLER_SCORPIO_ESPECIAL_FUNCTION_DELETE_METER:         
+            return LINK_DELETING_MTR;
             
         default:
             return NO_COMMAND_MTR;
     }
     
 }
-WORD API_SCORPIO_Meter_response_handler( BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE command, BYTE * response, WORD * responseLen){
+WORD API_SCORPIO_Meter_response_handler( BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE command, BYTE * response, WORD maxResponseLen, WORD * responseLen){
 
     /* Validating modbus id*/
     
-     if (scorpio_control.serialNumber != serialNumber)
-
+    if (memcmp(scorpio_control.serialNumber, serialNumber, serialNumberLen))
+     //if (scorpio_control.serialNumber != serialNumber)
          return ERROR_NO_MATCH_SERIAL_NUMBER;
      
      if (scorpio_control.serialNumberLen != serialNumberLen)
@@ -704,6 +706,16 @@ WORD API_SCORPIO_Meter_response_handler( BYTE modbusId, BYTE * serialNumber, WOR
                  return NO_ERROR_NUMERATION;
              }
              break;      
+             
+        case LINK_ADDING_MTR:       // Request Serial Number Meter
+        case LINK_DELETING_MTR:
+            
+            if (scorpio_control.fcn == HANDLER_SCORPIO_ESPFCN_TYPE_REPLYDATA_HIGH_VALUE){ 
+                
+                *responseLen = scorpio_control.dataSize;
+                return NO_ERROR_NUMERATION;
+            }
+            break;
              
         default:
             

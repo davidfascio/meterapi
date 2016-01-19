@@ -45,7 +45,7 @@ const sPeriodicTimers taPeriodicTimers[] =
 {
     {vfnToogling, _500_MSEC_ },
     //{vfnLED_TOGGLE_NWK_ON_PeriodTask,_500_MSEC_},
-    {vfnGO_TO_READ_MTR_PeriodTask,_10000_MSEC_ },
+    {vfnGO_TO_READ_MTR_PeriodTask,_1000_MSEC_ },
     {NULL,_1000_MSEC_ }
 };
 
@@ -204,9 +204,10 @@ int main(int argc, char** argv) {
     ComSerialInterface_Init();
     
     // Fill
-    Meters_Table1.Meter_DEV[0].Type = MONO_TYPE;
+    memset(&Meters_Table1, 0xFF, sizeof(Meters_Table));
+    /*Meters_Table1.Meter_DEV[0].Type = MONO_TYPE;
     Meters_Table1.Meter_DEV[0].Signature = 'p' + 5;
-    memcpy(Meters_Table1.Meter_DEV[0].Serial_Num,serialNumberDemo,Lenght_Meter_ID);    
+    memcpy(Meters_Table1.Meter_DEV[0].Serial_Num,serialNumberDemo,Lenght_Meter_ID);    */
     vfnPeriodicTimerEnable(LED_TOGGLE_MAIN_PERTASK);
     vfnPeriodicTimerEnable(GO_TO_READ_MTR_PERTASK);    //Crea la rutina de leer medidores
     
@@ -236,19 +237,23 @@ int main(int argc, char** argv) {
 
 BYTE counter;
 //BYTE number []= {1,1,1,1,1};
-BYTE command[] = {Dis_MTR,Con_MTR,Dis_MTR, Con_MTR};
+BYTE command[] = {Dis_MTR,Con_MTR,Con_MTR, Dis_MTR};
 
 BYTE AppModbusId = 1;
 void vfnGO_TO_READ_MTR_PeriodTask(void){
  
-    //API_MeterTable_SendCommand(0, command[counter]);
+    BYTE error_code;
     
+    error_code = API_MeterTable_SendCommand(counter%2, command[counter]);
+    
+    if (error_code != METER_TABLE_METER_NO_ERROR_CODE)
+        printf ("Meter Error Code: %d\n", error_code);
     
     counter++;
     if(counter == 4)
         counter = 0;
     
-    //API_MeterTable_ExcecuteBaptismProccess();
+    API_MeterTable_ExcecuteBaptismProccess();
     //API_MeterTable_ExcecuteBaptismProccess();
     //G155MeterInterface_RequestSerialNumber(AppModbusId++, NULL, 0, NULL, 0);
     //(void)CMD_To_Scorpio ((BYTE)NULL,READ_MODE); 

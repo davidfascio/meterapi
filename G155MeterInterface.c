@@ -16,7 +16,7 @@ COMMAND_ID_FUNCTION G155MeterInterface_CommandIdFunctionList [] =
         G155MeterInterface_Reset },                 /* Meter CommandIdFunction_Callback     */
     
     {   READ_MODE ,                                 /* Meter Common Command Id              */
-        G155MeterInterface_ReadMeteringData } ,             /* Meter CommandIdFunction_Callback     */
+        G155MeterInterface_ReadMeteringData } ,     /* Meter CommandIdFunction_Callback     */
         
     {   SEND_MAC_BROADCAST_MTR ,                    /* Meter Common Command Id              */
         G155MeterInterface_SendMACAddress },        /* Meter CommandIdFunction_Callback     */

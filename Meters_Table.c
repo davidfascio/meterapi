@@ -117,6 +117,18 @@ void vfnAddDelMeterDesassociateMeterState(void){
 
 void vfnAddDelMeterSendLinkerOFFState(void){
     
+    BYTE dumbShortMacAddress[SHORT_MAC_SIZE];
+    
+    memset(dumbShortMacAddress, 0xFF, SHORT_MAC_SIZE);
+    
+    MeterTable_SendCommand( LINK_DELETING_MTR,                                            /*  command                     */
+                            dumbShortMacAddress,                                               /*  data                        */
+                            SHORT_MAC_SIZE,                                                  /*  dataLen                     */
+                            TRUE,                                               /*  answerRequired              */
+                            _1000_MSEC_,                                         /*  timeoutValue                */
+                            METER_CONTROL_DEFAULT_NUMBER_OF_RETRIES,            /*  maxNumberOfRetries          */
+                            0,                                                  /*  stabilizationTimeoutValue   */
+                            _ADDDELMETER_END_STATE);                       /*  nextState                   */    
 }
 
 void vfnAddDelMeterSendReadState(void){
@@ -392,6 +404,21 @@ BYTE MeterTable_UpdateMeter(BYTE meterId, BYTE meterType, BYTE modbusId, BYTE * 
     return METER_TABLE_METER_NO_ERROR_CODE;    
 }
 
+BYTE MeterTable_DeleteMeter(BYTE meterId, BYTE meterType,BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen){
+    
+    Meter_Eneri * meter_eneri_ptr = &Meters_Table1.Meter_DEV[meterId];
+    
+    /*if(bfnIIC_MEM24_1025_Write(serialNumber,
+            Meter_Table_ADD+((meterId)*serialNumberLen),
+            serialNumberLen) == FALSE)
+        
+        return METER_TABLE_COULD_NOT_SAVE_SERIAL_NUMBER_IN_NVM;*/
+    
+    memset(meter_eneri_ptr, METER_TABLE_EMPTY_VALUE, sizeof(Meter_Eneri));        
+    printf("Deleting Meter\n");
+    return METER_TABLE_METER_NO_ERROR_CODE;
+}
+
 BYTE MeterTable_AddNewMeterBySerialNumber(BYTE meterType, BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen){
 
     BYTE meterId;
@@ -415,6 +442,20 @@ BYTE MeterTable_AddNewMeterBySerialNumber(BYTE meterType, BYTE modbusId, BYTE * 
     //return METER_TABLE_METER_ALREADY_EXISTS;
 }
 
+BYTE MeterTable_DeleteMeterBySerialNumber(BYTE meterType, BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen){
+    
+    BYTE meterId;
+    
+    if(!MeterTable_IsValidSerialNumber(serialNumber, serialNumberLen))
+        return METER_TABLE_SERIAL_NUMBER_ERROR_CODE;
+    
+    meterId = MeterTable_FindMeterBySerialNumber(serialNumber, serialNumberLen);
+    
+    if( meterId == METER_TABLE_SERIAL_NUMBER_NOT_FOUND)
+        return METER_TABLE_SERIAL_NUMBER_NOT_FOUND;
+        
+    return MeterTable_DeleteMeter(meterId, meterType, modbusId, serialNumber, serialNumberLen);
+}
 //******************************************************************************
 // API Meter Control Function
 //******************************************************************************
@@ -422,12 +463,13 @@ BYTE MeterTable_ResponseHandler(BYTE meterType, BYTE modbusId, BYTE * serialNumb
 {
     
     BYTE response[METER_TABLE_MAX_RESPONSE_SIZE];
+    WORD maxResponseLen = sizeof(response);
     WORD responseLen;
     BYTE error_code;
     
     METER_COMMAND_ID_FUNCTION_API_PTR meterCommandIdFunctionAPI_ptr = MeterInterface_GetMeterCommandIdFunctionAPI(meterType);
     
-    error_code = meterCommandIdFunctionAPI_ptr->meterHandler_ResponseProcessCallback(modbusId, serialNumber, serialNumberLen, command, response, &responseLen );
+    error_code = meterCommandIdFunctionAPI_ptr->meterHandler_ResponseProcessCallback(modbusId, serialNumber, serialNumberLen, command, response, maxResponseLen, &responseLen );
     
     switch(command){
         
@@ -435,6 +477,18 @@ BYTE MeterTable_ResponseHandler(BYTE meterType, BYTE modbusId, BYTE * serialNumb
             
             // Adding Meter Process
             return MeterTable_AddNewMeterBySerialNumber(meterType, modbusId, response,responseLen);
+        
+        case LINK_ADDING_MTR:            
+            return MeterTable_AddNewMeterBySerialNumber(meterType, modbusId, serialNumber, serialNumberLen);
+            
+        case LINK_DELETING_MTR:
+            
+            return MeterTable_DeleteMeterBySerialNumber(meterType, modbusId, serialNumber, serialNumberLen);
+            
+        case READ_MODE:
+            
+            // It needs to Save Metering Data into Table
+            return METER_TABLE_METER_NO_ERROR_CODE;
             
         default:
             break;
@@ -751,6 +805,10 @@ BYTE MeterTable_ExcecuteCommand(BYTE modbusId, BYTE * serialNumber, WORD serialN
         case LINK_ADDING_MTR:
             nextState = _ADDDELMETER_SEND_LINK_ON_STATE;
             break;
+            
+        case LINK_DELETING_MTR:
+            nextState = _ADDDELMETER_SEND_LINK_OFF_STATE;
+            break;
 
         default:            
             return FALSE;
@@ -776,6 +834,7 @@ void API_MeterTable_ExcecuteCommandInvoke( METER_DESCRIPTOR_PTR meterDescriptor,
     switch(commandCallBack){
         
         case LINK_ADDING_MTR:
+        case LINK_DELETING_MTR:
             
             API_MeterTable_ExcecuteCommand(meterDescriptor->modbusId, meterDescriptor->serialNumber, meterDescriptor->serialNumberLen, commandCallBack, meterDescriptor->meterType, FALSE);
             break;

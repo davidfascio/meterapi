@@ -135,7 +135,8 @@ typedef struct{
 //******************************************************************************
 // API
 WORD API_G155_Recieve_handler( BYTE * buffer, WORD  buffersize, METER_DESCRIPTOR_PTR meterDescriptor, BYTE * commandCallBack);
-WORD API_G155_Meter_response_handler( BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE command, BYTE * response, WORD * responseLen);
+WORD API_G155_Meter_response_handler( BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE command, BYTE * response, WORD maxResponseLen, WORD * responseLen);
+BYTE HandlerG155_GetInvokeFunctionId(BYTE command);
 
 WORD wfnCRC_CALC_G155(BYTE *ptFRAME, WORD wSizeFrame, WORD wCRCStart);
 BYTE Handler_FlagCheck_G155(BYTE * ptbFrame, WORD wSizeFrame, BYTE * flag_state);
@@ -146,6 +147,7 @@ BYTE Handler_IdCheck_G155(BYTE* id_data);
 DWORD G155MeterHandler_ParseActiveEnergy(DWORD value);
 
 typedef struct __attribute__((packed,aligned(1))) _Data_Readings_G155
+//typedef struct _Data_Readings_G155
 {
     WORD    FLAGS;
     DWORD   ENERGY_REACT_TOTAL_Add;
@@ -155,7 +157,10 @@ typedef struct __attribute__((packed,aligned(1))) _Data_Readings_G155
     DWORD   ENERGY_ACT_Add;
 }Data_Readings_G155, * Data_Readings_G155_Ptr;
 
-void G155MeterHandler_ParseToDataReading( Data_Readings_Ptr dataReading, Data_Readings_G155_Ptr g155DataReading);
-DWORD G155MeterHandler_ParseActiveEnergy(DWORD value);
+void G155MeterHandler_ParseToDataReading( Data_Readings_Ptr dataReading, BYTE * data,  WORD dataLen);
+void G155MeterHandler_PrintDataReading(Data_Readings_Ptr dataReading);
+DWORD G155MeterHandler_DWORD_Parser(DWORD value);
+WORD G155MeterHandler_WORD_Parser(WORD value);
+
 #endif	/* HANDLER_H */
 

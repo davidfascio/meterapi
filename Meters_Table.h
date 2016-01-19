@@ -35,10 +35,10 @@
 #define METER_TABLE_SERIAL_NUMBER_NOT_FOUND                 (0xFF)
 
 #define METER_TABLE_OFFSET_SIGNATURE_MTR                            (1)
-#define METER_TABLE_EMPTY_LOCATION                         (0x00)
+#define METER_TABLE_EMPTY_LOCATION                         (0xFF)
 #define METER_TABLE_EMPTY_VALUE                             (0xFF)
 #define METER_TABLE_NO_METER_ID_FOUND                      (0xFF)
-#define METER_TABLE_MAX_RESPONSE_SIZE                       20
+#define METER_TABLE_MAX_RESPONSE_SIZE                       (250)
 
 #define METER_TABLE_BROADCAST_METER_ID                      0xFF
 //typedef struct __attribute__((packed,aligned(1))) _Data_Readings
@@ -109,9 +109,10 @@ BYTE MeterTable_ExcecuteCommand(BYTE modbusId, BYTE * serialNumber, WORD serialN
 BOOL MeterTable_IsValidSerialNumber(BYTE * serialNumber, WORD serialNumberLen);
 BYTE MeterTable_FindMeterBySerialNumber(BYTE * serialNumber, WORD serialNumberLen);
 BYTE MeterTable_AddNewMeter(BYTE meterId, BYTE meterType,BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen);
+BYTE MeterTable_DeleteMeter(BYTE meterId, BYTE meterType,BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen);
 BYTE MeterTable_UpdateMeter(BYTE meterId, BYTE meterType, BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen);
 BYTE MeterTable_AddNewMeterBySerialNumber(BYTE meterType, BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen);
-
+BYTE MeterTable_DeleteMeterBySerialNumber(BYTE meterType, BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen);
 
 BYTE MeterTable_ResponseHandler(BYTE meterType, BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE command);
 void MeterTable_ReceiveHandler(void);
