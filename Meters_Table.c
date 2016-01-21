@@ -5,7 +5,7 @@
 
 Meters_Table            Meters_Table1;
 sSM _tAddDelMeterSM = {0,0,0,0};
-BYTE macLongAddrByteInverse[MAC_SIZE] = {0x24, 0xda, 0xb6, 0x0a, 0x02, 0x00, 0x07, 0x0A};
+BYTE macLongAddrByteInverse[MAC_SIZE] = {0x24, 0xda, 0xb6, 0x0a, 0x02, 0x00, 0x07, 0x0c};
 BYTE macLongAddrByte[MAC_SIZE];
 /*Add_Del State Machine*/
 void vfnAddDelMeterIdleState(void);
@@ -470,6 +470,8 @@ BYTE MeterTable_ResponseHandler(BYTE meterType, BYTE modbusId, BYTE * serialNumb
     METER_COMMAND_ID_FUNCTION_API_PTR meterCommandIdFunctionAPI_ptr = MeterInterface_GetMeterCommandIdFunctionAPI(meterType);
     
     error_code = meterCommandIdFunctionAPI_ptr->meterHandler_ResponseProcessCallback(modbusId, serialNumber, serialNumberLen, command, response, maxResponseLen, &responseLen );
+    
+    //! error_code needs to be processed here
     
     switch(command){
         

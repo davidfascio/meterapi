@@ -215,7 +215,7 @@
 #define HANDLER_SCORPIO_FUNCTION_DATA_SIZE                          (21)
 #define HANDLER_SCORPIO_NO_FCN_DATA_VALUE                           (0)
 #define HANDLER_SCORPIO_FCN_SN_READ_DATA_SIZE                     (0x10)
-#define HANDLER_SCORPIO_FCN_MTR_READ_DATA_SIZE                    (0xDC)
+#define HANDLER_SCORPIO_FCN_MTR_READ_DATA_SIZE                    (0x94) /*(0xDC)*/
 
 //******************************************************************************
 // Struct data
@@ -252,5 +252,62 @@ WORD API_SCORPIO_Meter_response_handler( BYTE modbusId, BYTE * serialNumber, WOR
 
 BYTE HandlerScorpio_GetInvokeFunctionId(BYTE command);
 
+#define BETA_1              (1.00)
+#define BETA_100            (100.00)
+#define BETA_1000           (1000.00)
+#define MANTISA_SIZE        23
+#define EXP_MAX             128
+#define MANTISA_MASK        0x007fffff
+#define NULL_DWORD_DATA     0xFFFFFFFF
+#define NULL_WORD_DATA      0xFFFF
+
+void ScorpioMeterHandler_ParseToDataReading( Data_Readings_Ptr dataReading, BYTE * data,  WORD dataLen);
+void ScorpioMeterHandler_PrintDataReading(Data_Readings_Ptr dataReading);
+
+typedef struct __attribute__((packed,aligned(1))) _Data_Readings2
+{
+    DWORD   ENERGY_ACT_C_Add;
+    DWORD   ENERGY_ACT_B_Add;
+    DWORD   ENERGY_ACT_A_Add;
+    DWORD   POWER_Aparent_SYSTEM_Add;
+    DWORD   POWER_React_SYSTEM_Add;
+    DWORD   POWER_ACT_SYSTEM_Add;
+    DWORD   Time1;
+    DWORD   ROLLER_DEMAND_Add1;
+    DWORD   Time2;
+    DWORD   ROLLER_DEMAND_Add2;
+    DWORD   Time3;
+    DWORD   ROLLER_DEMAND_Add3;
+    DWORD   Time4;
+    DWORD   ROLLER_DEMAND_Add4;
+    DWORD   POWER_FACTOR_Add1;
+    DWORD   POWER_FACTOR_Add2;
+    DWORD   POWER_FACTOR_Add3;
+    DWORD   POWER_FACTOR_Add;
+    DWORD   CURRENT_C_Add;
+    DWORD   CURRENT_B_Add;
+    DWORD   CURRENT_A_Add;
+    DWORD   VOLTAGE_C_Add;
+    DWORD   VOLTAGE_B_Add;
+    DWORD   VOLTAGE_A_Add;
+    DWORD   FRECUENCY_Add;
+    DWORD   TIME_STAMP_Add1;
+    DWORD   TIME_STAMP_Add;
+    DWORD   ENERGY_NEG_REACT_TOTAL_Add;
+    DWORD   ENERGY_NEG_ACT_TOTAL_Add;
+    DWORD   ENERGY_REACT_TOTAL_Add;
+    DWORD   ENERGY_ACT_TOTAL_Add;
+    DWORD   FLAGS_Add_LWEND;
+    WORD    INTERRUPT_COUNT;
+    DWORD   OFF_TIME;
+    DWORD   RESTART_TIME;
+    WORD    SUBINTERVAL_TIME;
+    WORD    TEST_TIME;
+    WORD    FW_VER;
+    WORD    TOU_ID;
+    WORD    KH;
+}Data_Readings2, * Data_Readings2_ptr;
+
+DWORD ScorpioMeterHandler_DWORD_Parser(DWORD value, float scale);
 #endif	/* HANDLERSCORPIO_H */
 

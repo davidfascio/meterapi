@@ -45,7 +45,7 @@ const sPeriodicTimers taPeriodicTimers[] =
 {
     {vfnToogling, _500_MSEC_ },
     //{vfnLED_TOGGLE_NWK_ON_PeriodTask,_500_MSEC_},
-    {vfnGO_TO_READ_MTR_PeriodTask,_1000_MSEC_ },
+    {vfnGO_TO_READ_MTR_PeriodTask,_5000_MSEC_ },
     {NULL,_1000_MSEC_ }
 };
 
@@ -205,14 +205,14 @@ int main(int argc, char** argv) {
     
     // Fill
     memset(&Meters_Table1, 0xFF, sizeof(Meters_Table));
-    /*Meters_Table1.Meter_DEV[0].Type = MONO_TYPE;
+    Meters_Table1.Meter_DEV[0].Type = MONO_TYPE;
     Meters_Table1.Meter_DEV[0].Signature = 'p' + 5;
-    memcpy(Meters_Table1.Meter_DEV[0].Serial_Num,serialNumberDemo,Lenght_Meter_ID);    */
+    memcpy(Meters_Table1.Meter_DEV[0].Serial_Num,serialNumberDemo,Lenght_Meter_ID);    
     vfnPeriodicTimerEnable(LED_TOGGLE_MAIN_PERTASK);
     vfnPeriodicTimerEnable(GO_TO_READ_MTR_PERTASK);    //Crea la rutina de leer medidores
     
     //MeterControl_Setup( METER_CONTROL_NO_METER_ID, G155_TYPE, REQUEST_SERIAL_NUMBER_MTR, 0);    
-    //handler = API_SCORPIO_Recieve_handler(reply_data, sizeof(reply_data), &meterDescriptor, &commandCallback );
+    //handler = API_SCORPIO_Recieve_handler(meter_metering_answer, sizeof(meter_metering_answer), &meterDescriptor, &commandCallback );
     //API_SCORPIO_Recieve_handler(meter_metering_answer, sizeof(meter_metering_answer), &meterDescriptor, &commandCallback );
     //API_MeterTable_ExcecuteCommandInvoke(&meterDescriptor, commandCallback);
     
@@ -237,7 +237,7 @@ int main(int argc, char** argv) {
 
 BYTE counter;
 //BYTE number []= {1,1,1,1,1};
-BYTE command[] = {Dis_MTR,Con_MTR,Con_MTR, Dis_MTR};
+BYTE command[] = {Dis_MTR,Con_MTR,Con_MTR,Dis_MTR};
 
 BYTE AppModbusId = 1;
 void vfnGO_TO_READ_MTR_PeriodTask(void){

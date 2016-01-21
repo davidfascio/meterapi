@@ -655,11 +655,15 @@ WORD API_SCORPIO_Meter_response_handler( BYTE modbusId, BYTE * serialNumber, WOR
         case READ_MODE: // Read Meter (function)
 
              if ((scorpio_control.fcn == HANDLER_SCORPIO_FUNCTION_ID_LOW_VALUE) && (scorpio_control.dataSize == HANDLER_SCORPIO_FCN_MTR_READ_DATA_SIZE)){
+                
+                 if(maxResponseLen >= sizeof(Data_Readings)){
+                     
+                    ScorpioMeterHandler_ParseToDataReading((Data_Readings_Ptr) response, scorpio_control.data, scorpio_control.dataSize);
+                    //memcpy(response, g155_control.data, g155_control.dataSize);//copy data & data size
+                    *responseLen = sizeof(Data_Readings); //g155_control.dataSize;
 
-                 memcpy(response, scorpio_control.data, scorpio_control.dataSize);//copy data & data size
-                 *responseLen = scorpio_control.dataSize;
-
-                 return NO_ERROR_NUMERATION;
+                    return NO_ERROR_NUMERATION;
+                 }                 
              }
              break;     
         
@@ -725,4 +729,84 @@ WORD API_SCORPIO_Meter_response_handler( BYTE modbusId, BYTE * serialNumber, WOR
 
      return HANDLER_SCORPIO_ERROR_NUMERATION;
 
+}
+
+void ScorpioMeterHandler_ParseToDataReading( Data_Readings_Ptr dataReading, BYTE * data,  WORD dataLen){
+    
+    Data_Readings2 scorpioDataReading;
+    
+    if(dataLen != sizeof(scorpioDataReading))
+        return;
+    
+    inverted_memcpy((BYTE*) &scorpioDataReading, data, dataLen);    
+    memset(dataReading , 0xFF, sizeof(Data_Readings) );
+    
+    dataReading->ENERGY_ACT_A_Add       =   ScorpioMeterHandler_DWORD_Parser(scorpioDataReading.ENERGY_ACT_A_Add, BETA_1);        //DWORD to DWORD
+    dataReading->ENERGY_ACT_B_Add       =   ScorpioMeterHandler_DWORD_Parser(scorpioDataReading.ENERGY_ACT_B_Add, BETA_1);        //DWORD to DWORD
+    dataReading->ENERGY_ACT_C_Add       =   ScorpioMeterHandler_DWORD_Parser(scorpioDataReading.ENERGY_ACT_C_Add, BETA_1);        //DWORD to DWORD
+    
+    dataReading->POWER_ACT_SYSTEM_Add   =   ScorpioMeterHandler_DWORD_Parser(scorpioDataReading.POWER_ACT_SYSTEM_Add, BETA_1000);    //DWORD to DWORD
+    dataReading->FLAGS_Add_LWEND        =   scorpioDataReading.FLAGS_Add_LWEND;                                 //DWORD to DWORD
+    dataReading->POWER_FACTOR_Add       =   ScorpioMeterHandler_DWORD_Parser(scorpioDataReading.POWER_FACTOR_Add, BETA_1000);         //DWORD to WORD
+            
+    dataReading->CURRENT_A_Add          =   ScorpioMeterHandler_DWORD_Parser(scorpioDataReading.CURRENT_A_Add, BETA_100);        // WORD
+    dataReading->CURRENT_B_Add          =   ScorpioMeterHandler_DWORD_Parser(scorpioDataReading.CURRENT_B_Add, BETA_100);        // WORD
+    dataReading->CURRENT_C_Add          =   ScorpioMeterHandler_DWORD_Parser(scorpioDataReading.CURRENT_C_Add, BETA_100);        // WORD
+    
+    dataReading->VOLTAGE_A_Add          =   ScorpioMeterHandler_DWORD_Parser(scorpioDataReading.VOLTAGE_A_Add, BETA_100);        // WORD
+    dataReading->VOLTAGE_B_Add          =   ScorpioMeterHandler_DWORD_Parser(scorpioDataReading.VOLTAGE_B_Add, BETA_100);        // WORD
+    dataReading->VOLTAGE_C_Add          =   ScorpioMeterHandler_DWORD_Parser(scorpioDataReading.VOLTAGE_C_Add, BETA_100);        // WORD
+    
+    dataReading->FRECUENCY_Add          =   ScorpioMeterHandler_DWORD_Parser(scorpioDataReading.FRECUENCY_Add, BETA_1000);            // WORD
+    
+    //! Time stamp
+    //! Meters_Table1.Readings[_READ_METER_TO_WORK-1].Reading.TIME_STAMP_Add = ZCL_Callback_GetCurrentTimeInSeconds();
+    
+    dataReading->ENERGY_NEG_ACT_TOTAL_Add   = ScorpioMeterHandler_DWORD_Parser(scorpioDataReading.ENERGY_NEG_ACT_TOTAL_Add, BETA_1000);  //DWORD
+    dataReading->ENERGY_NEG_REACT_TOTAL_Add = ScorpioMeterHandler_DWORD_Parser(scorpioDataReading.ENERGY_NEG_REACT_TOTAL_Add, BETA_1000);//DWORD    
+    dataReading->ENERGY_REACT_TOTAL_Add     = ScorpioMeterHandler_DWORD_Parser(scorpioDataReading.ENERGY_REACT_TOTAL_Add, BETA_1000);    //DWORD
+       
+    dataReading->ROLLER_DEMAND_Add          = ScorpioMeterHandler_DWORD_Parser(scorpioDataReading.ROLLER_DEMAND_Add4, BETA_1000);    //DWORD
+    ScorpioMeterHandler_PrintDataReading(dataReading);
+}   
+
+void ScorpioMeterHandler_PrintDataReading(Data_Readings_Ptr dataReading){
+    
+    printf("[DATA READING INFORMATION]\n");
+    printf("Active Energy (A): %i\n",   dataReading->ENERGY_ACT_A_Add);
+    printf("Active Energy (B): %i\n",   dataReading->ENERGY_ACT_B_Add);
+    printf("Active Energy (C): %i\n",   dataReading->ENERGY_ACT_C_Add);
+    
+    printf("Voltage (A): %i\n",         dataReading->VOLTAGE_A_Add);
+    printf("Voltage (B): %i\n",         dataReading->VOLTAGE_B_Add);
+    printf("Voltage (C): %i\n",         dataReading->VOLTAGE_C_Add);
+    
+    printf("Current (A): %i\n",         dataReading->CURRENT_A_Add);
+    printf("Current (B): %i\n",         dataReading->CURRENT_B_Add);
+    printf("Current (C): %i\n",         dataReading->CURRENT_C_Add);    
+    
+    printf("Active Power : %i\n",       dataReading->POWER_ACT_SYSTEM_Add);
+    printf("FLAGS : %i\n",              dataReading->FLAGS_Add_LWEND);
+    printf("Power Factor : %i\n",       dataReading->POWER_FACTOR_Add);    
+    printf("Frequency : %i\n",          dataReading->FRECUENCY_Add);
+    
+    printf("Total Negative Active Energy: %i\n",    dataReading->ENERGY_NEG_ACT_TOTAL_Add);
+    printf("Total Negative Reactive Energy: %i\n",  dataReading->ENERGY_NEG_REACT_TOTAL_Add);
+    printf("Total Reactive Energy: %i\n",           dataReading->ENERGY_REACT_TOTAL_Add);
+    
+    printf("Roller demand: %i\n",           dataReading->ROLLER_DEMAND_Add);
+}
+
+DWORD ScorpioMeterHandler_DWORD_Parser(DWORD value, float scale){
+    
+    float newValue;
+    
+    if(value == NULL_DWORD_DATA)
+        return NULL_DWORD_DATA;
+    
+    memcpy((BYTE *) &newValue, (BYTE *) &value, sizeof(newValue));
+    
+    newValue *= (float) scale;
+    
+    return (DWORD) newValue;
 }

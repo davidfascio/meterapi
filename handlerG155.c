@@ -451,10 +451,10 @@ void G155MeterHandler_ParseToDataReading( Data_Readings_Ptr dataReading, BYTE * 
     inverted_memcpy((BYTE*) &g155DataReading, data, dataLen);    
     memset(dataReading , 0xFF, sizeof(Data_Readings) );
     
-    dataReading->ENERGY_ACT_A_Add       =   G155MeterHandler_DWORD_Parser(g155DataReading.ENERGY_ACT_Add);
+    dataReading->ENERGY_ACT_A_Add       =   G155MeterHandler_DWORD_Parser(g155DataReading.ENERGY_ACT_Add, HANDLER_G155_DWORD_ACTIVE_ENERGY_DECIMAL_CONSTANT_VALUE);
     dataReading->VOLTAGE_A_Add          =   G155MeterHandler_WORD_Parser(g155DataReading.VOLTAGE_Add);
     dataReading->CURRENT_A_Add          =   G155MeterHandler_WORD_Parser(g155DataReading.CURRENT_Add);
-    dataReading->ENERGY_REACT_TOTAL_Add =   G155MeterHandler_DWORD_Parser(g155DataReading.ENERGY_REACT_TOTAL_Add);
+    dataReading->ENERGY_REACT_TOTAL_Add =   G155MeterHandler_DWORD_Parser(g155DataReading.ENERGY_REACT_TOTAL_Add, HANDLER_G155_DWORD_REACTIVE_ENERGY_DECIMAL_CONSTANT_VALUE);
     dataReading->POWER_ACT_SYSTEM_Add   =   g155DataReading.POWER_ACT_SYSTEM_Add;
     dataReading->FLAGS_Add_LWEND        =   g155DataReading.FLAGS;   
     
@@ -472,29 +472,21 @@ void G155MeterHandler_PrintDataReading(Data_Readings_Ptr dataReading){
     printf("FLAGS : %i\n", dataReading->FLAGS_Add_LWEND);
 }
 
-#define HANDLER_G155_DWORD_INTEGER_ROTATE_VALUE                              (14)
-#define HANDLER_G155_DWORD_RATION_VALUE                                      (1000)
-#define HANDLER_G155_DWORD_DECIMAL_CONSTANT_VALUE                            (61)
-#define HANDLER_G155_DWORD_DECIMAL_MASK_VALUE                                (0x00003FFF)
-
-#define HANDLER_G155_WORD_RATION_VALUE                                       (100)
-#define HANDLER_G155_WORD_DECIMAL_CONSTANT_VALUE                             (39)
-
-DWORD G155MeterHandler_DWORD_Parser(DWORD value){
+DWORD G155MeterHandler_DWORD_Parser(DWORD value, float decimal_scaler){
     
-    DWORD newValue;
+    float newValue;
     
-    newValue =  ((value >> HANDLER_G155_DWORD_INTEGER_ROTATE_VALUE) * HANDLER_G155_DWORD_RATION_VALUE) + 
-                    ((( value & HANDLER_G155_DWORD_DECIMAL_MASK_VALUE) * HANDLER_G155_DWORD_DECIMAL_CONSTANT_VALUE) / HANDLER_G155_DWORD_RATION_VALUE);
+    newValue =  ((float)(value >> HANDLER_G155_DWORD_INTEGER_ROTATE_VALUE) * HANDLER_G155_DWORD_RATION_VALUE) + 
+                    (((float)( value & HANDLER_G155_DWORD_DECIMAL_MASK_VALUE) * decimal_scaler) / HANDLER_G155_DWORD_RATION_VALUE);
     
-    return newValue;
+    return (DWORD) newValue;
 }
 
 WORD G155MeterHandler_WORD_Parser(WORD value){
     
-    WORD newValue;
+    float newValue = (float) value;
     
-    newValue =  (( value  * HANDLER_G155_WORD_DECIMAL_CONSTANT_VALUE ) / HANDLER_G155_WORD_RATION_VALUE );
+    newValue =  (( newValue  * HANDLER_G155_WORD_DECIMAL_CONSTANT_VALUE ) / HANDLER_G155_WORD_RATION_VALUE );
     
-    return newValue;
+    return (WORD) newValue;
 }

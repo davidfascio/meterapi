@@ -144,7 +144,14 @@ BYTE Handler_FcnCheck_G155(BYTE * function_data);
 BYTE Handler_SizeCheck_G155(BYTE* size_data_value, WORD wSizeFrame, BYTE* data);
 BYTE Handler_IdCheck_G155(BYTE* id_data);
 
-DWORD G155MeterHandler_ParseActiveEnergy(DWORD value);
+#define HANDLER_G155_DWORD_INTEGER_ROTATE_VALUE                              (14)
+#define HANDLER_G155_DWORD_RATION_VALUE                                      (1000.00)
+#define HANDLER_G155_DWORD_ACTIVE_ENERGY_DECIMAL_CONSTANT_VALUE              (75.28) /*(76.06)*/
+#define HANDLER_G155_DWORD_REACTIVE_ENERGY_DECIMAL_CONSTANT_VALUE            (75.28)
+#define HANDLER_G155_DWORD_DECIMAL_MASK_VALUE                                (0x00003FFF)
+
+#define HANDLER_G155_WORD_RATION_VALUE                                       (100.00)
+#define HANDLER_G155_WORD_DECIMAL_CONSTANT_VALUE                             (39.11)
 
 typedef struct __attribute__((packed,aligned(1))) _Data_Readings_G155
 //typedef struct _Data_Readings_G155
@@ -159,7 +166,7 @@ typedef struct __attribute__((packed,aligned(1))) _Data_Readings_G155
 
 void G155MeterHandler_ParseToDataReading( Data_Readings_Ptr dataReading, BYTE * data,  WORD dataLen);
 void G155MeterHandler_PrintDataReading(Data_Readings_Ptr dataReading);
-DWORD G155MeterHandler_DWORD_Parser(DWORD value);
+DWORD G155MeterHandler_DWORD_Parser(DWORD value, float decimal_scaler);
 WORD G155MeterHandler_WORD_Parser(WORD value);
 
 #endif	/* HANDLER_H */

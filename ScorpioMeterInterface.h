@@ -214,7 +214,6 @@
                                                                             SCORPIO_METER_INTERFACE_ROLLER_DEMAND_TIME_3_REGISTER_ADDRESS_SIZE +\
                                                                             SCORPIO_METER_INTERFACE_ROLLER_DEMAND_4_REGISTER_ADDRESS_SIZE +\
                                                                             SCORPIO_METER_INTERFACE_ROLLER_DEMAND_TIME_4_REGISTER_ADDRESS_SIZE +\
-                                                                            SCORPIO_METER_INTERFACE_ROLLER_DEMAND_TIME_4_REGISTER_ADDRESS_SIZE +\
                                                                             SCORPIO_METER_INTERFACE_ACTIVE_POWER_REGISTER_ADDRESS_SIZE +\
                                                                             SCORPIO_METER_INTERFACE_REACTIVE_POWER_REGISTER_ADDRESS_SIZE +\
                                                                             SCORPIO_METER_INTERFACE_APARENT_POWER_REGISTER_ADDRESS_SIZE +\
