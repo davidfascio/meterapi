@@ -237,7 +237,7 @@ int main(int argc, char** argv) {
 
 BYTE counter;
 //BYTE number []= {1,1,1,1,1};
-BYTE command[] = {Dis_MTR,Con_MTR,Con_MTR,Dis_MTR};
+BYTE command[] = {Dis_MTR,Dis_MTR, Con_MTR,Con_MTR, Res_MTR, Res_MTR};
 
 BYTE AppModbusId = 1;
 void vfnGO_TO_READ_MTR_PeriodTask(void){
@@ -250,7 +250,7 @@ void vfnGO_TO_READ_MTR_PeriodTask(void){
         printf ("Meter Error Code: %d\n", error_code);
     
     counter++;
-    if(counter == 4)
+    if(counter == sizeof(command))
         counter = 0;
     
     API_MeterTable_ExcecuteBaptismProccess();

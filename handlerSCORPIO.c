@@ -617,7 +617,7 @@ WORD API_SCORPIO_Meter_response_handler( BYTE modbusId, BYTE * serialNumber, WOR
 
         case NO_COMMAND_MTR: // No command Meter
             
-                 return NO_ERROR_NUMERATION;
+                 return HANDLER_SCORPIO_NO_ERROR;
          
         case Dis_MTR: // Disconnect Meter (flag)
 
@@ -626,7 +626,7 @@ WORD API_SCORPIO_Meter_response_handler( BYTE modbusId, BYTE * serialNumber, WOR
                  memcpy(response, scorpio_control.data, scorpio_control.dataSize);//copy data & data size
                  *responseLen = scorpio_control.dataSize;
 
-                 return NO_ERROR_NUMERATION;
+                 return HANDLER_SCORPIO_NO_ERROR;
              }
              break;
              
@@ -637,7 +637,7 @@ WORD API_SCORPIO_Meter_response_handler( BYTE modbusId, BYTE * serialNumber, WOR
                  memcpy(response, scorpio_control.data, scorpio_control.dataSize);//copy data & data size
                  *responseLen = scorpio_control.dataSize;
 
-                 return NO_ERROR_NUMERATION;
+                 return HANDLER_SCORPIO_NO_ERROR;
              }
              break;
              
@@ -648,7 +648,7 @@ WORD API_SCORPIO_Meter_response_handler( BYTE modbusId, BYTE * serialNumber, WOR
                  memcpy(response, scorpio_control.data, scorpio_control.dataSize);//copy data & data size
                  *responseLen = scorpio_control.dataSize;
 
-                 return NO_ERROR_NUMERATION;
+                 return HANDLER_SCORPIO_NO_ERROR;
              }
              break;     
 
@@ -662,7 +662,7 @@ WORD API_SCORPIO_Meter_response_handler( BYTE modbusId, BYTE * serialNumber, WOR
                     //memcpy(response, g155_control.data, g155_control.dataSize);//copy data & data size
                     *responseLen = sizeof(Data_Readings); //g155_control.dataSize;
 
-                    return NO_ERROR_NUMERATION;
+                    return HANDLER_SCORPIO_NO_ERROR;
                  }                 
              }
              break;     
@@ -674,7 +674,7 @@ WORD API_SCORPIO_Meter_response_handler( BYTE modbusId, BYTE * serialNumber, WOR
                  memcpy(response, scorpio_control.data, scorpio_control.dataSize);//copy data & data size
                  *responseLen = scorpio_control.dataSize;
 
-                 return NO_ERROR_NUMERATION;
+                 return HANDLER_SCORPIO_NO_ERROR;
              }
              break;
              
@@ -688,6 +688,7 @@ WORD API_SCORPIO_Meter_response_handler( BYTE modbusId, BYTE * serialNumber, WOR
                  return NO_ERROR_NUMERATION;
              }
              break;*/
+            return HANDLER_SCORPIO_NO_ERROR;
              
         case ASSIGN_MODBUS_ID_MTR: // Assign Serial Number Meter
 
@@ -696,7 +697,7 @@ WORD API_SCORPIO_Meter_response_handler( BYTE modbusId, BYTE * serialNumber, WOR
                  memcpy(response, scorpio_control.data, scorpio_control.dataSize);//copy data & data size
                  *responseLen = scorpio_control.dataSize;
 
-                 return NO_ERROR_NUMERATION;
+                 return HANDLER_SCORPIO_NO_ERROR;
              }
              break;
              
@@ -707,7 +708,7 @@ WORD API_SCORPIO_Meter_response_handler( BYTE modbusId, BYTE * serialNumber, WOR
                  memcpy(response, scorpio_control.data, scorpio_control.dataSize);//copy data & data size
                  *responseLen = scorpio_control.dataSize;
 
-                 return NO_ERROR_NUMERATION;
+                 return HANDLER_SCORPIO_NO_ERROR;
              }
              break;      
              
@@ -717,7 +718,7 @@ WORD API_SCORPIO_Meter_response_handler( BYTE modbusId, BYTE * serialNumber, WOR
             if (scorpio_control.fcn == HANDLER_SCORPIO_ESPFCN_TYPE_REPLYDATA_HIGH_VALUE){ 
                 
                 *responseLen = scorpio_control.dataSize;
-                return NO_ERROR_NUMERATION;
+                return HANDLER_SCORPIO_NO_ERROR;
             }
             break;
              

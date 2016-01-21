@@ -138,11 +138,45 @@ void G155MeterInterface_SendFrame(  BYTE modbusId,
 
 void G155MeterInterface_SendPassword( BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE * data, WORD dataLen)
 {
+    BYTE buffer [G155_METER_INTERFACE_LOCAL_BUFFER_SIZE];
+    BYTE * buffer_ptr = buffer;
+    BYTE bufferLen;      
     
-    BYTE buffer [] = {KEY1_G155, KEY2_G155};
-    BYTE bufferLen = sizeof(buffer);
+    BYTE passwordType;
+    BYTE passwordValue = KEY1_G155;
+    BYTE commandId;
     
-    printf("Sending PASSWORD Command\n");
+    memcpy(&commandId, data,  dataLen);
+    
+    switch(commandId){
+        
+        case Dis_MTR:
+            printf("Sending PASSWORD for DISCONNECTION Command\n");
+            passwordType = KEY2_G155;
+            break;
+            
+        case Con_MTR:           
+            printf("Sending PASSWORD for CONNECTION Command\n");
+            passwordType = KEY2_G155;
+            break;
+            
+        case Res_MTR:
+            
+            printf("Sending PASSWORD for RESET Command\n");
+            passwordType = RST_G155_CMD;
+            break;
+            
+        default:
+            return;
+    }
+    
+    memcpy(buffer_ptr, (BYTE *) &passwordValue , sizeof(passwordValue));
+    buffer_ptr += sizeof(passwordValue);
+    
+    inverted_memcpy(buffer_ptr, (BYTE *) &passwordType , sizeof(passwordType) );
+    buffer_ptr += sizeof(passwordType);
+    
+    bufferLen = buffer_ptr - buffer;
     
     G155MeterInterface_SendFrame(   modbusId,               /* modbus Id        */
                                     WRITE_SINGLE_FN_MDB,    /* commandFunction  */     
@@ -182,8 +216,18 @@ void G155MeterInterface_Connect(BYTE modbusId, BYTE * serialNumber, WORD serialN
 }
 
 void G155MeterInterface_Reset(BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE * data, WORD dataLen){
+        
+    BYTE buffer [] = {0x00, RST_G155_CMD};
+    BYTE bufferLen = sizeof(buffer);
     
     printf("Sending RESET Command\n");
+    
+    G155MeterInterface_SendFrame(   modbusId,               /* modbus Id        */
+                                    WRITE_SINGLE_FN_MDB,    /* commandFunction  */     
+                                    ADD_RLY_G155,           /* registerAddress, */
+                                    0,                      /* registerAmount   */
+                                    buffer,                 /* data             */
+                                    bufferLen);             /* dataLen          */
 }
 
 void G155MeterInterface_ReadMeteringData(BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE * data, WORD dataLen){

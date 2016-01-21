@@ -48,6 +48,24 @@
 #define SCORPIO_METER_INTERFACE_PASSWORD                                    (0xC300)
 
 #define SCORPIO_METER_INTERFACE_PASSWORD_REPLAY                             (0x0001)
+#define SCORPIO_METER_INTERFACE_PASSWORD_IR_MODE                            (0x0002)
+#define SCORPIO_METER_INTERFACE_PASSWORD_3_PHASE_MODE                       (0x0004)
+#define SCORPIO_METER_INTERFACE_PASSWORD_HM_MODE                            (0x0008)
+#define SCORPIO_METER_INTERFACE_PASSWORD_VOLTAGE_MODE                       (0x0010)
+#define SCORPIO_METER_INTERFACE_PASSWORD_ACC_RESET                          (0x0020)
+#define SCORPIO_METER_INTERFACE_PASSWORD_FORCE_RESET                        (0x0040)
+#define SCORPIO_METER_INTERFACE_PASSWORD_STPMC_RESET                        (0x0080)
+#define SCORPIO_METER_INTERFACE_PASSWORD_DEMAND_RESET                       (0x0100)
+#define SCORPIO_METER_INTERFACE_PASSWORD_UPGRADE_PROCESS_RESET              (0x0200)
+#define SCORPIO_METER_INTERFACE_PASSWORD_FORCE_BOOTLOADER_REGULAR_UART_PARITY           (0x4000)
+
+//#define SCORPIO_METER_INTERFACE_PASSWORD                                    (0xC301)
+#define SCORPIO_METER_INTERFACE_PASSWORD_ROLLING_DEMAND_INTERVAL            (0x0000)
+
+//#define SCORPIO_METER_INTERFACE_PASSWORD                                    (0x74CA)
+#define SCORPIO_METER_INTERFACE_PASSWORD_FORCE_BOOTLOADER                   (0xF02D)
+
+
 
 //******************************************************************************
 // Metering Register Address
@@ -177,6 +195,7 @@
 //******************************************************************************
 #define SCORPIO_METER_INTERFACE_SYSTEM_FLAGS_RELAY_TURN_ON                  (0x00000001)
 #define SCORPIO_METER_INTERFACE_SYSTEM_FLAGS_RELAY_TURN_OFF                 (0x00000000)
+#define SCORPIO_METER_INTERFACE_SYSTEM_FLAGS_FORCE_RESET                    (0x00000040)
 
 #define SCORPIO_METER_INTERFACE_METERING_REGISTER_ADDRESS                   SCORPIO_METER_INTERFACE_KH_REGISTER_ADDRESS
 
@@ -262,6 +281,7 @@ void ScorpioMeterInterface_SendFrame(BYTE * serialNumber,
 void ScorpioMeterInterface_SendPassword(BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE * data, WORD dataLen);
 void ScorpioMeterInterface_Disconnect(BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE * data, WORD dataLen);
 void ScorpioMeterInterface_Connect(BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE * data, WORD dataLen);
+void ScorpioMeterInterface_Reset(BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE * data, WORD dataLen);
 void ScorpioMeterInterface_ReadMeteringData(BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE * data, WORD dataLen);
 void ScorpioMeterInterface_LinkMeter(BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE * data, WORD dataLen);
 

@@ -50,7 +50,6 @@
 #define REQUEST_SERIAL_NUMBER_MTR                               (8)*/
 
 // Error Codes
-#define NO_ERROR_NUMERATION                                     (1)   
 #define HANDLER_G155_NO_ERROR                                   (0)
 #define HANDLER_G155_CRC_FAILURE_ERROR_CODE                     (-1)
 #define HANDLER_G155_SIZE_FAILURE_ERROR_CODE                    (-2)

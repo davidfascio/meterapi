@@ -334,7 +334,7 @@ WORD API_G155_Meter_response_handler( BYTE modbusId, BYTE * serialNumber, WORD s
 
         case NO_COMMAND_MTR: // No command Meter
             
-                 return NO_ERROR_NUMERATION;
+                 return HANDLER_G155_NO_ERROR;
          
         case Dis_MTR: // Disconnect Meter
 
@@ -343,7 +343,7 @@ WORD API_G155_Meter_response_handler( BYTE modbusId, BYTE * serialNumber, WORD s
                  memcpy(response, g155_control.data, g155_control.dataSize);//copy data & data size
                  *responseLen = g155_control.dataSize;
 
-                 return NO_ERROR_NUMERATION;
+                 return HANDLER_G155_NO_ERROR;
              }
              break;
              
@@ -354,7 +354,7 @@ WORD API_G155_Meter_response_handler( BYTE modbusId, BYTE * serialNumber, WORD s
                  memcpy(response, g155_control.data, g155_control.dataSize);//copy data & data size
                  *responseLen = g155_control.dataSize;
 
-                 return NO_ERROR_NUMERATION;
+                 return HANDLER_G155_NO_ERROR;
              }
              break;
              
@@ -365,7 +365,7 @@ WORD API_G155_Meter_response_handler( BYTE modbusId, BYTE * serialNumber, WORD s
                  memcpy(response, g155_control.data, g155_control.dataSize);//copy data & data size
                  *responseLen = g155_control.dataSize;
 
-                 return NO_ERROR_NUMERATION;
+                 return HANDLER_G155_NO_ERROR;
              }
              break;     
 
@@ -379,7 +379,7 @@ WORD API_G155_Meter_response_handler( BYTE modbusId, BYTE * serialNumber, WORD s
                     //memcpy(response, g155_control.data, g155_control.dataSize);//copy data & data size
                     *responseLen = sizeof(Data_Readings); //g155_control.dataSize;
 
-                    return NO_ERROR_NUMERATION;
+                    return HANDLER_G155_NO_ERROR;
                  }
              }
              break;     
@@ -391,7 +391,7 @@ WORD API_G155_Meter_response_handler( BYTE modbusId, BYTE * serialNumber, WORD s
                  memcpy(response, g155_control.data, g155_control.dataSize);//copy data & data size
                  *responseLen = g155_control.dataSize;
 
-                 return NO_ERROR_NUMERATION;
+                 return HANDLER_G155_NO_ERROR;
              }
              break;
              
@@ -402,7 +402,7 @@ WORD API_G155_Meter_response_handler( BYTE modbusId, BYTE * serialNumber, WORD s
                  memcpy(response, g155_control.data, g155_control.dataSize);//copy data & data size
                  *responseLen = g155_control.dataSize;
 
-                 return NO_ERROR_NUMERATION;
+                 return HANDLER_G155_NO_ERROR;
              }
              break;
              
@@ -413,7 +413,7 @@ WORD API_G155_Meter_response_handler( BYTE modbusId, BYTE * serialNumber, WORD s
                  memcpy(response, g155_control.data, g155_control.dataSize);//copy data & data size
                  *responseLen = g155_control.dataSize;
 
-                 return NO_ERROR_NUMERATION;
+                 return HANDLER_G155_NO_ERROR;
              }
              break;
              
@@ -427,7 +427,7 @@ WORD API_G155_Meter_response_handler( BYTE modbusId, BYTE * serialNumber, WORD s
                  memcpy(response, serial_number , sizeof(serial_number) );//copy data & data size
                  *responseLen = sizeof(serial_number);
 
-                 return NO_ERROR_NUMERATION;
+                 return HANDLER_G155_NO_ERROR;
              }
              break;     
              

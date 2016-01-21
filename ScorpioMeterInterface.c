@@ -10,6 +10,9 @@ COMMAND_ID_FUNCTION ScorpioMeterInterface_CommandIdFunctionList [] =
         
     {   Con_MTR,                                            /* Meter Common Command Id              */
         ScorpioMeterInterface_Connect  },                   /* Meter CommandIdFunction_Callback     */
+    
+    {   Res_MTR,                                            /* Meter Common Command Id              */
+        ScorpioMeterInterface_Reset  },                   /* Meter CommandIdFunction_Callback     */        
         
     {   READ_MODE ,                                         /* Meter Common Command Id              */
         ScorpioMeterInterface_ReadMeteringData } ,             /* Meter CommandIdFunction_Callback     */
@@ -114,10 +117,35 @@ void ScorpioMeterInterface_SendPassword(BYTE modbusId, BYTE * serialNumber, WORD
     
     BYTE buffer [SCORPIO_METER_INTERFACE_LOCAL_BUFFER_SIZE];
     BYTE * buffer_ptr = buffer;
-    BYTE bufferLen;
-    
+    BYTE bufferLen;    
+    WORD passwordType;
     WORD passwordValue = SCORPIO_METER_INTERFACE_PASSWORD;
-    WORD passwordType = SCORPIO_METER_INTERFACE_PASSWORD_REPLAY;
+    BYTE commandId;
+    
+    memcpy(&commandId, data,  dataLen);
+    
+    switch(commandId){
+        
+        case Dis_MTR:
+            printf("Sending PASSWORD for DISCONNECTION Command\n");
+            passwordType = SCORPIO_METER_INTERFACE_PASSWORD_REPLAY;
+            break;
+            
+        case Con_MTR:           
+            printf("Sending PASSWORD for CONNECTION Command\n");
+            passwordType = SCORPIO_METER_INTERFACE_PASSWORD_REPLAY;
+            break;
+            
+        case Res_MTR:
+            
+            printf("Sending PASSWORD for RESET Command\n");
+            passwordType = SCORPIO_METER_INTERFACE_PASSWORD_FORCE_RESET;
+            break;
+            
+        default:
+            return;
+    }
+    
     
     inverted_memcpy(buffer_ptr, (BYTE *) &passwordValue , sizeof(passwordValue));
     buffer_ptr += sizeof(passwordValue);
@@ -126,8 +154,6 @@ void ScorpioMeterInterface_SendPassword(BYTE modbusId, BYTE * serialNumber, WORD
     buffer_ptr += sizeof(passwordType);
     
     bufferLen = buffer_ptr - buffer;
-    
-    printf("Sending PASSWORD Command\n");
     
     ScorpioMeterInterface_SendFrame(serialNumber, 
                                     serialNumberLen, 
@@ -186,6 +212,29 @@ void ScorpioMeterInterface_Connect(BYTE modbusId, BYTE * serialNumber, WORD seri
                                     bufferLen);  
 }
 
+void ScorpioMeterInterface_Reset(BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE * data, WORD dataLen){
+    
+    BYTE buffer [SCORPIO_METER_INTERFACE_LOCAL_BUFFER_SIZE];
+    BYTE * buffer_ptr = buffer;
+    BYTE bufferLen;
+    
+    DWORD status = SCORPIO_METER_INTERFACE_SYSTEM_FLAGS_FORCE_RESET;
+        
+    inverted_memcpy(buffer_ptr, (BYTE *) &status , sizeof(status));
+    buffer_ptr += sizeof(status);
+            
+    bufferLen = buffer_ptr - buffer;
+    
+    printf("Sending Reset Command\n");
+    
+    ScorpioMeterInterface_SendFrame(serialNumber, 
+                                    serialNumberLen, 
+                                    SCORPIO_METER_INTERFACE_WRITE_COMMAND_FUNCTION,
+                                    SCORPIO_METER_INTERFACE_SYSTEM_FLAGS_REGISTER_ADDRESS,
+                                    SCORPIO_METER_INTERFACE_SYSTEM_FLAGS_REGISTER_ADDRESS_SIZE,
+                                    (BYTE *) buffer,
+                                    bufferLen); 
+}
 
 void ScorpioMeterInterface_ReadMeteringData(BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE * data, WORD dataLen){
     

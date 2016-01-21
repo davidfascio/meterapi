@@ -145,10 +145,12 @@ void vfnAddDelMeterSendReadState(void){
 }
 
 void vfnAddDelMeterSendPSWState(void){
-        
+    
+    BYTE commandId =   MeterControl_GetCommandId();  
+    
     MeterTable_SendCommand( PSW_MTR,                                            /*  command                     */
-                            NULL,                                               /*  data                        */
-                            0,                                                  /*  dataLen                     */
+                            &commandId,                                               /*  data                        */
+                            sizeof(commandId),                                                  /*  dataLen                     */
                             (MeterControl_IsBroadcastSent() ? FALSE : TRUE),                                               /*  answerRequired              */
                             _1000_MSEC_,                                         /*  timeoutValue                */
                             METER_CONTROL_DEFAULT_NUMBER_OF_RETRIES,            /*  maxNumberOfRetries          */
@@ -471,6 +473,8 @@ BYTE MeterTable_ResponseHandler(BYTE meterType, BYTE modbusId, BYTE * serialNumb
     
     error_code = meterCommandIdFunctionAPI_ptr->meterHandler_ResponseProcessCallback(modbusId, serialNumber, serialNumberLen, command, response, maxResponseLen, &responseLen );
     
+    if(error_code)
+        return error_code;
     //! error_code needs to be processed here
     
     switch(command){

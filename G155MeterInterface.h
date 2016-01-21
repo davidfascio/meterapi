@@ -45,6 +45,7 @@
 #define READ_FN_MDB                                                         (0x03)
 #define WRITE_SINGLE_FN_MDB                                                 (0x06)
 #define WRITE_VARIOUS_FN_MDB                                                (0x10)
+#define G155_METER_INTERFACE_LOCAL_BUFFER_SIZE                              (20)
 
 // G155 Modbus Protocol
 #define G155_METER_INTERFACE_MODBUS_ID_HEADER_SIZE                          (1)

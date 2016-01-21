@@ -60,7 +60,6 @@
 //#define REQUEST_SERIAL_NUMBER_MTR                                  (8)
 
 // Error Codes
-#define NO_ERROR_NUMERATION                                        (1)
 #define HANDLER_SCORPIO_NO_ERROR                                   (0)
 #define HANDLER_SCORPIO_CRC_FAILURE_ERROR_CODE                     (-1)
 #define HANDLER_SCORPIO_SIZE_FAILURE_ERROR_CODE                    (-2)
