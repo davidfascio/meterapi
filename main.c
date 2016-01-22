@@ -13,7 +13,7 @@
 #include "SystemEvents.h"
 #include "EventsEngine.h"
 #include "G155MeterInterface.h"
-#include "Meters_Table.h"
+#include "MeterControl.h"
 #include "ComSerialInterface.h"
 
 
@@ -97,7 +97,7 @@ void vfnTime_Out_Meter_Response_OneShot(void){
 
 void vfnUART_Char_Received_OneShot(void){
     
-    MeterControl_ReceiveHandler();
+    API_MeterControl_ReceiveHandler();
 }
 
 void vfnTimer(void){
@@ -246,7 +246,7 @@ void vfnGO_TO_READ_MTR_PeriodTask(void){
     
     error_code = API_MeterControl_SendCommand(counter%2, command[counter]);
     
-    if (error_code != METER_TABLE_METER_NO_ERROR_CODE)
+    if (error_code != METER_CONTROL_NO_ERROR_CODE)
         printf ("Meter Error Code: %d\n", error_code);
     
     counter++;

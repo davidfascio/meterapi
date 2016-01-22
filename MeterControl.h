@@ -13,21 +13,29 @@
 //******************************************************************************
 
 #include "EventsEngine.h"
+#include "SystemQueue.h"
+
 #include "MeterCommons.h"
-//#include "MeterInterface.h"
+#include "MeterInterface.h"
+#include "Meters_Table.h"
 
 //******************************************************************************
-// Error Codes
+// Meter Control Defines
 //******************************************************************************
+#define METER_CONTROL_METER_ID_ERROR_CODE                               (0)
+#define METER_CONTROL_DEFAULT_NUMBER_OF_RETRIES                         (3)
+#define METER_CONTROL_NO_METER_ID                                       (0xFF)
+#define METER_CONTROL_MAX_RESPONSE_SIZE                                 (250)
 
-#define METER_CONTROL_METER_ID_ERROR_CODE                             (0)
-#define METER_CONTROL_DEFAULT_NUMBER_OF_RETRIES                       (3)
-
-#define METER_CONTROL_NO_METER_ID                                     (0xFF)
-
-//#define METER_CONTROL_MAX_SERIAL_NUMBER_SIZE                          (20)
 //******************************************************************************
-// Data types
+// Meter Control Error Codes
+//******************************************************************************
+#define METER_CONTROL_NO_ERROR_CODE                                     (0)
+#define METER_CONTROL_API_METER_COMMAND_BUSY_ERROR_CODE                 (-5)
+#define METER_CONTROL_EMPTY_QUEUE_ERROR_CODE                            (-6)
+
+//******************************************************************************
+// Meter Control Data types
 //******************************************************************************
 
 typedef enum{
@@ -53,7 +61,7 @@ typedef struct {
 }METER_CONTROL, * METER_CONTROL_PTR;
 
 //******************************************************************************
-// Meter Control Function
+// Meter Control Set and Get Function Prototypes
 //******************************************************************************
 void MeterControl_Setup(BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE meterType, BYTE commandId, BOOL broadcastSent, WORD stabilizationTimeoutValue);
 void MeterControl_Reset(WORD stabilizationTimeoutValue);
@@ -89,6 +97,66 @@ void MeterControl_ExpireStabilizationTimeout(void);
 
 void MeterControl_SetBroadcastSent(BOOL broadcastSent);
 BOOL MeterControl_IsBroadcastSent(void);
+
+//******************************************************************************
+// Meter Control Function Prototypes
+//******************************************************************************
+
+void MeterControl_SendCommand(    BYTE command ,
+                                BYTE * data, 
+                                WORD dataLen, 
+                                BOOL answerRequired,
+                                WORD timeoutValue, 
+                                BYTE maxRetries,
+                                WORD stabilizationTimeoutValue, 
+                                BYTE nextState);
+
+void MeterControl_SendCommandByIdentificator( BYTE modbusId, 
+                                            BYTE * serialNumber, 
+                                            WORD serialNumberLen, 
+                                            BYTE command ,
+                                            BYTE * data, 
+                                            WORD dataLen, 
+                                            BOOL answerRequired,
+                                            WORD timeoutValue, 
+                                            BYTE maxRetries,
+                                            WORD stabilizationTimeoutValue, 
+                                            BYTE nextState);
+
+void MeterControl_SendNextCommand(WORD stabilizationTimeoutValue, BYTE nextState);
+void MeterControl_ErrorReset(void);
+BYTE MeterControl_ExcecuteCommand(BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE commandId, BYTE meterType, BOOL broadcastSent);
+
+
+//******************************************************************************
+// API Meter Control Send Functions
+//******************************************************************************
+
+BYTE API_MeterControl_SendCommand(BYTE meterId, BYTE commandId);
+void API_MeterControl_ExcecuteBaptismProccess(void);
+BYTE API_MeterControl_ExcecuteCommand(BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE commandId, BYTE meterType, BOOL broadcastSent);
+BOOL API_MeterControl_IsCommandMeterBusy(void);
+void API_MeterTable_SetCommandMeterBusy(BOOL state);
+BYTE API_MeterControl_QueueInfoCheck(void);
+
+//******************************************************************************
+// API Meter Control Handler Functions
+//******************************************************************************
+BYTE API_MeterControl_ResponseHandler(BYTE meterType, BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE command);
+void API_MeterControl_ReceiveHandler(void);
+
+//******************************************************************************
+// API Meter Control Invoke Functions
+//******************************************************************************
+void API_MeterControl_ExcecuteCommandInvoke( METER_DESCRIPTOR_PTR meterDescriptor, BYTE commandCallBack);
+
+//******************************************************************************
+// Local Meter Control State Machine Function Protoypes
+//******************************************************************************
+
+void vfnAddDelMeterDriver(void);
+void MeterControl_SetStateMachine(BYTE actualState);
+BYTE MeterControl_GetNextStateMachine(void);
 
 #endif	/* __METER_CONTROL_H__ */
 

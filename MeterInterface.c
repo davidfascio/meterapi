@@ -121,3 +121,26 @@ WORD MeterInterface_GetBroadcastSerialNumber(BYTE meterType, BYTE * broadcastSer
     
     return meterCommandIdFunctionAPI_ptr->broadcastSerialNumberLen;
 }
+
+BYTE MeterInterface_ValidateMeterType(BYTE meterType){
+    
+    BYTE index;    
+    BYTE meterTypeFromAPI;
+    
+    index = 0;    
+    while(TRUE){
+        
+        meterTypeFromAPI = MeterInterface_GetMeterTypeByIndex(index);
+        
+        if( meterType == meterTypeFromAPI)
+            break;
+        
+        if( (meterTypeFromAPI == METER_INTERFACE_NO_METER_TYPE_ERROR_CODE) ||
+            (meterTypeFromAPI == METER_INTERFACE_METER_TYPE_INDEX_OVERFLOW_ERROR_CODE))
+            break;
+        
+        index++;
+    }
+    
+    return meterTypeFromAPI;     
+}

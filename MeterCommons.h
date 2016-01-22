@@ -17,6 +17,10 @@
 // Common Defines
 //******************************************************************************
 
+#define SIGNATURE_MTR                                       'p'
+#define BROADCAST_MDB                                           0x00
+#define BROADCAST_MDB_ESP                                       0xF7
+
 // Common meter types
 #define METER_INTERFACE_NO_METER_TYPE                                   (0x00)
 

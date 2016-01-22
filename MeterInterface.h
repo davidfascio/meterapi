@@ -39,5 +39,6 @@ COMMAND_ID_FUNCTION_PTR MeterInterface_GetCommandIdFunction(METER_COMMAND_ID_FUN
 WORD MeterInterface_GetStabilizationTimeoutValue(BYTE meterType);
 BYTE MeterInterface_GetBroadcastId(BYTE meterType);
 WORD MeterInterface_GetBroadcastSerialNumber(BYTE meterType, BYTE * broadcastSerialNumber, WORD broadcastSerialNumberLen);
+BYTE MeterInterface_ValidateMeterType(BYTE meterType);
 #endif	/* __METER_INTERFACE_H__ */
 
