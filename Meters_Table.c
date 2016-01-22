@@ -458,6 +458,35 @@ BYTE MeterTable_DeleteMeterBySerialNumber(BYTE meterType, BYTE modbusId, BYTE * 
         
     return MeterTable_DeleteMeter(meterId, meterType, modbusId, serialNumber, serialNumberLen);
 }
+
+BYTE MeterTable_SaveMeasurementBySerialNumber(BYTE meterType, BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, Data_Readings_Ptr measurement){
+ 
+    BYTE meterId;
+    WORD crc_measurement;
+    Readings_Eneri * readings_eneri_ptr;
+    
+    if(!MeterTable_IsValidSerialNumber(serialNumber, serialNumberLen))
+        return METER_TABLE_SERIAL_NUMBER_ERROR_CODE;
+    
+    meterId = MeterTable_FindMeterBySerialNumber(serialNumber, serialNumberLen);
+    
+    if( meterId == METER_TABLE_SERIAL_NUMBER_NOT_FOUND)
+        return METER_TABLE_SERIAL_NUMBER_NOT_FOUND;
+    
+    if(measurement == NULL)
+        return METER_TABLE_MEASUREMENT_ERROR_CODE;
+    
+    readings_eneri_ptr = &Meters_Table1.Readings[meterId];    
+    memcpy(&readings_eneri_ptr->Reading, measurement, sizeof(Data_Readings));
+    
+    //readings_eneri_ptr->Reading.TIME_STAMP_Add = ZCL_Callback_GetCurrentTimeInSeconds();
+    
+    crc_measurement = wfnCRC_CALC((BYTE *) &readings_eneri_ptr->Reading, sizeof(Data_Readings), METER_TABLE_MEASUREMENT_CRC_BASE);
+    
+    inverted_memcpy((BYTE *) readings_eneri_ptr->CRC, (BYTE *) &crc_measurement, sizeof(crc_measurement));
+    
+    return METER_TABLE_METER_NO_ERROR_CODE;
+}
 //******************************************************************************
 // API Meter Control Function
 //******************************************************************************
@@ -494,7 +523,10 @@ BYTE MeterTable_ResponseHandler(BYTE meterType, BYTE modbusId, BYTE * serialNumb
         case READ_MODE:
             
             // It needs to Save Metering Data into Table
-            return METER_TABLE_METER_NO_ERROR_CODE;
+            if(responseLen != sizeof(Data_Readings))
+                return METER_TABLE_MEASUREMENT_ERROR_CODE;
+            
+            return MeterTable_SaveMeasurementBySerialNumber(meterType, modbusId, serialNumber, serialNumberLen, (Data_Readings_Ptr) response);
             
         default:
             break;

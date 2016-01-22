@@ -31,6 +31,7 @@
 #define METER_TABLE_SERIAL_NUMBER_NOT_MATCHED_ERROR_CODE    (-4)
 #define METER_TABLE_COMMAND_METER_API_BUSY                  (-5)
 #define METER_TABLE_EMPTY_QUEUE                             (-6)
+#define METER_TABLE_MEASUREMENT_ERROR_CODE                  (-7)
 
 #define METER_TABLE_SERIAL_NUMBER_NOT_FOUND                 (0xFF)
 
@@ -41,10 +42,11 @@
 #define METER_TABLE_MAX_RESPONSE_SIZE                       (250)
 
 #define METER_TABLE_BROADCAST_METER_ID                      0xFF
+#define METER_TABLE_MEASUREMENT_CRC_BASE                    (0xFFFF)
 //typedef struct __attribute__((packed,aligned(1))) _Data_Readings
 
-//typedef struct __attribute__((packed,aligned(1))) _Meter_Eneri
-typedef struct _Meter_Eneri
+typedef struct __attribute__((packed,aligned(1))) _Meter_Eneri
+//typedef struct _Meter_Eneri
 {
     BYTE Serial_Num[Lenght_Meter_ID];
     BYTE Type;
@@ -113,6 +115,7 @@ BYTE MeterTable_DeleteMeter(BYTE meterId, BYTE meterType,BYTE modbusId, BYTE * s
 BYTE MeterTable_UpdateMeter(BYTE meterId, BYTE meterType, BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen);
 BYTE MeterTable_AddNewMeterBySerialNumber(BYTE meterType, BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen);
 BYTE MeterTable_DeleteMeterBySerialNumber(BYTE meterType, BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen);
+BYTE MeterTable_SaveMeasurementBySerialNumber(BYTE meterType, BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, Data_Readings_Ptr measurement);
 
 BYTE MeterTable_ResponseHandler(BYTE meterType, BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE command);
 void MeterTable_ReceiveHandler(void);
