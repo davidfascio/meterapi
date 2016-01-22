@@ -68,15 +68,15 @@ typedef struct _Meters_Table
 
 void vfnAddDelMeterDriver(void);
 
-void MeterTable_SetStateMachine(BYTE actualState);
+void MeterControl_SetStateMachine(BYTE actualState);
 BYTE MeterTable_GetMeterTypeByMeterId(BYTE meterId);
 BYTE MeterTable_GetModbusIdByMeterId(BYTE meterId);
 BYTE MeterTable_GetSerialNumberByMeterId(BYTE meterId, BYTE * serialNumber, BYTE serialNumberLen);
-BYTE MeterTable_GetNextStateMachine(void);
+BYTE MeterControl_GetNextStateMachine(void);
 BYTE findAvailableMeterId(void);
 BYTE findAvailableModbusId(void);
 
-void MeterTable_SendCommand(    BYTE command ,
+void MeterControl_SendCommand(    BYTE command ,
                                 BYTE * data, 
                                 WORD dataLen, 
                                 BOOL answerRequired,
@@ -85,7 +85,7 @@ void MeterTable_SendCommand(    BYTE command ,
                                 WORD stabilizationTimeoutValue, 
                                 BYTE nextState);
 
-void MeterTable_SendCommandByIdentificator( BYTE modbusId, 
+void MeterControl_SendCommandByIdentificator( BYTE modbusId, 
                                             BYTE * serialNumber, 
                                             WORD serialNumberLen, 
                                             BYTE command ,
@@ -97,12 +97,12 @@ void MeterTable_SendCommandByIdentificator( BYTE modbusId,
                                             WORD stabilizationTimeoutValue, 
                                             BYTE nextState);
 
-void MeterTable_SendNextCommand(WORD stabilizationTimeoutValue, BYTE nextState);
-void MeterTable_ErrorReset(void);
-BYTE API_MeterTable_SendCommand(BYTE meterId, BYTE commandId);
-BYTE API_MeterTable_ExcecuteCommand(BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE commandId, BYTE meterType, BOOL broadcastSent);
+void MeterControl_SendNextCommand(WORD stabilizationTimeoutValue, BYTE nextState);
+void MeterControl_ErrorReset(void);
+BYTE API_MeterControl_SendCommand(BYTE meterId, BYTE commandId);
+BYTE API_MeterControl_ExcecuteCommand(BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE commandId, BYTE meterType, BOOL broadcastSent);
 //BYTE API_MeterTable_ExcecuteCommand(BYTE meterId, BYTE commandId, BYTE meterType);
-BYTE MeterTable_ExcecuteCommand(BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE commandId, BYTE meterType, BOOL broadcastSent);
+BYTE MeterControl_ExcecuteCommand(BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE commandId, BYTE meterType, BOOL broadcastSent);
 //BYTE MeterTable_ExcecuteCommand(BYTE meterId, BYTE commandId, BYTE meterType);
 
 //******************************************************************************
@@ -117,23 +117,15 @@ BYTE MeterTable_AddNewMeterBySerialNumber(BYTE meterType, BYTE modbusId, BYTE * 
 BYTE MeterTable_DeleteMeterBySerialNumber(BYTE meterType, BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen);
 BYTE MeterTable_SaveMeasurementBySerialNumber(BYTE meterType, BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, Data_Readings_Ptr measurement);
 
-BYTE MeterTable_ResponseHandler(BYTE meterType, BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE command);
-void MeterTable_ReceiveHandler(void);
+BYTE MeterControl_ResponseHandler(BYTE meterType, BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE command);
+void MeterControl_ReceiveHandler(void);
 
-BOOL MeterTable_IsCommandMeterAPIBusy(void);
-void MeterTable_SetCommandMeterAPIBusy(BOOL state);
+BOOL API_MeterControl_IsCommandMeterBusy(void);
+void API_MeterTable_SetCommandMeterBusy(BOOL state);
 
-typedef struct{
-    
-    BYTE meterId;
-    BYTE commandId;
-    BYTE meterType;
-    
-} QUEUE_INFO, * QUEUE_INFO_PTR;
-
-BYTE API_MeterTable_QueueInfoCheck(void);
-void API_MeterTable_ExcecuteNewBaptismProcess(void);
-void API_MeterTable_ExcecuteCommandInvoke( METER_DESCRIPTOR_PTR meterDescriptor, BYTE commandCallBack);
+BYTE API_MeterControl_QueueInfoCheck(void);
+void API_MeterControl_ExcecuteBaptismProccess(void);
+void API_MeterControl_ExcecuteCommandInvoke( METER_DESCRIPTOR_PTR meterDescriptor, BYTE commandCallBack);
 
 #endif	/* __METERS_TABLE_H__ */
 

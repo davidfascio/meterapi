@@ -97,7 +97,7 @@ void vfnTime_Out_Meter_Response_OneShot(void){
 
 void vfnUART_Char_Received_OneShot(void){
     
-    MeterTable_ReceiveHandler();
+    MeterControl_ReceiveHandler();
 }
 
 void vfnTimer(void){
@@ -244,7 +244,7 @@ void vfnGO_TO_READ_MTR_PeriodTask(void){
  
     BYTE error_code;
     
-    error_code = API_MeterTable_SendCommand(counter%2, command[counter]);
+    error_code = API_MeterControl_SendCommand(counter%2, command[counter]);
     
     if (error_code != METER_TABLE_METER_NO_ERROR_CODE)
         printf ("Meter Error Code: %d\n", error_code);
@@ -253,7 +253,7 @@ void vfnGO_TO_READ_MTR_PeriodTask(void){
     if(counter == sizeof(command))
         counter = 0;
     
-    API_MeterTable_ExcecuteBaptismProccess();
+    API_MeterControl_ExcecuteBaptismProccess();
     //API_MeterTable_ExcecuteBaptismProccess();
     //G155MeterInterface_RequestSerialNumber(AppModbusId++, NULL, 0, NULL, 0);
     //(void)CMD_To_Scorpio ((BYTE)NULL,READ_MODE); 
