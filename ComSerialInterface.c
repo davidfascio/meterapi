@@ -115,15 +115,15 @@ void ComSerialInterface_PrintData(BYTE * frame, WORD frameLen){
     
     
     for(index = 0; index < frameLen; index++)
-        printf("%02X ", *frame_ptr++);
+        print_message("%02X ", *frame_ptr++);
     
-    printf("\n");
+    
 }
 DWORD ComSerialInterface_WriteData(BYTE * data, DWORD dataLen){
     
     if(ComSerialInterfaceHandler == NULL){
         
-        printf("Serial Port is closed\n");
+        print_error("Serial Port is closed");
         return 0;
     }
     
@@ -168,7 +168,7 @@ void ComSerialInterface_CleanBuffer(void){
 
 void ComSerialInterface_SendData(BYTE* frame, BYTE frameLen){ 
     
-    printf("Sent Data: ");
+    print_info("Sent Data: ");
     ComSerialInterface_PrintData(frame, frameLen);
     ComSerialInterface_WriteData(frame, frameLen);
 }

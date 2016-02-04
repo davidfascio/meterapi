@@ -207,6 +207,7 @@ void MeterControl_StopResponseTimeout(void){
 void MeterControl_ExpireResponseTimeout(void){
     vfnOneShotDisable(TIME_OUT_METER_RESPONSE_ONESHOT);
     meterControl.responseTimeout = METER_TIMEOUT_EXPIRED;
+    print_warm("Meter response timeout expired");
 }
 
 void MeterControl_InitializeStabilizationTimeout(WORD timeoutValue){
@@ -226,6 +227,7 @@ void MeterControl_StopStabilizationTimeout(void){
 void MeterControl_ExpireStabilizationTimeout(void){
     vfnOneShotDisable(TIME_OUT_METER_STABILIZE_ONESHOT);
     meterControl.stabilizationTimeout = METER_TIMEOUT_EXPIRED;
+    print_info("Meter statilization timeout expired");
 }
 
 void MeterControl_SetBroadcastSent(BOOL broadcastSent){
@@ -351,14 +353,14 @@ void MeterControl_SendNextCommand(WORD stabilizationTimeoutValue, BYTE nextState
               
     MeterControl_Reset(stabilizationTimeoutValue);    
     MeterControl_SetStateMachine( nextState);    
-    printf("Command Processed Successfully\n");
+    print_log("Command Processed Successfully");
 }
 
 void MeterControl_ErrorReset(void){
     
     MeterControl_SetStateMachine(_ADDDELMETER_END_STATE);
     MeterControl_Clear();
-    printf("Meter Error Response\n");
+    print_error("Meter Error Response");
 }
 
 BYTE MeterControl_ExcecuteCommand(BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE commandId, BYTE meterType, BOOL broadcastSent)
@@ -390,14 +392,30 @@ BYTE MeterControl_ExcecuteCommand(BYTE modbusId, BYTE * serialNumber, WORD seria
             nextState = _ADDDELMETER_SEND_LINK_OFF_STATE;
             break;
 
-        default:            
+        default:
+            print_error("Excecute Command was not found");
             return FALSE;
     }
+    
+    
+    print_info("Excecuting Command: ");
+    
     
     MeterControl_Setup(modbusId, serialNumber, serialNumberLen, meterType, commandId, broadcastSent, 0);        
     MeterControl_SetStateMachine(nextState);
     
+    MeterControl_Print();
+    
     return TRUE;    
+}
+
+void MeterControl_Print( void ){
+    
+    print_message("Meter Type: %X, ",     meterControl.meterDescriptor.meterType);
+    print_message("Modbus Id: %X, ",      meterControl.meterDescriptor.modbusId);
+    print_message("Serial Number: %s, ",  meterControl.meterDescriptor.serialNumber);
+    print_message("Command Id: %d, ",     meterControl.commandId);
+    print_message("Is Broadcast Command: %d",     meterControl.broadcastSent);
 }
 
 //******************************************************************************
@@ -476,15 +494,19 @@ BYTE API_MeterControl_ExcecuteCommand(BYTE modbusId, BYTE * serialNumber, WORD s
         
         QueueList_AddElement(queueControlList, (BYTE *) &queueInfo, sizeof(queueInfo));        
         
+        print_debug("New Excecute Command was added into Queue List");
+        
         return METER_CONTROL_API_METER_COMMAND_BUSY_ERROR_CODE;
     }
     
     error_code = MeterControl_ExcecuteCommand(modbusId, serialNumber, serialNumberLen, commandId, meterType, broadcastSent);
     
-    if(error_code == TRUE)
+    if(error_code == TRUE){
         API_MeterTable_SetCommandMeterBusy(TRUE);
+        return METER_CONTROL_NO_ERROR_CODE;
+    }
     
-    return error_code;
+    return METER_CONTROL_COMMAND_NOT_FOUND_ERROR_CODE;
 }
 
 BOOL API_MeterControl_IsCommandMeterBusy(void){
@@ -549,7 +571,8 @@ BYTE API_MeterControl_ResponseHandler(BYTE meterType, BYTE modbusId, BYTE * seri
             // Adding Meter Process
             return MeterTable_AddNewMeterBySerialNumber(meterType, modbusId, response,responseLen);
         
-        case LINK_ADDING_MTR:            
+        case LINK_ADDING_MTR:  
+            modbusId = MeterTable_FindAvailableModbusId();
             return MeterTable_AddNewMeterBySerialNumber(meterType, modbusId, serialNumber, serialNumberLen);
             
         case LINK_DELETING_MTR:
@@ -611,17 +634,14 @@ void API_MeterControl_ReceiveHandler(void){
         index++;
     } 
     
-    printf("Arrived Data: ");
+    print_log("Arrived Data: ");
     ComSerialInterface_PrintData(buffer_ptr, buffersize);
     ComSerialInterface_CleanBuffer();
 }
 
 void API_MeterControl_ExcecuteCommandInvoke( METER_DESCRIPTOR_PTR meterDescriptor, BYTE commandCallBack){
     
-    printf("Serial Number: ");
-    ComSerialInterface_PrintData(meterDescriptor->serialNumber, meterDescriptor->serialNumberLen);
-    printf("\n");
-    
+        
     switch(commandCallBack){
         
         case LINK_ADDING_MTR:
@@ -744,7 +764,7 @@ void vfnAddDelMeterSendPSWState(void){
                                 (MeterControl_IsBroadcastSent() ? FALSE : TRUE),/*  answerRequired              */
                                 _1000_MSEC_,                                    /*  timeoutValue                */
                                 METER_CONTROL_DEFAULT_NUMBER_OF_RETRIES,        /*  maxNumberOfRetries          */
-                                0,                                              /*  stabilizationTimeoutValue   */
+                                _100_MSEC_,                                              /*  stabilizationTimeoutValue   */
                                 _ADDDELMETER_SEND_CMD_STATE);                   /*  nextState                   */
 }
 
@@ -795,7 +815,7 @@ void vfnAddDelMeterAssignModbusIdState(void){
                                                 FALSE,                                                  /*  answerRequired              */
                                                 0,                                                      /*  timeoutValue                */
                                                 0,                                                      /*  maxNumberOfRetries          */
-                                                _100_MSEC_ ,                                            /*  stabilizationTimeoutValue   */
+                                                _500_MSEC_ ,                                            /*  stabilizationTimeoutValue   */
                                                 _ADDDELMETER_REQUEST_SERIAL_NUMBER_BY_MODBUS_ID_STATE); /*  nextState                   */
 }
 

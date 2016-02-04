@@ -8,12 +8,14 @@
       <itemPath>EventsEngine.h</itemPath>
       <itemPath>G155MeterInterface.h</itemPath>
       <itemPath>GenericTypeDefs.h</itemPath>
+      <itemPath>KitronMeterInterface.h</itemPath>
       <itemPath>MeterCommons.h</itemPath>
       <itemPath>MeterControl.h</itemPath>
       <itemPath>MeterInterface.h</itemPath>
       <itemPath>Meters_Table.h</itemPath>
       <itemPath>ScorpioMeterInterface.h</itemPath>
       <itemPath>SystemEvents.h</itemPath>
+      <itemPath>SystemLog.h</itemPath>
       <itemPath>SystemQueue.h</itemPath>
       <itemPath>Utility.h</itemPath>
       <itemPath>handlerG155.h</itemPath>
@@ -34,6 +36,7 @@
       <itemPath>MeterInterface.c</itemPath>
       <itemPath>Meters_Table.c</itemPath>
       <itemPath>ScorpioMeterInterface.c</itemPath>
+      <itemPath>SystemLog.c</itemPath>
       <itemPath>SystemQueue.c</itemPath>
       <itemPath>Utility.c</itemPath>
       <itemPath>handlerG155.c</itemPath>
@@ -76,6 +79,8 @@
       </item>
       <item path="GenericTypeDefs.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="KitronMeterInterface.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="MeterCommons.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="MeterCommons.h" ex="false" tool="3" flavor2="0">
@@ -97,6 +102,10 @@
       <item path="ScorpioMeterInterface.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="SystemEvents.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="SystemLog.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="SystemLog.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="SystemQueue.c" ex="false" tool="0" flavor2="0">
       </item>
@@ -151,6 +160,8 @@
       </item>
       <item path="GenericTypeDefs.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="KitronMeterInterface.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="MeterCommons.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="MeterCommons.h" ex="false" tool="3" flavor2="0">
@@ -172,6 +183,10 @@
       <item path="ScorpioMeterInterface.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="SystemEvents.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="SystemLog.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="SystemLog.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="SystemQueue.c" ex="false" tool="0" flavor2="0">
       </item>

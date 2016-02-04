@@ -205,9 +205,9 @@ int main(int argc, char** argv) {
     
     // Fill
     memset(&Meters_Table1, 0xFF, sizeof(Meters_Table));
-    Meters_Table1.Meter_DEV[0].Type = MONO_TYPE;
-    Meters_Table1.Meter_DEV[0].Signature = 'p' + 5;
-    memcpy(Meters_Table1.Meter_DEV[0].Serial_Num,serialNumberDemo,Lenght_Meter_ID);    
+    Meters_Table1.Meter_DEV[1].Type = MONO_TYPE;
+    Meters_Table1.Meter_DEV[1].Signature = 'p' + 5;
+    memcpy(Meters_Table1.Meter_DEV[1].Serial_Num,serialNumberDemo,Lenght_Meter_ID);    
     vfnPeriodicTimerEnable(LED_TOGGLE_MAIN_PERTASK);
     vfnPeriodicTimerEnable(GO_TO_READ_MTR_PERTASK);    //Crea la rutina de leer medidores
     
@@ -247,7 +247,7 @@ void vfnGO_TO_READ_MTR_PeriodTask(void){
     error_code = API_MeterControl_SendCommand(counter%2, command[counter]);
     
     if (error_code != METER_CONTROL_NO_ERROR_CODE)
-        printf ("Meter Error Code: %d\n", error_code);
+        print_debug ("Meter Error Code: %d", error_code);
     
     counter++;
     if(counter == sizeof(command))
@@ -261,5 +261,5 @@ void vfnGO_TO_READ_MTR_PeriodTask(void){
 
 void vfnToogling (void)
 {
-    printf("TICK\n");
+    print_debug("TICK");
 }

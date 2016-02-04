@@ -463,13 +463,13 @@ void G155MeterHandler_ParseToDataReading( Data_Readings_Ptr dataReading, BYTE * 
 
 void G155MeterHandler_PrintDataReading(Data_Readings_Ptr dataReading){
     
-    printf("[DATA READING INFORMATION]\n");
-    printf("Active Energy (A): %i\n", dataReading->ENERGY_ACT_A_Add);
-    printf("Voltage (A): %i\n", dataReading->VOLTAGE_A_Add);
-    printf("Current (A): %i\n", dataReading->CURRENT_A_Add);
-    printf("Reactive Energy (A): %i\n", dataReading->ENERGY_REACT_TOTAL_Add);
-    printf("Active Power : %i\n", dataReading->POWER_ACT_SYSTEM_Add);
-    printf("FLAGS : %i\n", dataReading->FLAGS_Add_LWEND);
+    println_message("[G155 METER DATA READING INFORMATION]");
+    print_message("\n\r\t\tActive Energy (A): %i", dataReading->ENERGY_ACT_A_Add);
+    print_message("\n\r\t\tVoltage (A): %i", dataReading->VOLTAGE_A_Add);
+    print_message("\n\r\t\tCurrent (A): %i", dataReading->CURRENT_A_Add);
+    print_message("\n\r\t\tReactive Energy (A): %i", dataReading->ENERGY_REACT_TOTAL_Add);
+    print_message("\n\r\t\tActive Power : %i", dataReading->POWER_ACT_SYSTEM_Add);
+    print_message("\n\r\t\tFLAGS : %i", dataReading->FLAGS_Add_LWEND);
 }
 
 DWORD G155MeterHandler_DWORD_Parser(DWORD value, float decimal_scaler){

@@ -3,7 +3,7 @@
 
 SCORPIO_STRUCT scorpio_control;
 
-boolean wfnCRC_CALC_SCORPIO(BYTE *ptFRAME, WORD wSizeFrame, WORD wCRCStart){
+BOOL wfnCRC_CALC_SCORPIO(BYTE *ptFRAME, WORD wSizeFrame, WORD wCRCStart){
     
     WORD temp;
     BYTE c, flag;
@@ -773,29 +773,24 @@ void ScorpioMeterHandler_ParseToDataReading( Data_Readings_Ptr dataReading, BYTE
 
 void ScorpioMeterHandler_PrintDataReading(Data_Readings_Ptr dataReading){
     
-    printf("[DATA READING INFORMATION]\n");
-    printf("Active Energy (A): %i\n",   dataReading->ENERGY_ACT_A_Add);
-    printf("Active Energy (B): %i\n",   dataReading->ENERGY_ACT_B_Add);
-    printf("Active Energy (C): %i\n",   dataReading->ENERGY_ACT_C_Add);
-    
-    printf("Voltage (A): %i\n",         dataReading->VOLTAGE_A_Add);
-    printf("Voltage (B): %i\n",         dataReading->VOLTAGE_B_Add);
-    printf("Voltage (C): %i\n",         dataReading->VOLTAGE_C_Add);
-    
-    printf("Current (A): %i\n",         dataReading->CURRENT_A_Add);
-    printf("Current (B): %i\n",         dataReading->CURRENT_B_Add);
-    printf("Current (C): %i\n",         dataReading->CURRENT_C_Add);    
-    
-    printf("Active Power : %i\n",       dataReading->POWER_ACT_SYSTEM_Add);
-    printf("FLAGS : %i\n",              dataReading->FLAGS_Add_LWEND);
-    printf("Power Factor : %i\n",       dataReading->POWER_FACTOR_Add);    
-    printf("Frequency : %i\n",          dataReading->FRECUENCY_Add);
-    
-    printf("Total Negative Active Energy: %i\n",    dataReading->ENERGY_NEG_ACT_TOTAL_Add);
-    printf("Total Negative Reactive Energy: %i\n",  dataReading->ENERGY_NEG_REACT_TOTAL_Add);
-    printf("Total Reactive Energy: %i\n",           dataReading->ENERGY_REACT_TOTAL_Add);
-    
-    printf("Roller demand: %i\n",           dataReading->ROLLER_DEMAND_Add);
+    println_message("[SCORPIO METER DATA READING INFORMATION]");
+    print_message("\n\r\t\tActive Energy (A): %i",   dataReading->ENERGY_ACT_A_Add);
+    print_message("\n\r\t\tActive Energy (B): %i",   dataReading->ENERGY_ACT_B_Add);
+    print_message("\n\r\t\tActive Energy (C): %i",   dataReading->ENERGY_ACT_C_Add);
+    print_message("\n\r\t\tVoltage (A): %i",         dataReading->VOLTAGE_A_Add);
+    print_message("\n\r\t\tVoltage (B): %i",         dataReading->VOLTAGE_B_Add);
+    print_message("\n\r\t\tVoltage (C): %i",         dataReading->VOLTAGE_C_Add);
+    print_message("\n\r\t\tCurrent (A): %i",         dataReading->CURRENT_A_Add);
+    print_message("\n\r\t\tCurrent (B): %i",         dataReading->CURRENT_B_Add);
+    print_message("\n\r\t\tCurrent (C): %i",         dataReading->CURRENT_C_Add);
+    print_message("\n\r\t\tActive Power : %i",       dataReading->POWER_ACT_SYSTEM_Add);
+    print_message("\n\r\t\tFLAGS : %i",              dataReading->FLAGS_Add_LWEND);
+    print_message("\n\r\t\tPower Factor : %i",       dataReading->POWER_FACTOR_Add);
+    print_message("\n\r\t\tFrequency : %i",          dataReading->FRECUENCY_Add);
+    print_message("\n\r\t\tTotal Negative Active Energy: %i",    dataReading->ENERGY_NEG_ACT_TOTAL_Add);
+    print_message("\n\r\t\tTotal Negative Reactive Energy: %i",  dataReading->ENERGY_NEG_REACT_TOTAL_Add);
+    print_message("\n\r\t\tTotal Reactive Energy: %i",           dataReading->ENERGY_REACT_TOTAL_Add);
+    print_message("\n\r\t\tRoller demand: %i",           dataReading->ROLLER_DEMAND_Add);
 }
 
 DWORD ScorpioMeterHandler_DWORD_Parser(DWORD value, float scale){

@@ -31,8 +31,9 @@
 // Meter Control Error Codes
 //******************************************************************************
 #define METER_CONTROL_NO_ERROR_CODE                                     (0)
-#define METER_CONTROL_API_METER_COMMAND_BUSY_ERROR_CODE                 (-5)
+#define METER_CONTROL_API_METER_COMMAND_BUSY_ERROR_CODE                 (1)
 #define METER_CONTROL_EMPTY_QUEUE_ERROR_CODE                            (-6)
+#define METER_CONTROL_COMMAND_NOT_FOUND_ERROR_CODE                      (-7)
 
 //******************************************************************************
 // Meter Control Data types
@@ -127,7 +128,7 @@ void MeterControl_SendNextCommand(WORD stabilizationTimeoutValue, BYTE nextState
 void MeterControl_ErrorReset(void);
 BYTE MeterControl_ExcecuteCommand(BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE commandId, BYTE meterType, BOOL broadcastSent);
 
-
+void MeterControl_Print( void );
 //******************************************************************************
 // API Meter Control Send Functions
 //******************************************************************************

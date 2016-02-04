@@ -130,8 +130,10 @@ void G155MeterInterface_SendFrame(  BYTE modbusId,
     
     if(framebuilt == FALSE)
         return;
-            
-    ComSerialInterface_SendData(frame, frameLen);    
+    
+    //print_info("Sent Data: ");
+    //ComSerialInterface_PrintData(frame, frameLen);
+    ComSerialInterface_SendData(frame, frameLen);
 }
 
 
@@ -151,18 +153,18 @@ void G155MeterInterface_SendPassword( BYTE modbusId, BYTE * serialNumber, WORD s
     switch(commandId){
         
         case Dis_MTR:
-            printf("Sending PASSWORD for DISCONNECTION Command\n");
+            print_info("Sending PASSWORD for DISCONNECTION Command");
             passwordType = KEY2_G155;
             break;
             
         case Con_MTR:           
-            printf("Sending PASSWORD for CONNECTION Command\n");
+            print_info("Sending PASSWORD for CONNECTION Command");
             passwordType = KEY2_G155;
             break;
             
         case Res_MTR:
             
-            printf("Sending PASSWORD for RESET Command\n");
+            print_info("Sending PASSWORD for RESET Command");
             passwordType = RST_G155_CMD;
             break;
             
@@ -191,7 +193,7 @@ void G155MeterInterface_Disconnect(BYTE modbusId, BYTE * serialNumber, WORD seri
     BYTE buffer [] = {0x00, RLY_G155_OFF};
     BYTE bufferLen = sizeof(buffer);
     
-    printf("Sending DISCONNECT Command\n");
+    print_info("Sending DISCONNECT Command");
     
     G155MeterInterface_SendFrame(   modbusId,               /* modbus Id        */
                                     WRITE_SINGLE_FN_MDB,    /* commandFunction  */     
@@ -205,7 +207,7 @@ void G155MeterInterface_Connect(BYTE modbusId, BYTE * serialNumber, WORD serialN
     BYTE buffer [] = {0x00, RLY_G155_ON};
     BYTE bufferLen = sizeof(buffer);
     
-    printf("Sending CONNECT Command\n");
+    print_info("Sending CONNECT Command");
     
     G155MeterInterface_SendFrame(   modbusId,               /* modbus Id        */
                                     WRITE_SINGLE_FN_MDB,    /* commandFunction  */     
@@ -220,7 +222,7 @@ void G155MeterInterface_Reset(BYTE modbusId, BYTE * serialNumber, WORD serialNum
     BYTE buffer [] = {0x00, RST_G155_CMD};
     BYTE bufferLen = sizeof(buffer);
     
-    printf("Sending RESET Command\n");
+    print_info("Sending RESET Command");
     
     G155MeterInterface_SendFrame(   modbusId,               /* modbus Id        */
                                     WRITE_SINGLE_FN_MDB,    /* commandFunction  */     
@@ -232,7 +234,7 @@ void G155MeterInterface_Reset(BYTE modbusId, BYTE * serialNumber, WORD serialNum
 
 void G155MeterInterface_ReadMeteringData(BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE * data, WORD dataLen){
 
-    printf("Sending READ_DATA Command\n");    
+    print_info("Sending READ_DATA Command");    
     
     G155MeterInterface_SendFrame(   modbusId,                                       /* modbus Id        */
                                     READ_FN_MDB,                                    /* commandFunction  */     
@@ -244,7 +246,7 @@ void G155MeterInterface_ReadMeteringData(BYTE modbusId, BYTE * serialNumber, WOR
 
 void G155MeterInterface_SendMACAddress(BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE * data, WORD dataLen){
     
-    printf("Send MAC Broadcast\n");
+    print_info("Send MAC Broadcast");
     
     G155MeterInterface_SendFrame(   modbusId,                                               /* modbus Id        */
                                     WRITE_VARIOUS_FN_MDB,                                   /* commandFunction  */     
@@ -258,7 +260,7 @@ void G155MeterInterface_SendAssignModbusId(BYTE modbusId, BYTE * serialNumber, W
     BYTE buffer [] = {0x00, * data};
     BYTE bufferLen = sizeof(buffer);
     
-    printf("Send Assign Modbus Id\n");
+    print_info("Send Assign Modbus Id");
     
     G155MeterInterface_SendFrame(   modbusId,               /* modbus Id        */
                                     WRITE_SINGLE_FN_MDB,    /* commandFunction  */     
@@ -269,7 +271,7 @@ void G155MeterInterface_SendAssignModbusId(BYTE modbusId, BYTE * serialNumber, W
 }
 void G155MeterInterface_RequestSerialNumber(BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE * data, WORD dataLen){
     
-    printf("Request Serial Number\n");
+    print_info("Request Serial Number");
     
     G155MeterInterface_SendFrame(   modbusId,                                   /* modbus Id        */
                                     READ_FN_MDB,                                /* commandFunction  */     

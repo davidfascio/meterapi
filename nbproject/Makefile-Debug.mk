@@ -43,6 +43,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/MeterInterface.o \
 	${OBJECTDIR}/Meters_Table.o \
 	${OBJECTDIR}/ScorpioMeterInterface.o \
+	${OBJECTDIR}/SystemLog.o \
 	${OBJECTDIR}/SystemQueue.o \
 	${OBJECTDIR}/Utility.o \
 	${OBJECTDIR}/handlerG155.o \
@@ -68,11 +69,11 @@ LDLIBSOPTIONS=
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
-	"${MAKE}"  -f nbproject/Makefile-${CND_CONF}.mk ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/metersapi.exe
+	"${MAKE}"  -f nbproject/Makefile-${CND_CONF}.mk ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/meterapi.exe
 
-${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/metersapi.exe: ${OBJECTFILES}
+${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/meterapi.exe: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
-	${LINK.c} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/metersapi ${OBJECTFILES} ${LDLIBSOPTIONS}
+	${LINK.c} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/meterapi ${OBJECTFILES} ${LDLIBSOPTIONS}
 
 ${OBJECTDIR}/ComSerialInterface.o: ComSerialInterface.c 
 	${MKDIR} -p ${OBJECTDIR}
@@ -114,6 +115,11 @@ ${OBJECTDIR}/ScorpioMeterInterface.o: ScorpioMeterInterface.c
 	${RM} "$@.d"
 	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/ScorpioMeterInterface.o ScorpioMeterInterface.c
 
+${OBJECTDIR}/SystemLog.o: SystemLog.c 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/SystemLog.o SystemLog.c
+
 ${OBJECTDIR}/SystemQueue.o: SystemQueue.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
@@ -145,7 +151,7 @@ ${OBJECTDIR}/main.o: main.c
 # Clean Targets
 .clean-conf: ${CLEAN_SUBPROJECTS}
 	${RM} -r ${CND_BUILDDIR}/${CND_CONF}
-	${RM} ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/metersapi.exe
+	${RM} ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/meterapi.exe
 
 # Subprojects
 .clean-subprojects:

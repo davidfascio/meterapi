@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <windows.h>
+#include "SystemLog.h"
 
 HANDLE ComSerialInterface_OpenHandler(  LPCSTR  portName, 
                                         DWORD   baudRate,

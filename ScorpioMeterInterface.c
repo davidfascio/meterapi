@@ -109,7 +109,8 @@ void ScorpioMeterInterface_SendFrame(BYTE * serialNumber,
     
     if(framebuilt == FALSE)
         return;
-            
+    //!print_info("Sent Data: ");   
+    //! ComSerialInterface_PrintData(frame, frameLen);        
     ComSerialInterface_SendData(frame, frameLen);        
 }
 
@@ -127,18 +128,18 @@ void ScorpioMeterInterface_SendPassword(BYTE modbusId, BYTE * serialNumber, WORD
     switch(commandId){
         
         case Dis_MTR:
-            printf("Sending PASSWORD for DISCONNECTION Command\n");
+            print_info("Sending PASSWORD for DISCONNECTION Command");
             passwordType = SCORPIO_METER_INTERFACE_PASSWORD_REPLAY;
             break;
             
         case Con_MTR:           
-            printf("Sending PASSWORD for CONNECTION Command\n");
+            print_info("Sending PASSWORD for CONNECTION Command");
             passwordType = SCORPIO_METER_INTERFACE_PASSWORD_REPLAY;
             break;
             
         case Res_MTR:
             
-            printf("Sending PASSWORD for RESET Command\n");
+            print_info("Sending PASSWORD for RESET Command");
             passwordType = SCORPIO_METER_INTERFACE_PASSWORD_FORCE_RESET;
             break;
             
@@ -177,7 +178,7 @@ void ScorpioMeterInterface_Disconnect(BYTE modbusId, BYTE * serialNumber, WORD s
             
     bufferLen = buffer_ptr - buffer;
     
-    printf("Sending DISCONNECT Command\n");
+    print_info("Sending DISCONNECT Command");
     
     ScorpioMeterInterface_SendFrame(serialNumber, 
                                     serialNumberLen, 
@@ -201,7 +202,7 @@ void ScorpioMeterInterface_Connect(BYTE modbusId, BYTE * serialNumber, WORD seri
             
     bufferLen = buffer_ptr - buffer;
     
-    printf("Sending CONNECT Command\n");
+    print_info("Sending CONNECT Command");
     
     ScorpioMeterInterface_SendFrame(serialNumber, 
                                     serialNumberLen, 
@@ -225,7 +226,7 @@ void ScorpioMeterInterface_Reset(BYTE modbusId, BYTE * serialNumber, WORD serial
             
     bufferLen = buffer_ptr - buffer;
     
-    printf("Sending Reset Command\n");
+    print_info("Sending Reset Command");
     
     ScorpioMeterInterface_SendFrame(serialNumber, 
                                     serialNumberLen, 
@@ -238,7 +239,7 @@ void ScorpioMeterInterface_Reset(BYTE modbusId, BYTE * serialNumber, WORD serial
 
 void ScorpioMeterInterface_ReadMeteringData(BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE * data, WORD dataLen){
     
-    printf("Requesting METERING Command\n");
+    print_info("Requesting METERING Command");
     
     ScorpioMeterInterface_SendFrame(serialNumber, 
                                     serialNumberLen, 
@@ -251,10 +252,9 @@ void ScorpioMeterInterface_ReadMeteringData(BYTE modbusId, BYTE * serialNumber, 
 
 void ScorpioMeterInterface_LinkMeter(BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE * data, WORD dataLen){
 
-    printf("LINKING METER Command\n");
-    printf("SHORT MAC ADDRESS Associated: ");
+    print_info("LINKING METER Command");
+    print_info("Associated SHORT MAC ADDRESS : ");
     ComSerialInterface_PrintData(data, dataLen);
-    printf("\n");
     
     ScorpioMeterInterface_SendFrame(serialNumber, 
                                     serialNumberLen, 
@@ -264,15 +264,3 @@ void ScorpioMeterInterface_LinkMeter(BYTE modbusId, BYTE * serialNumber, WORD se
                                     data,
                                     dataLen);      
 }
-
-/*WORD API_Scorpio_Meter_response_handler( BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE command, BYTE * response, WORD * responseLen){
-    
-    return 0;
-}
-
-WORD API_Scorpio_Recieve_handler( BYTE * buffer, WORD  buffersize, METER_DESCRIPTOR_PTR meterDescriptor, BYTE * commandCallBack){
-    
-    *commandCallBack = 0;
-    
-    return 0;
-}*/

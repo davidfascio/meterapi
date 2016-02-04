@@ -285,9 +285,6 @@ void ScorpioMeterInterface_Reset(BYTE modbusId, BYTE * serialNumber, WORD serial
 void ScorpioMeterInterface_ReadMeteringData(BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE * data, WORD dataLen);
 void ScorpioMeterInterface_LinkMeter(BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE * data, WORD dataLen);
 
-/*WORD API_Scorpio_Meter_response_handler( BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE command, BYTE * response, WORD * responseLen);
-WORD API_Scorpio_Recieve_handler( BYTE * buffer, WORD  buffersize, METER_DESCRIPTOR_PTR meterDescriptor, BYTE * commandCallBack);*/
-
 extern COMMAND_ID_FUNCTION ScorpioMeterInterface_CommandIdFunctionList [];
 
 #endif	/* __SCORPIO_METER_INTERFACE_H__ */

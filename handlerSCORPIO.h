@@ -240,7 +240,7 @@ typedef struct{
 //******************************************************************************
 // API
 
-boolean wfnCRC_CALC_SCORPIO(BYTE *ptFRAME, WORD wSizeFrame, WORD wCRCStart);
+BOOL wfnCRC_CALC_SCORPIO(BYTE *ptFRAME, WORD wSizeFrame, WORD wCRCStart);
 BYTE Handler_Flag_Addr_PassWord_Check_SCORPIO(BYTE * ptbFrame, WORD wSizeFrame, BYTE * flag_state);
 BYTE Handler_Flag_Addr_System_Check_SCORPIO(BYTE * ptbFrame, WORD wSizeFrame, BYTE * flag_state);
 BYTE Handler_FcnCheck_SCORPIO(BYTE * function_data);
