@@ -15,6 +15,7 @@
 #include "G155MeterInterface.h"
 #include "MeterControl.h"
 #include "ComSerialInterface.h"
+#include "KitronMeterInterface.h"
 
 
 /*
@@ -222,7 +223,8 @@ int main(int argc, char** argv) {
     else{
         check_flag = 0; 
     }*/
-    
+   
+    KitronMeterInterface_ReadMeteringData(0x04,NULL, 0, NULL, 0);
     while(TRUE){
         
         vfnEventsEngine();
@@ -242,7 +244,7 @@ BYTE command[] = {Dis_MTR,Dis_MTR, Con_MTR,Con_MTR, Res_MTR, Res_MTR};
 BYTE AppModbusId = 1;
 void vfnGO_TO_READ_MTR_PeriodTask(void){
  
-    BYTE error_code;
+    /*BYTE error_code;
     
     error_code = API_MeterControl_SendCommand(counter%2, command[counter]);
     
@@ -253,7 +255,7 @@ void vfnGO_TO_READ_MTR_PeriodTask(void){
     if(counter == sizeof(command))
         counter = 0;
     
-    API_MeterControl_ExcecuteBaptismProccess();
+    API_MeterControl_ExcecuteBaptismProccess();*/
     //API_MeterTable_ExcecuteBaptismProccess();
     //G155MeterInterface_RequestSerialNumber(AppModbusId++, NULL, 0, NULL, 0);
     //(void)CMD_To_Scorpio ((BYTE)NULL,READ_MODE); 

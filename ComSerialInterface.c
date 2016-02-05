@@ -98,11 +98,11 @@ DWORD ComSerialInterface_WritePort( HANDLE hSerial, BYTE * buffer, DWORD buffers
     return dwBytesRead;
 }
 
-#define COM_SERIAL_INTERFACE_HANDLER_PORT                       "\\\\.\\COM30"
-#define COM_SERIAL_INTERFACE_HANDLER_BAUDRATE                   (19200)
+#define COM_SERIAL_INTERFACE_HANDLER_PORT                       "\\\\.\\COM45" //"\\\\.\\COM30"
+#define COM_SERIAL_INTERFACE_HANDLER_BAUDRATE                   (9600) //(19200)
 #define COM_SERIAL_INTERFACE_HANDLER_BYTE_SIZE                  (8)
 #define COM_SERIAL_INTERFACE_HANDLER_STOP_BITS                  (ONESTOPBIT)
-#define COM_SERIAL_INTERFACE_HANDLER_PARITY                     (EVENPARITY)
+#define COM_SERIAL_INTERFACE_HANDLER_PARITY                     (NOPARITY)//(EVENPARITY)
 
 
 HANDLE ComSerialInterfaceHandler = NULL;

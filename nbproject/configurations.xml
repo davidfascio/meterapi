@@ -31,6 +31,7 @@
       <itemPath>ComSerialInterface.c</itemPath>
       <itemPath>EventsEngine.c</itemPath>
       <itemPath>G155MeterInterface.c</itemPath>
+      <itemPath>KitronMeterInterface.c</itemPath>
       <itemPath>MeterCommons.c</itemPath>
       <itemPath>MeterControl.c</itemPath>
       <itemPath>MeterInterface.c</itemPath>
@@ -78,6 +79,8 @@
       <item path="G155MeterInterface.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="GenericTypeDefs.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="KitronMeterInterface.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="KitronMeterInterface.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -159,6 +162,8 @@
       <item path="G155MeterInterface.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="GenericTypeDefs.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="KitronMeterInterface.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="KitronMeterInterface.h" ex="false" tool="3" flavor2="0">
       </item>

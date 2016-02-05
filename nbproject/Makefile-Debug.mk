@@ -38,6 +38,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/ComSerialInterface.o \
 	${OBJECTDIR}/EventsEngine.o \
 	${OBJECTDIR}/G155MeterInterface.o \
+	${OBJECTDIR}/KitronMeterInterface.o \
 	${OBJECTDIR}/MeterCommons.o \
 	${OBJECTDIR}/MeterControl.o \
 	${OBJECTDIR}/MeterInterface.o \
@@ -89,6 +90,11 @@ ${OBJECTDIR}/G155MeterInterface.o: G155MeterInterface.c
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/G155MeterInterface.o G155MeterInterface.c
+
+${OBJECTDIR}/KitronMeterInterface.o: KitronMeterInterface.c 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/KitronMeterInterface.o KitronMeterInterface.c
 
 ${OBJECTDIR}/MeterCommons.o: MeterCommons.c 
 	${MKDIR} -p ${OBJECTDIR}

@@ -611,6 +611,9 @@ void API_MeterControl_ReceiveHandler(void){
     if ((buffersize == 0) || (buffer_ptr == NULL))
         return;
     
+    print_log("Arrived Data: ");
+    ComSerialInterface_PrintData(buffer_ptr, buffersize);
+    
     while(TRUE){
         
         meterType = MeterInterface_GetMeterTypeByIndex(index);   
@@ -634,8 +637,6 @@ void API_MeterControl_ReceiveHandler(void){
         index++;
     } 
     
-    print_log("Arrived Data: ");
-    ComSerialInterface_PrintData(buffer_ptr, buffersize);
     ComSerialInterface_CleanBuffer();
 }
 
