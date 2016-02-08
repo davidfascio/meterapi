@@ -560,10 +560,10 @@ BYTE API_MeterControl_ResponseHandler(BYTE meterType, BYTE modbusId, BYTE * seri
     WORD maxResponseLen = sizeof(response);
     WORD responseLen;
     BYTE error_code;
-    
+    BYTE commandCallBack;
     METER_COMMAND_ID_FUNCTION_API_PTR meterCommandIdFunctionAPI_ptr = MeterInterface_GetMeterCommandIdFunctionAPI(meterType);
     
-    error_code = meterCommandIdFunctionAPI_ptr->meterHandler_ResponseProcessCallback(modbusId, serialNumber, serialNumberLen, command, response, maxResponseLen, &responseLen );
+    error_code = meterCommandIdFunctionAPI_ptr->meterHandler_ResponseProcessCallback(modbusId, serialNumber, serialNumberLen, command, response, maxResponseLen, &responseLen, &commandCallBack );
     
     if(error_code)
         return error_code;

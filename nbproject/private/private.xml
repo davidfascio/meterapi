@@ -10,7 +10,7 @@
             <file>file:/C:/development/test/MeterAPI/handlerG155.h</file>
             <file>file:/C:/development/test/MeterAPI/KitronMeterHandler.h</file>
             <file>file:/C:/development/test/MeterAPI/SystemLog.c</file>
-            <file>file:/C:/development/test/MeterAPI/KitronMeterInterface.h</file>
+            <file>file:/C:/development/test/MeterAPI/EventsEngine.c</file>
             <file>file:/C:/development/test/MeterAPI/ComSerialInterface.h</file>
             <file>file:/C:/development/test/MeterAPI/ScorpioMeterInterface.c</file>
             <file>file:/C:/development/test/MeterAPI/ComSerialInterface.c</file>
@@ -20,10 +20,8 @@
             <file>file:/C:/development/test/MeterAPI/handlerSCORPIO.h</file>
             <file>file:/C:/development/test/MeterAPI/MeterControl.h</file>
             <file>file:/C:/development/test/MeterAPI/G155MeterInterface.c</file>
-            <file>file:/C:/development/test/MeterAPI/MeterInterface.c</file>
             <file>file:/C:/development/test/MeterAPI/Utility.c</file>
             <file>file:/C:/development/test/MeterAPI/ScorpioMeterInterface.h</file>
-            <file>file:/C:/development/test/MeterAPI/MeterInterface.h</file>
             <file>file:/C:/development/test/MeterAPI/main.c</file>
             <file>file:/C:/development/test/MeterAPI/KitronMeterInterface.c</file>
             <file>file:/C:/development/test/MeterAPI/KitronMeterHandler.c</file>

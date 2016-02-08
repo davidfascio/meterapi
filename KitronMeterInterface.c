@@ -2,8 +2,8 @@
 
 COMMAND_ID_FUNCTION KitronMeterInterface_CommandIdFunctionList [] = 
 {
-    //{   READ_MODE ,                                         /* Meter Common Command Id              */
-    //    KitronMeterInterface_ReadMeteringData } ,             /* Meter CommandIdFunction_Callback     */
+    {   READ_MODE ,                                         /* Meter Common Command Id              */
+        KitronMeterInterface_ReadAllVoltageData } ,             /* Meter CommandIdFunction_Callback     */
         
     COMMAND_ID_FUNCTION_NULL
 };

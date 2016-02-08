@@ -599,7 +599,7 @@ BYTE HandlerScorpio_GetInvokeFunctionId(BYTE command){
     }
     
 }
-WORD API_SCORPIO_Meter_response_handler( BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE command, BYTE * response, WORD maxResponseLen, WORD * responseLen){
+WORD API_SCORPIO_Meter_response_handler( BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE command, BYTE * response, WORD maxResponseLen, WORD * responseLen, BYTE * commandCallBack){
 
     /* Validating modbus id*/
     
@@ -611,6 +611,7 @@ WORD API_SCORPIO_Meter_response_handler( BYTE modbusId, BYTE * serialNumber, WOR
 
          return ERROR_NO_MATCH_SERIAL_NUMBER_LENGTH; 
 
+    * commandCallBack = NO_COMMAND_MTR;
     /*Validating numeration*/ 
      
      switch(command){

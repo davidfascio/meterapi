@@ -92,7 +92,7 @@ typedef struct{
     WORD broadcastSerialNumberLen;
     WORD stabilizationTimeoutValue;
     COMMAND_ID_FUNCTION_PTR commandIdFunctionList;    
-    WORD (* meterHandler_ResponseProcessCallback)( BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE command, BYTE * response, WORD maxResponseLen, WORD * responseLen);    
+    WORD (* meterHandler_ResponseProcessCallback)( BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE command, BYTE * response, WORD maxResponseLen, WORD * responseLen, BYTE * commandCallBack);    
     WORD (* meterHandler_ReceiveProcessCallback)( BYTE * buffer, WORD  bufferLen, METER_DESCRIPTOR_PTR meterDescriptor, BYTE * commandCallBack);    
     BOOL dataAvailable;
 } METER_COMMAND_ID_FUNCTION_API, * METER_COMMAND_ID_FUNCTION_API_PTR;

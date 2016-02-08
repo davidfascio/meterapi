@@ -247,7 +247,7 @@ BYTE Handler_FcnCheck_SCORPIO(BYTE * function_data);
 BYTE Handler_Size_Data_Check_SCORPIO(BYTE* size_data_value, WORD wSizeFrame, BYTE* data);
 BYTE Handler_Serial_Number_Size_Check_SCORPIO(BYTE* id_data, BYTE* data);
 WORD API_SCORPIO_Recieve_handler(BYTE* buffer, WORD buffersize, METER_DESCRIPTOR_PTR meterDescriptor, BYTE * commandCallBack);
-WORD API_SCORPIO_Meter_response_handler( BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE command, BYTE * response, WORD maxResponseLen, WORD * responseLen);
+WORD API_SCORPIO_Meter_response_handler( BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE command, BYTE * response, WORD maxResponseLen, WORD * responseLen, BYTE * commandCallBack);
 
 BYTE HandlerScorpio_GetInvokeFunctionId(BYTE command);
 

@@ -320,7 +320,7 @@ BYTE HandlerG155_GetInvokeFunctionId(BYTE command){
     
 }
 
-WORD API_G155_Meter_response_handler( BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE command, BYTE * response, WORD maxResponseLen, WORD * responseLen){
+WORD API_G155_Meter_response_handler( BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE command, BYTE * response, WORD maxResponseLen, WORD * responseLen, BYTE * commandCallBack){
 
     /* Validating modbus id*/
     
@@ -328,6 +328,7 @@ WORD API_G155_Meter_response_handler( BYTE modbusId, BYTE * serialNumber, WORD s
 
          return ERROR_NO_MATCH_MODBUS_ID;
 
+     * commandCallBack = NO_COMMAND_MTR;
     /*Validating numeration*/ 
      
      switch(command){

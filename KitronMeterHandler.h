@@ -15,6 +15,10 @@
 #include "GenericTypeDefs.h"
 #include "MeterCommons.h"
 
+//******************************************************************************
+// KITRON METER HANDLER DEFINES
+//******************************************************************************
+
 #define KITRON_METER_TYPE                                               (0x85)
 #define KITRON_METER_HANDLER_CRC_BASE                                   (0xFFFF)
 #define KITRON_METER_HANDLER_READ_COMMAND_FUNCTION                      (0x03)
@@ -24,15 +28,18 @@
 #define KITRON_METER_HANDLER_COMMAND_FUNCTION_HEADER_SIZE                    (1)
 #define KITRON_METER_HANDLER_DATA_SIZE_HEADER_SIZE                           (1)
 #define KITRON_METER_HANDLER_CRC_HEADER_SIZE                                 (2)
+
 #define KITRON_METER_HANDLER_FILEDS_HEADER_SIZE                         (KITRON_METER_HANDLER_MODBUS_ID_HEADER_SIZE +\
                                                                         KITRON_METER_HANDLER_COMMAND_FUNCTION_HEADER_SIZE +\
                                                                         KITRON_METER_HANDLER_DATA_SIZE_HEADER_SIZE +\
                                                                         KITRON_METER_HANDLER_CRC_HEADER_SIZE)
 
-
-
 #define KITRON_METER_HANDLER_CRC_OK                                          (0)
 #define KITRON_METER_HANDLER_INVALID_MODBUS_ID                               (0)
+
+//******************************************************************************
+// KITRON METER HANDLER ERROR CODES
+//******************************************************************************
 
 #define KITRON_METER_HANDLER_NO_ERROR_CODE                                  (0)
 #define KITRON_METER_HANDLER_WRONG_CRC_ERROR_CODE                           (-1)
@@ -56,13 +63,17 @@ typedef struct{
     float VoltagePhaseC;
     float VoltagePhaseB;
     float VoltagePhaseA;
-}KitronMeter_Voltage_DataReading, *KitronMeter_Voltage_DataReading_Ptr;
+}KitronMeter_Voltage_DataReading, * KitronMeter_Voltage_DataReading_Ptr;
+
+#define KITRON_METER_HANDLER_VOLTAGE_DATA_SIZE  (sizeof(KitronMeter_Voltage_DataReading))
 
 typedef struct{
     float CurrentPhaseC;
     float CurrentPhaseB;
     float CurrentPhaseA;
 }KitronMeter_Current_DataReading, *KitronMeter_Current_DataReading_Ptr;
+
+#define KITRON_METER_HANDLER_CURRENT_DATA_SIZE  (sizeof(KitronMeter_Current_DataReading))
 
 typedef struct{
     float ActivePowerPhaseC;
@@ -71,12 +82,16 @@ typedef struct{
     float TotalInstantaneousActivePower;
 }KitronMeter_ActivePower_DataReading, *KitronMeter_ActivePower_DataReading_Ptr;
 
+#define KITRON_METER_HANDLER_ACTIVE_POWER_DATA_SIZE  (sizeof(KitronMeter_ActivePower_DataReading))
+
 typedef struct{
     float PowerFactorPhaseC;
     float PowerFactorPhaseB;
     float PowerFactorPhaseA;
     float TotalPowerFactor;
 }KitronMeter_PowerFactor_DataReading, *KitronMeter_PowerFactor_DataReading_Ptr;
+
+#define KITRON_METER_HANDLER_POWER_FACTOR_DATA_SIZE  (sizeof(KitronMeter_PowerFactor_DataReading))
 
 typedef struct{
     float ApparentPowerPhaseC;
@@ -85,13 +100,17 @@ typedef struct{
     float TotalInstantaneousApparentPower;
 }KitronMeter_ApparentPower_DataReading, * KitronMeter_ApparentPower_DataReading_Ptr;
 
-typedef struct{
+#define KITRON_METER_HANDLER_APPARENT_POWER_DATA_SIZE  (sizeof(KitronMeter_ApparentPower_DataReading))
+
+/*typedef struct{
     KitronMeter_ApparentPower_DataReading   AppatentPower;
     KitronMeter_PowerFactor_DataReading     PowerFactor;
     KitronMeter_ActivePower_DataReading     ActivePower;
     KitronMeter_Current_DataReading         Current;
     KitronMeter_Voltage_DataReading         Voltage;
 }KitronMeter_RealTimeData_DataReading, * KitronMeter_RealTimeData_DataReading_Ptr;
+
+#define KITRON_METER_HANDLER_REAL_TIME_DATA_SIZE  (sizeof(KitronMeter_RealTimeData_DataReading))*/
 
 //******************************************************************************
 // Kitron Meter Handler API
@@ -100,9 +119,11 @@ typedef struct{
 void KitronMeterHandler_Setup(BYTE modbusId, BYTE functionCommand, BYTE dataSize, BYTE * data);
 
 WORD API_KitronMeterHandler_ReceiveHandler( BYTE * buffer, WORD  buffersize, METER_DESCRIPTOR_PTR meterDescriptor, BYTE * commandCallBack);
-WORD API_KitronmeterHandler_ResponseHandler( BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE command, BYTE * response, WORD maxResponseLen, WORD * responseLen);
+WORD API_KitronmeterHandler_ResponseHandler( BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE command, BYTE * response, WORD maxResponseLen, WORD * responseLen, BYTE * commandCallBack);
 BYTE API_KitronMeterHandler_GetInvokeFunctionId(BYTE commandId);
 
+void KitronMeterHandler_ParseVoltageToDataReading( Data_Readings_Ptr dataReading, BYTE * data, WORD dataLen);
+void KitronMeterHandler_PrintDataReading(KitronMeter_Voltage_DataReading_Ptr voltage);
 
 #endif	/* __KITRON_METER_HANDLER_H__ */
 

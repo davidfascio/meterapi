@@ -206,8 +206,8 @@ int main(int argc, char** argv) {
     
     // Fill
     memset(&Meters_Table1, 0xFF, sizeof(Meters_Table));
-    Meters_Table1.Meter_DEV[1].Type = MONO_TYPE;
-    Meters_Table1.Meter_DEV[1].Signature = 'p' + 5;
+    Meters_Table1.Meter_DEV[1].Type = KITRON_METER_TYPE;
+    Meters_Table1.Meter_DEV[1].Signature = 'p' + 3;
     memcpy(Meters_Table1.Meter_DEV[1].Serial_Num,serialNumberDemo,Lenght_Meter_ID);    
     vfnPeriodicTimerEnable(LED_TOGGLE_MAIN_PERTASK);
     vfnPeriodicTimerEnable(GO_TO_READ_MTR_PERTASK);    //Crea la rutina de leer medidores
@@ -224,7 +224,7 @@ int main(int argc, char** argv) {
         check_flag = 0; 
     }*/
    
-    KitronMeterInterface_ReadAllPowerFactorData(0x04,NULL, 0, NULL, 0);
+    //!KitronMeterInterface_ReadAllVoltageData(0x04,NULL, 0, NULL, 0);
     while(TRUE){
         
         vfnEventsEngine();
@@ -259,6 +259,14 @@ void vfnGO_TO_READ_MTR_PeriodTask(void){
     //API_MeterTable_ExcecuteBaptismProccess();
     //G155MeterInterface_RequestSerialNumber(AppModbusId++, NULL, 0, NULL, 0);
     //(void)CMD_To_Scorpio ((BYTE)NULL,READ_MODE); 
+    
+    BYTE error_code;
+    
+    error_code = API_MeterControl_SendCommand(1, READ_MODE);
+    
+    if (error_code != METER_CONTROL_NO_ERROR_CODE)
+        print_debug ("Meter Error Code: %d", error_code);
+    
 }
 
 void vfnToogling (void)
