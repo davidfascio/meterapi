@@ -41,6 +41,13 @@
 #define LINK_ADDING_MTR                                                 (9)
 #define LINK_DELETING_MTR                                               (10)
 
+#define READ_ALL_VOLTAGE_MTR                                            (11)
+#define READ_ALL_CURRENT_MTR                                            (12)
+#define READ_ALL_ACTIVE_POWER_MTR                                       (13)
+#define READ_ALL_POWER_FACTOR_MTR                                       (14)
+#define READ_ALL_APPARENT_POWER_MTR                                     (15)
+
+
 #define Lenght_Meter_ID                                                 (16)
 #define METER_DESCRIPTOR_MAX_SERIAL_NUMBER_SIZE                         (20)
 
@@ -87,10 +94,10 @@ typedef struct{
     COMMAND_ID_FUNCTION_PTR commandIdFunctionList;    
     WORD (* meterHandler_ResponseProcessCallback)( BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE command, BYTE * response, WORD maxResponseLen, WORD * responseLen);    
     WORD (* meterHandler_ReceiveProcessCallback)( BYTE * buffer, WORD  bufferLen, METER_DESCRIPTOR_PTR meterDescriptor, BYTE * commandCallBack);    
-    
+    BOOL dataAvailable;
 } METER_COMMAND_ID_FUNCTION_API, * METER_COMMAND_ID_FUNCTION_API_PTR;
 
-#define METER_COMMAND_ID_FUNCTION_API_NULL                  { METER_INTERFACE_NO_METER_TYPE, 0, NULL, 0, 0, NULL, NULL , NULL }
+#define METER_COMMAND_ID_FUNCTION_API_NULL                  { METER_INTERFACE_NO_METER_TYPE, 0, NULL, 0, 0, NULL, NULL , NULL, FALSE }
 
 typedef struct  _Data_Readings
 {

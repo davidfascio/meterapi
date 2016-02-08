@@ -12,10 +12,15 @@
 // Includes
 //******************************************************************************
 //#include "MeterCommons.h"
+
 #include "G155MeterInterface.h"
 #include "handlerG155.h"
+
 #include "ScorpioMeterInterface.h"
 #include "handlerSCORPIO.h"
+
+#include "KitronMeterInterface.h"
+#include "KitronMeterHandler.h"
 
 //******************************************************************************
 // Defines
@@ -40,5 +45,7 @@ WORD MeterInterface_GetStabilizationTimeoutValue(BYTE meterType);
 BYTE MeterInterface_GetBroadcastId(BYTE meterType);
 WORD MeterInterface_GetBroadcastSerialNumber(BYTE meterType, BYTE * broadcastSerialNumber, WORD broadcastSerialNumberLen);
 BYTE MeterInterface_ValidateMeterType(BYTE meterType);
+BOOL MeterInterface_IsDataAvailable(BYTE meterType);
+void MeterInterface_SetDataAvailable(BYTE meterType, BOOL dataAvailable);
 #endif	/* __METER_INTERFACE_H__ */
 

@@ -114,13 +114,7 @@
 
 //******************************************************************************
 // Struct data
-typedef struct{
-    BYTE id;
-    BYTE function;
-    BYTE data_size;
-    BYTE data[HANDLER_G155_WINDOW];
-    WORD crc;
-}HANDLER_G155_STRUCT;
+
 
 
 typedef struct{

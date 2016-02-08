@@ -8,8 +8,9 @@ METER_COMMAND_ID_FUNCTION_API meterCommandIdFunctionAPIList [] =
         0,                                                      /*  SerialNumber Broadcast Len                           */
         _2200_MSEC_,                                            /*  Stabilization Time Value                             */
         G155MeterInterface_CommandIdFunctionList,               /*  Pointer to Command Id Function List per Meter Type   */
-        API_G155_Meter_response_handler,                        /*  Pointer to Meter Response Handler                             */
-        API_G155_Recieve_handler},                              /*  Pointer to Meter Receive  Handler                             */
+        API_G155_Meter_response_handler,                        /*  Pointer to Meter Response Handler                    */
+        API_G155_Recieve_handler,                               /*  Pointer to Meter Receive  Handler                    */
+        FALSE},                                                 /*  Data Available                                       */
         
     {   SCORPIO_METER_TYPE,                                     /*  Meter Type                                           */
         0x00,                                                   /*  Broadcast Id                                         */
@@ -17,11 +18,20 @@ METER_COMMAND_ID_FUNCTION_API meterCommandIdFunctionAPIList [] =
         16,                                                     /*  SerialNumber Broadcast Len                           */
         _2200_MSEC_,                                            /*  Stabilization Time Value                             */
         ScorpioMeterInterface_CommandIdFunctionList,            /*  Pointer to Command Id Function List per Meter Type   */
-        API_SCORPIO_Meter_response_handler,                     /*  Pointer to Meter Response Handler                             */
-        API_SCORPIO_Recieve_handler},                           /*  Pointer to Meter Receive  Handler                             */
-    
-   
+        API_SCORPIO_Meter_response_handler,                     /*  Pointer to Meter Response Handler                    */
+        API_SCORPIO_Recieve_handler,                            /*  Pointer to Meter Receive  Handler                    */
+        FALSE},                                                 /*  Data Available                                       */
         
+    {   KITRON_METER_TYPE,                                      /*  Meter Type                                           */
+        0x00,                                                   /*  Broadcast Id                                         */
+        NULL,                                                   /*  SerialNumber Broadcast                               */
+        0,                                                      /*  SerialNumber Broadcast Len                           */
+        _2200_MSEC_,                                            /*  Stabilization Time Value                             */
+        KitronMeterInterface_CommandIdFunctionList,             /*  Pointer to Command Id Function List per Meter Type   */
+        API_KitronmeterHandler_ResponseHandler,                 /*  Pointer to Meter Response Handler                    */
+        API_KitronMeterHandler_ReceiveHandler,                  /*  Pointer to Meter Receive  Handler                    */
+        FALSE},                                                 /*  Data Available                                       */
+    
     METER_COMMAND_ID_FUNCTION_API_NULL    
 };
 
@@ -143,4 +153,28 @@ BYTE MeterInterface_ValidateMeterType(BYTE meterType){
     }
     
     return meterTypeFromAPI;     
+}
+
+BOOL MeterInterface_IsDataAvailable(BYTE meterType){
+    
+    METER_COMMAND_ID_FUNCTION_API_PTR meterCommandIdFunctionAPI_ptr;
+    
+    meterCommandIdFunctionAPI_ptr = MeterInterface_GetMeterCommandIdFunctionAPI(meterType);
+    
+    if(meterCommandIdFunctionAPI_ptr == NULL)
+        return FALSE;
+    
+    return meterCommandIdFunctionAPI_ptr->dataAvailable;    
+}
+
+void MeterInterface_SetDataAvailable(BYTE meterType, BOOL dataAvailable){
+    
+    METER_COMMAND_ID_FUNCTION_API_PTR meterCommandIdFunctionAPI_ptr;
+    
+    meterCommandIdFunctionAPI_ptr = MeterInterface_GetMeterCommandIdFunctionAPI(meterType);
+    
+    if(meterCommandIdFunctionAPI_ptr == NULL)
+        return;
+    
+    meterCommandIdFunctionAPI_ptr->dataAvailable = dataAvailable;
 }

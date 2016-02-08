@@ -55,7 +55,7 @@ typedef struct {
     BYTE retries;
     BOOL broadcastSent;
     BOOL answerRequired;
-    BOOL dataAvailable;
+    //!BOOL dataAvailable;
     METER_TIMEOUT responseTimeout;
     METER_TIMEOUT stabilizationTimeout;
     
@@ -65,11 +65,11 @@ typedef struct {
 // Meter Control Set and Get Function Prototypes
 //******************************************************************************
 void MeterControl_Setup(BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE meterType, BYTE commandId, BOOL broadcastSent, WORD stabilizationTimeoutValue);
-void MeterControl_Reset(WORD stabilizationTimeoutValue);
-void MeterControl_Clear(void);
+void MeterControl_Reset(BYTE meterType, WORD stabilizationTimeoutValue);
+void MeterControl_Clear(BYTE meterType);
 
-void MeterControl_SetDataAvailable(BOOL dataAvailable);
-BOOL MeterControl_IsDataAvailable(void);
+void MeterControl_SetDataAvailable(BYTE meterType, BOOL dataAvailable);
+BOOL MeterControl_IsDataAvailable(BYTE meterType);
 
 void MeterControl_SetAnswerRequired(BOOL answerRequired);
 BOOL MeterControl_IsAnswerRequired(void);
@@ -124,8 +124,8 @@ void MeterControl_SendCommandByIdentificator( BYTE modbusId,
                                             WORD stabilizationTimeoutValue, 
                                             BYTE nextState);
 
-void MeterControl_SendNextCommand(WORD stabilizationTimeoutValue, BYTE nextState);
-void MeterControl_ErrorReset(void);
+void MeterControl_SendNextCommand(BYTE meterType, WORD stabilizationTimeoutValue, BYTE nextState);
+void MeterControl_ErrorReset(BYTE meterType);
 BYTE MeterControl_ExcecuteCommand(BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE commandId, BYTE meterType, BOOL broadcastSent);
 
 void MeterControl_Print( void );

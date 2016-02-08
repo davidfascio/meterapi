@@ -224,7 +224,7 @@ int main(int argc, char** argv) {
         check_flag = 0; 
     }*/
    
-    KitronMeterInterface_ReadMeteringData(0x04,NULL, 0, NULL, 0);
+    KitronMeterInterface_ReadAllPowerFactorData(0x04,NULL, 0, NULL, 0);
     while(TRUE){
         
         vfnEventsEngine();

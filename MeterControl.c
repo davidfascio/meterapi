@@ -105,28 +105,32 @@ void MeterControl_Setup(BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen
     meterControl.retries   = 0;
     meterControl.broadcastSent = broadcastSent;
     meterControl.answerRequired = FALSE;
-    meterControl.dataAvailable = FALSE;
+    //!meterControl.dataAvailable = FALSE;
+    MeterInterface_SetDataAvailable(meterType, FALSE);
     MeterControl_StopResponseTimeout();
     MeterControl_InitializeStabilizationTimeout(stabilizationTimeoutValue);
 }
 
-void MeterControl_Reset(WORD stabilizationTimeoutValue){
+void MeterControl_Reset(BYTE meterType, WORD stabilizationTimeoutValue){
     
     meterControl.retries = 0;
     meterControl.answerRequired = FALSE;
-    meterControl.dataAvailable = FALSE;
+    //!meterControl.dataAvailable = FALSE;
+    MeterInterface_SetDataAvailable(meterType, FALSE);
     MeterControl_StopResponseTimeout();
     MeterControl_InitializeStabilizationTimeout(stabilizationTimeoutValue);
 }
 
-void MeterControl_SetDataAvailable(BOOL dataAvailable){
+void MeterControl_SetDataAvailable(BYTE meterType, BOOL dataAvailable){
     
-    meterControl.dataAvailable = dataAvailable;
+    //!meterControl.dataAvailable = dataAvailable;
+    MeterInterface_SetDataAvailable(meterType, dataAvailable);
 }
 
-BOOL MeterControl_IsDataAvailable(void){
+BOOL MeterControl_IsDataAvailable(BYTE meterType){
     
-    return meterControl.dataAvailable;
+    //!return meterControl.dataAvailable;
+    return MeterInterface_IsDataAvailable(meterType);
 }
 
 void MeterControl_SetAnswerRequired(BOOL answerRequired){
@@ -184,9 +188,10 @@ METER_TIMEOUT MeterControl_GetResponseTimeout(void){
     return meterControl.responseTimeout;
 }
 
-void MeterControl_Clear(void){
+void MeterControl_Clear(BYTE meterType){
     
     memset(&meterControl, 0, sizeof(meterControl));
+    MeterInterface_SetDataAvailable(meterType, FALSE);
 }
 
 void MeterControl_InitializeResponseTimeout(WORD timeoutValue){
@@ -302,15 +307,15 @@ void MeterControl_SendCommandByIdentificator(   BYTE modbusId,
     if(MeterControl_GetStabilizationTimeout() == METER_TIMEOUT_INITIALIZED)
         return;
     
-    if ((MeterControl_IsAnswerRequired() == TRUE) && (MeterControl_IsDataAvailable() == TRUE)) {
+    if ((MeterControl_IsAnswerRequired() == TRUE) && (MeterControl_IsDataAvailable(meterType) == TRUE)) {
         
         if(API_MeterControl_ResponseHandler(meterType, modbusId, serialNumber, serialNumberLen, command) != 
                 METER_TABLE_METER_NO_ERROR_CODE){
          
-            MeterControl_SetDataAvailable(FALSE);
+            MeterControl_SetDataAvailable(meterType, FALSE);
             return;
         }            
-        MeterControl_SendNextCommand(stabilizationTimeoutValue, nextState);
+        MeterControl_SendNextCommand(meterType, stabilizationTimeoutValue, nextState);
         return;
     }
             
@@ -332,34 +337,34 @@ void MeterControl_SendCommandByIdentificator(   BYTE modbusId,
 
             } else {
 
-                MeterControl_SendNextCommand(stabilizationTimeoutValue, nextState);
+                MeterControl_SendNextCommand(meterType, stabilizationTimeoutValue, nextState);
             }
 
             return;
         }
      
-        MeterControl_ErrorReset();        
+        MeterControl_ErrorReset(meterType);        
     }
     
     if ( (MeterControl_GetResponseTimeout() == METER_TIMEOUT_EXPIRED) && (retries == maxRetries))
     {
-        MeterControl_ErrorReset();
+        MeterControl_ErrorReset(meterType);
     }
     
     return;
 }
 
-void MeterControl_SendNextCommand(WORD stabilizationTimeoutValue, BYTE nextState ) {
+void MeterControl_SendNextCommand(BYTE meterType, WORD stabilizationTimeoutValue, BYTE nextState ) {
               
-    MeterControl_Reset(stabilizationTimeoutValue);    
+    MeterControl_Reset(meterType, stabilizationTimeoutValue);    
     MeterControl_SetStateMachine( nextState);    
     print_log("Command Processed Successfully");
 }
 
-void MeterControl_ErrorReset(void){
+void MeterControl_ErrorReset(BYTE meterType){
     
     MeterControl_SetStateMachine(_ADDDELMETER_END_STATE);
-    MeterControl_Clear();
+    MeterControl_Clear(meterType);
     print_error("Meter Error Response");
 }
 
@@ -627,11 +632,12 @@ void API_MeterControl_ReceiveHandler(void){
         
         if(error_code == METER_CONTROL_NO_ERROR_CODE){
             
-            MeterControl_SetDataAvailable(TRUE);
+            print_log("Data Available Cast as a MeterType: %X", meterType );
+            MeterControl_SetDataAvailable(meterType, TRUE);
             API_MeterControl_ExcecuteCommandInvoke(&meterDescriptor, commandCallBack);
             //API_MeterTable_ExcecuteCommand( meterDescriptor.modbusId, meterDescriptor.serialNumber, meterDescriptor.serialNumberLen,commandCallBack, meterType);
             
-            break;
+            //!break;
         }            
         
         index++;
