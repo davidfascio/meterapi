@@ -343,11 +343,13 @@ void MeterControl_SendCommandByIdentificator(   BYTE modbusId,
             return;
         }
      
+        print_error("Command Id Function Callback does not exist");
         MeterControl_ErrorReset(meterType);        
     }
     
     if ( (MeterControl_GetResponseTimeout() == METER_TIMEOUT_EXPIRED) && (retries == maxRetries))
     {
+        print_error("Meter Error Response");
         MeterControl_ErrorReset(meterType);
     }
     
@@ -364,8 +366,7 @@ void MeterControl_SendNextCommand(BYTE meterType, WORD stabilizationTimeoutValue
 void MeterControl_ErrorReset(BYTE meterType){
     
     MeterControl_SetStateMachine(_ADDDELMETER_END_STATE);
-    MeterControl_Clear(meterType);
-    print_error("Meter Error Response");
+    MeterControl_Clear(meterType);    
 }
 
 BYTE MeterControl_ExcecuteCommand(BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE commandId, BYTE meterType, BOOL broadcastSent)
@@ -382,6 +383,15 @@ BYTE MeterControl_ExcecuteCommand(BYTE modbusId, BYTE * serialNumber, WORD seria
             break;
             
         case READ_MODE:
+        case READ_IMPORTED_ACTIVE_ENERGY_MTR:
+        case READ_EXPORTED_ACTIVE_ENERGY_MTR:
+        case READ_IMPORTED_REACTIVE_ENERGY_MTR:
+        case READ_EXPORTED_REACTIVE_ENERGY_MTR:
+        case READ_ALL_VOLTAGE_MTR:
+        case READ_ALL_CURRENT_MTR:
+        case READ_ACTIVE_POWER_MTR:
+        case READ_POWER_FACTOR_MTR:       
+            
             nextState = _ADDDELMETER_SEND_READ_STATE;
             break;
             
@@ -560,7 +570,7 @@ BYTE API_MeterControl_ResponseHandler(BYTE meterType, BYTE modbusId, BYTE * seri
     WORD maxResponseLen = sizeof(response);
     WORD responseLen;
     BYTE error_code;
-    BYTE commandCallBack;
+    BYTE commandCallBack = NO_COMMAND_MTR;
     METER_COMMAND_ID_FUNCTION_API_PTR meterCommandIdFunctionAPI_ptr = MeterInterface_GetMeterCommandIdFunctionAPI(meterType);
     
     error_code = meterCommandIdFunctionAPI_ptr->meterHandler_ResponseProcessCallback(modbusId, serialNumber, serialNumberLen, command, response, maxResponseLen, &responseLen, &commandCallBack );
@@ -574,29 +584,46 @@ BYTE API_MeterControl_ResponseHandler(BYTE meterType, BYTE modbusId, BYTE * seri
         case REQUEST_SERIAL_NUMBER_MTR:
             
             // Adding Meter Process
-            return MeterTable_AddNewMeterBySerialNumber(meterType, modbusId, response,responseLen);
+            error_code = MeterTable_AddNewMeterBySerialNumber(meterType, modbusId, response,responseLen);
+            break;
         
         case LINK_ADDING_MTR:  
             modbusId = MeterTable_FindAvailableModbusId();
-            return MeterTable_AddNewMeterBySerialNumber(meterType, modbusId, serialNumber, serialNumberLen);
+            error_code = MeterTable_AddNewMeterBySerialNumber(meterType, modbusId, serialNumber, serialNumberLen);
+            break;
             
         case LINK_DELETING_MTR:
             
-            return MeterTable_DeleteMeterBySerialNumber(meterType, modbusId, serialNumber, serialNumberLen);
+            error_code = MeterTable_DeleteMeterBySerialNumber(meterType, modbusId, serialNumber, serialNumberLen);
+            break;
             
         case READ_MODE:
+        case READ_IMPORTED_ACTIVE_ENERGY_MTR:
+        case READ_EXPORTED_ACTIVE_ENERGY_MTR:
+        case READ_IMPORTED_REACTIVE_ENERGY_MTR:
+        case READ_EXPORTED_REACTIVE_ENERGY_MTR:
+        case READ_ALL_VOLTAGE_MTR:
+        case READ_ALL_CURRENT_MTR:
+        case READ_ACTIVE_POWER_MTR:
+        case READ_POWER_FACTOR_MTR:       
             
             // It needs to Save Metering Data into Table
             if(responseLen != sizeof(Data_Readings))
                 return METER_TABLE_MEASUREMENT_ERROR_CODE;
             
-            return MeterTable_SaveMeasurementBySerialNumber(meterType, modbusId, serialNumber, serialNumberLen, (Data_Readings_Ptr) response);
+            error_code = MeterTable_SaveMeasurementBySerialNumber(meterType, modbusId, serialNumber, serialNumberLen, (Data_Readings_Ptr) response);
             
         default:
             break;
     }
     
-    return METER_TABLE_METER_NO_ERROR_CODE;
+    if( (error_code == METER_TABLE_METER_NO_ERROR_CODE ) && 
+        (commandCallBack != NO_COMMAND_MTR)){
+        
+        API_MeterControl_ExcecuteCommand(modbusId, serialNumber, serialNumberLen, commandCallBack, meterType, FALSE);
+    }
+        
+    return error_code;   
 }
 
 void API_MeterControl_ReceiveHandler(void){
@@ -749,8 +776,8 @@ void vfnAddDelMeterSendLinkerOFFState(void){
 }
 
 void vfnAddDelMeterSendReadState(void){
-    
-    MeterControl_SendCommand(   READ_MODE,                                      /*  command                     */
+    BYTE commandId =   MeterControl_GetCommandId();
+    MeterControl_SendCommand(   commandId,                                      /*  command                     */
                                 NULL,                                           /*  data                        */
                                 0,                                              /*  dataLen                     */
                                 TRUE,                                           /*  answerRequired              */

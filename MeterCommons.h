@@ -41,11 +41,16 @@
 #define LINK_ADDING_MTR                                                 (9)
 #define LINK_DELETING_MTR                                               (10)
 
-#define READ_ALL_VOLTAGE_MTR                                            (11)
-#define READ_ALL_CURRENT_MTR                                            (12)
-#define READ_ALL_ACTIVE_POWER_MTR                                       (13)
-#define READ_ALL_POWER_FACTOR_MTR                                       (14)
-#define READ_ALL_APPARENT_POWER_MTR                                     (15)
+#define READ_IMPORTED_ACTIVE_ENERGY_MTR                                 (11)
+#define READ_EXPORTED_ACTIVE_ENERGY_MTR                                 (12)
+#define READ_IMPORTED_REACTIVE_ENERGY_MTR                               (13)
+#define READ_EXPORTED_REACTIVE_ENERGY_MTR                               (14)
+#define READ_ALL_VOLTAGE_MTR                                            (15)
+#define READ_ALL_CURRENT_MTR                                            (16)
+#define READ_POWER_FACTOR_MTR                                           (17)
+#define READ_ACTIVE_POWER_MTR                                           (18)
+
+//#define READ_ALL_APPARENT_POWER_MTR                                     (15)
 
 
 #define Lenght_Meter_ID                                                 (16)

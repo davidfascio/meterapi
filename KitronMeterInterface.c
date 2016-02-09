@@ -3,9 +3,30 @@
 COMMAND_ID_FUNCTION KitronMeterInterface_CommandIdFunctionList [] = 
 {
     {   READ_MODE ,                                         /* Meter Common Command Id              */
+        KitronMeterInterface_ReadImportedActiveEnergyData } ,             /* Meter CommandIdFunction_Callback     */
+        
+    {   READ_EXPORTED_ACTIVE_ENERGY_MTR ,                                         /* Meter Common Command Id              */
+        KitronMeterInterface_ReadExportedActiveEnergyData } ,             /* Meter CommandIdFunction_Callback     */    
+        
+    {   READ_IMPORTED_REACTIVE_ENERGY_MTR ,                                         /* Meter Common Command Id              */
+        KitronMeterInterface_ReadImportedReactiveEnergyData } ,             /* Meter CommandIdFunction_Callback     */
+        
+    {   READ_EXPORTED_REACTIVE_ENERGY_MTR ,                                         /* Meter Common Command Id              */
+        KitronMeterInterface_ReadExportedReactiveEnergyData } ,             /* Meter CommandIdFunction_Callback     */
+        
+    {   READ_ALL_VOLTAGE_MTR ,                                         /* Meter Common Command Id              */
         KitronMeterInterface_ReadAllVoltageData } ,             /* Meter CommandIdFunction_Callback     */
         
-    COMMAND_ID_FUNCTION_NULL
+    {   READ_ALL_CURRENT_MTR ,                                         /* Meter Common Command Id              */
+        KitronMeterInterface_ReadAllCurrentData } ,             /* Meter CommandIdFunction_Callback     */
+        
+    {   READ_ACTIVE_POWER_MTR ,                                         /* Meter Common Command Id              */
+        KitronMeterInterface_ReadActivePowerData } ,             /* Meter CommandIdFunction_Callback     */
+        
+    {   READ_POWER_FACTOR_MTR ,                                         /* Meter Common Command Id              */
+        KitronMeterInterface_ReadPowerFactorData } ,             /* Meter CommandIdFunction_Callback     */    
+        
+        COMMAND_ID_FUNCTION_NULL
 };
 
 //******************************************************************************
@@ -83,6 +104,55 @@ void KitronMeterInterface_SendFrame( BYTE modbusId,
     ComSerialInterface_SendData(frame, frameLen);        
 }
 
+void KitronMeterInterface_ReadImportedActiveEnergyData(BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE * data, WORD dataLen){
+    
+    print_info("Requesting READ IMPORTED ACTIVE ENERGY DATA Command");
+    
+    KitronMeterInterface_SendFrame( modbusId,                                     
+                                    KITRON_METER_INTERFACE_READ_COMMAND_FUNCTION,
+                                    KITRON_METER_INTERFACE_TOTAL_IMPORT_ACTIVE_ENERGY_REGISTER_ADDRESS,
+                                    KITRON_METER_INTERFACE_TOTAL_IMPORT_ACTIVE_ENERGY_REGISTER_ADDRESS_SIZE,
+                                    NULL,
+                                    0);      
+}
+
+void KitronMeterInterface_ReadExportedActiveEnergyData(BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE * data, WORD dataLen){
+    
+    print_info("Requesting READ EXPORTED ACTIVE ENERGY DATA Command");
+    
+    KitronMeterInterface_SendFrame( modbusId,                                     
+                                    KITRON_METER_INTERFACE_READ_COMMAND_FUNCTION,
+                                    KITRON_METER_INTERFACE_TOTAL_EXPORT_ACTIVE_ENERGY_REGISTER_ADDRESS,
+                                    KITRON_METER_INTERFACE_TOTAL_EXPORT_ACTIVE_ENERGY_REGISTER_ADDRESS_SIZE,
+                                    NULL,
+                                    0);      
+}
+
+void KitronMeterInterface_ReadImportedReactiveEnergyData(BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE * data, WORD dataLen){
+    
+    print_info("Requesting READ IMPORTED REACTIVE ENERGY DATA Command");
+    
+    KitronMeterInterface_SendFrame( modbusId,                                     
+                                    KITRON_METER_INTERFACE_READ_COMMAND_FUNCTION,
+                                    KITRON_METER_INTERFACE_TOTAL_IMPORT_REACTIVE_ENERGY_REGISTER_ADDRESS,
+                                    KITRON_METER_INTERFACE_TOTAL_IMPORT_REACTIVE_ENERGY_REGISTER_ADDRESS_SIZE,
+                                    NULL,
+                                    0);      
+}
+
+void KitronMeterInterface_ReadExportedReactiveEnergyData(BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE * data, WORD dataLen){
+    
+    print_info("Requesting READ EXPORTED REACTIVE ENERGY DATA Command");
+    
+    KitronMeterInterface_SendFrame( modbusId,                                     
+                                    KITRON_METER_INTERFACE_READ_COMMAND_FUNCTION,
+                                    KITRON_METER_INTERFACE_TOTAL_EXPORT_REACTIVE_ENERGY_REGISTER_ADDRESS,
+                                    KITRON_METER_INTERFACE_TOTAL_EXPORT_REACTIVE_ENERGY_REGISTER_ADDRESS_SIZE,
+                                    NULL,
+                                    0);      
+    
+}
+
 void KitronMeterInterface_ReadAllVoltageData(BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE * data, WORD dataLen){
     
     print_info("Requesting READ ALL VOLTAGE DATA Command");
@@ -107,31 +177,31 @@ void KitronMeterInterface_ReadAllCurrentData(BYTE modbusId, BYTE * serialNumber,
                                     0);      
 }
 
-void KitronMeterInterface_ReadAllActivePowerData(BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE * data, WORD dataLen){
+void KitronMeterInterface_ReadPowerFactorData(BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE * data, WORD dataLen){
     
-    print_info("Requesting READ ALL ACTIVE POWER DATA Command");
+    print_info("Requesting READ POWER FACTOR DATA Command");
     
     KitronMeterInterface_SendFrame( modbusId,                                     
                                     KITRON_METER_INTERFACE_READ_COMMAND_FUNCTION,
-                                    KITRON_METER_INTERFACE_ALL_ACTIVE_POWER_PHASE_REGISTER_ADDRESS,
-                                    KITRON_METER_INTERFACE_ALL_ACTIVE_POWER_PHASE_REGISTER_ADDRESS_SIZE,
+                                    KITRON_METER_INTERFACE_TOTAL_POWER_FACTOR_REGISTER_ADDRESS,
+                                    KITRON_METER_INTERFACE_TOTAL_POWER_FACTOR_REGISTER_ADDRESS_SIZE,
                                     NULL,
                                     0);      
 }
 
-void KitronMeterInterface_ReadAllPowerFactorData(BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE * data, WORD dataLen){
+void KitronMeterInterface_ReadActivePowerData(BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE * data, WORD dataLen){
     
-    print_info("Requesting READ ALL POWER FACTOR DATA Command");
+    print_info("Requesting READ ACTIVE POWER DATA Command");
     
     KitronMeterInterface_SendFrame( modbusId,                                     
                                     KITRON_METER_INTERFACE_READ_COMMAND_FUNCTION,
-                                    KITRON_METER_INTERFACE_ALL_POWER_FACTOR_PHASE_REGISTER_ADDRESS,
-                                    KITRON_METER_INTERFACE_ALL_POWER_FACTOR_PHASE_REGISTER_ADDRESS_SIZE,
+                                    KITRON_METER_INTERFACE_TOTAL_INSTANTANEOUS_ACTIVE_POWER_REGISTER_ADDRESS,
+                                    KITRON_METER_INTERFACE_TOTAL_INSTANTANEOUS_ACTIVE_POWER_REGISTER_ADDRESS_SIZE,
                                     NULL,
                                     0);      
 }
 
-void KitronMeterInterface_ReadAllApparentPowerData(BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE * data, WORD dataLen){
+/*void KitronMeterInterface_ReadAllApparentPowerData(BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE * data, WORD dataLen){
     
     print_info("Requesting READ ALL APPARENT POWER DATA Command");
     
@@ -141,4 +211,4 @@ void KitronMeterInterface_ReadAllApparentPowerData(BYTE modbusId, BYTE * serialN
                                     KITRON_METER_INTERFACE_ALL_APPARENT_POWER_PHASE_REGISTER_ADDRESS_SIZE,
                                     NULL,
                                     0);      
-}
+}*/

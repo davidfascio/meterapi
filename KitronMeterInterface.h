@@ -32,6 +32,19 @@
 //******************************************************************************
 // KITRON METER INTERFACE REGISTER ADDRESSES
 //******************************************************************************
+
+#define KITRON_METER_INTERFACE_TOTAL_IMPORT_ACTIVE_ENERGY_REGISTER_ADDRESS          (0x4010) //kWh
+#define KITRON_METER_INTERFACE_TOTAL_IMPORT_ACTIVE_ENERGY_REGISTER_ADDRESS_SIZE         (1)
+
+#define KITRON_METER_INTERFACE_TOTAL_IMPORT_REACTIVE_ENERGY_REGISTER_ADDRESS        (0x4110) //kvarh
+#define KITRON_METER_INTERFACE_TOTAL_IMPORT_REACTIVE_ENERGY_REGISTER_ADDRESS_SIZE       (1)
+
+#define KITRON_METER_INTERFACE_TOTAL_EXPORT_ACTIVE_ENERGY_REGISTER_ADDRESS          (0x4020) //kWh
+#define KITRON_METER_INTERFACE_TOTAL_EXPORT_ACTIVE_ENERGY_REGISTER_ADDRESS_SIZE         (1) 
+
+#define KITRON_METER_INTERFACE_TOTAL_EXPORT_REACTIVE_ENERGY_REGISTER_ADDRESS        (0x4120) //kvarh
+#define KITRON_METER_INTERFACE_TOTAL_EXPORT_REACTIVE_ENERGY_REGISTER_ADDRESS_SIZE       (1) 
+
 #define KITRON_METER_INTERFACE_VOLTAGE_PHASE_A_REGISTER_ADDRESS         (0x6611)
 #define KITRON_METER_INTERFACE_VOLTAGE_PHASE_A_REGISTER_ADDRESS_SIZE         (1)
 
@@ -72,11 +85,11 @@
 #define KITRON_METER_INTERFACE_ACTIVE_POWER_PHASE_C_REGISTER_ADDRESS    (0x6633)
 #define KITRON_METER_INTERFACE_ACTIVE_POWER_PHASE_C_REGISTER_ADDRESS_SIZE    (1)
 
-#define KITRON_METER_INTERFACE_ALL_ACTIVE_POWER_PHASE_REGISTER_ADDRESS      KITRON_METER_INTERFACE_TOTAL_INSTANTANEOUS_ACTIVE_POWER_REGISTER_ADDRESS
+/*#define KITRON_METER_INTERFACE_ALL_ACTIVE_POWER_PHASE_REGISTER_ADDRESS      KITRON_METER_INTERFACE_TOTAL_INSTANTANEOUS_ACTIVE_POWER_REGISTER_ADDRESS
 #define KITRON_METER_INTERFACE_ALL_ACTIVE_POWER_PHASE_REGISTER_ADDRESS_SIZE (KITRON_METER_INTERFACE_TOTAL_INSTANTANEOUS_ACTIVE_POWER_REGISTER_ADDRESS_SIZE +\
                                                                             KITRON_METER_INTERFACE_ACTIVE_POWER_PHASE_A_REGISTER_ADDRESS_SIZE +\
                                                                             KITRON_METER_INTERFACE_ACTIVE_POWER_PHASE_B_REGISTER_ADDRESS_SIZE +\
-                                                                            KITRON_METER_INTERFACE_ACTIVE_POWER_PHASE_C_REGISTER_ADDRESS_SIZE)
+                                                                            KITRON_METER_INTERFACE_ACTIVE_POWER_PHASE_C_REGISTER_ADDRESS_SIZE)*/
 
 #define KITRON_METER_INTERFACE_TOTAL_POWER_FACTOR_REGISTER_ADDRESS      (0x6650)
 #define KITRON_METER_INTERFACE_TOTAL_POWER_FACTOR_REGISTER_ADDRESS_SIZE      (1)
@@ -90,11 +103,11 @@
 #define KITRON_METER_INTERFACE_POWER_FACTOR_PHASE_C_REGISTER_ADDRESS    (0x6653)
 #define KITRON_METER_INTERFACE_POWER_FACTOR_PHASE_C_REGISTER_ADDRESS_SIZE    (1)
 
-#define KITRON_METER_INTERFACE_ALL_POWER_FACTOR_PHASE_REGISTER_ADDRESS      KITRON_METER_INTERFACE_TOTAL_POWER_FACTOR_REGISTER_ADDRESS
+/*#define KITRON_METER_INTERFACE_ALL_POWER_FACTOR_PHASE_REGISTER_ADDRESS      KITRON_METER_INTERFACE_TOTAL_POWER_FACTOR_REGISTER_ADDRESS
 #define KITRON_METER_INTERFACE_ALL_POWER_FACTOR_PHASE_REGISTER_ADDRESS_SIZE (KITRON_METER_INTERFACE_TOTAL_POWER_FACTOR_REGISTER_ADDRESS_SIZE +\
                                                                             KITRON_METER_INTERFACE_POWER_FACTOR_PHASE_A_REGISTER_ADDRESS_SIZE +\
                                                                             KITRON_METER_INTERFACE_POWER_FACTOR_PHASE_B_REGISTER_ADDRESS_SIZE +\
-                                                                            KITRON_METER_INTERFACE_POWER_FACTOR_PHASE_C_REGISTER_ADDRESS_SIZE)
+                                                                            KITRON_METER_INTERFACE_POWER_FACTOR_PHASE_C_REGISTER_ADDRESS_SIZE)*/
 
 #define KITRON_METER_INTERFACE_TOTAL_INSTANTANEOUS_APPARENT_POWER_REGISTER_ADDRESS    (0x6660)
 #define KITRON_METER_INTERFACE_TOTAL_INSTANTANEOUS_APPARENT_POWER_REGISTER_ADDRESS_SIZE    (1)
@@ -108,11 +121,11 @@
 #define KITRON_METER_INTERFACE_APPARENT_POWER_PHASE_C_REGISTER_ADDRESS      (0x6663)
 #define KITRON_METER_INTERFACE_APPARENT_POWER_PHASE_C_REGISTER_ADDRESS_SIZE     (1)
 
-#define KITRON_METER_INTERFACE_ALL_APPARENT_POWER_PHASE_REGISTER_ADDRESS      KITRON_METER_INTERFACE_TOTAL_INSTANTANEOUS_APPARENT_POWER_REGISTER_ADDRESS
+/*#define KITRON_METER_INTERFACE_ALL_APPARENT_POWER_PHASE_REGISTER_ADDRESS      KITRON_METER_INTERFACE_TOTAL_INSTANTANEOUS_APPARENT_POWER_REGISTER_ADDRESS
 #define KITRON_METER_INTERFACE_ALL_APPARENT_POWER_PHASE_REGISTER_ADDRESS_SIZE (KITRON_METER_INTERFACE_TOTAL_INSTANTANEOUS_APPARENT_POWER_REGISTER_ADDRESS_SIZE +\
                                                                                KITRON_METER_INTERFACE_APPARENT_POWER_PHASE_A_REGISTER_ADDRESS_SIZE +\
                                                                                KITRON_METER_INTERFACE_APPARENT_POWER_PHASE_B_REGISTER_ADDRESS_SIZE +\
-                                                                               KITRON_METER_INTERFACE_APPARENT_POWER_PHASE_C_REGISTER_ADDRESS_SIZE)
+                                                                               KITRON_METER_INTERFACE_APPARENT_POWER_PHASE_C_REGISTER_ADDRESS_SIZE)*/
 //******************************************************************************
 // G155 Meter Interface API
 //******************************************************************************
@@ -132,11 +145,17 @@ void KitronMeterInterface_SendFrame( BYTE modbusId,
                                      BYTE * data, 
                                      BYTE dataLen );
 
+void KitronMeterInterface_ReadImportedActiveEnergyData(BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE * data, WORD dataLen);
+void KitronMeterInterface_ReadExportedActiveEnergyData(BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE * data, WORD dataLen);
+void KitronMeterInterface_ReadImportedReactiveEnergyData(BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE * data, WORD dataLen);
+void KitronMeterInterface_ReadExportedReactiveEnergyData(BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE * data, WORD dataLen);
+
 void KitronMeterInterface_ReadAllVoltageData(BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE * data, WORD dataLen);
 void KitronMeterInterface_ReadAllCurrentData(BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE * data, WORD dataLen);
-void KitronMeterInterface_ReadAllActivePowerData(BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE * data, WORD dataLen);
-void KitronMeterInterface_ReadAllPowerFactorData(BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE * data, WORD dataLen);
-void KitronMeterInterface_ReadAllApparentPowerData(BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE * data, WORD dataLen);
+void KitronMeterInterface_ReadPowerFactorData(BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE * data, WORD dataLen);
+void KitronMeterInterface_ReadActivePowerData(BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE * data, WORD dataLen);
+
+//void KitronMeterInterface_ReadAllApparentPowerData(BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE * data, WORD dataLen);
 
 extern COMMAND_ID_FUNCTION KitronMeterInterface_CommandIdFunctionList [];
 
