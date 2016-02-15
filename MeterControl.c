@@ -301,8 +301,11 @@ void MeterControl_SendCommandByIdentificator(   BYTE modbusId,
     
     MeterControl_SetAnswerRequired(answerRequired);
     
-    if(meterCommandIdFunctionAPI_ptr == NULL)
+    if(meterCommandIdFunctionAPI_ptr == NULL){
+        print_error("MeterCommandIdFunctionAPI does not exist");
+        MeterControl_ErrorReset(meterType);
         return;
+    }
     
     if(MeterControl_GetStabilizationTimeout() == METER_TIMEOUT_INITIALIZED)
         return;
@@ -575,8 +578,10 @@ BYTE API_MeterControl_ResponseHandler(BYTE meterType, BYTE modbusId, BYTE * seri
     
     error_code = meterCommandIdFunctionAPI_ptr->meterHandler_ResponseProcessCallback(modbusId, serialNumber, serialNumberLen, command, response, maxResponseLen, &responseLen, &commandCallBack );
     
-    if(error_code)
+    if(error_code){
+        print_error("ResponseProcessCallback Error Code :%i", error_code);
         return error_code;
+    }
     //! error_code needs to be processed here
     
     switch(command){
@@ -585,6 +590,8 @@ BYTE API_MeterControl_ResponseHandler(BYTE meterType, BYTE modbusId, BYTE * seri
             
             // Adding Meter Process
             error_code = MeterTable_AddNewMeterBySerialNumber(meterType, modbusId, response,responseLen);
+            serialNumber = response;
+            serialNumberLen = responseLen;
             break;
         
         case LINK_ADDING_MTR:  
@@ -623,7 +630,10 @@ BYTE API_MeterControl_ResponseHandler(BYTE meterType, BYTE modbusId, BYTE * seri
         API_MeterControl_ExcecuteCommand(modbusId, serialNumber, serialNumberLen, commandCallBack, meterType, FALSE);
     }
         
-    return error_code;   
+    if (error_code)
+        print_error("Local Error Code :%i", error_code);
+    
+    return error_code;  
 }
 
 void API_MeterControl_ReceiveHandler(void){
@@ -811,7 +821,7 @@ void vfnAddDelMeterSendCMDState(void){
                                 _1000_MSEC_,                                                                                                    /*  timeoutValue                */
                                 METER_CONTROL_DEFAULT_NUMBER_OF_RETRIES,                                                                        /*  maxNumberOfRetries          */
                                 (MeterControl_IsBroadcastSent() ? 0 : MeterInterface_GetStabilizationTimeoutValue(MeterControl_GetMeterType())),/*  stabilizationTimeoutValue   */
-                                (MeterControl_IsBroadcastSent() ? _ADDDELMETER_END_STATE : _ADDDELMETER_SEND_READ_STATE ));                     /*  nextState                   */
+                                _ADDDELMETER_END_STATE );                                                                                       /*  nextState                   */
 }
 
 void vfnAddDelMeterSendMACBroadcastState(void){

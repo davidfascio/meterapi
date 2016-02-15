@@ -626,7 +626,7 @@ WORD API_SCORPIO_Meter_response_handler( BYTE modbusId, BYTE * serialNumber, WOR
 
                  memcpy(response, scorpio_control.data, scorpio_control.dataSize);//copy data & data size
                  *responseLen = scorpio_control.dataSize;
-
+                 * commandCallBack = READ_MODE;
                  return HANDLER_SCORPIO_NO_ERROR;
              }
              break;
@@ -637,7 +637,7 @@ WORD API_SCORPIO_Meter_response_handler( BYTE modbusId, BYTE * serialNumber, WOR
 
                  memcpy(response, scorpio_control.data, scorpio_control.dataSize);//copy data & data size
                  *responseLen = scorpio_control.dataSize;
-
+                 * commandCallBack = READ_MODE;
                  return HANDLER_SCORPIO_NO_ERROR;
              }
              break;
@@ -648,7 +648,7 @@ WORD API_SCORPIO_Meter_response_handler( BYTE modbusId, BYTE * serialNumber, WOR
 
                  memcpy(response, scorpio_control.data, scorpio_control.dataSize);//copy data & data size
                  *responseLen = scorpio_control.dataSize;
-
+                 * commandCallBack = READ_MODE;
                  return HANDLER_SCORPIO_NO_ERROR;
              }
              break;     
@@ -708,12 +708,21 @@ WORD API_SCORPIO_Meter_response_handler( BYTE modbusId, BYTE * serialNumber, WOR
 
                  memcpy(response, scorpio_control.data, scorpio_control.dataSize);//copy data & data size
                  *responseLen = scorpio_control.dataSize;
-
+                 * commandCallBack = READ_MODE;
                  return HANDLER_SCORPIO_NO_ERROR;
              }
              break;      
              
         case LINK_ADDING_MTR:       // Request Serial Number Meter
+            
+            if (scorpio_control.fcn == HANDLER_SCORPIO_ESPFCN_TYPE_REPLYDATA_HIGH_VALUE){
+
+                * responseLen = scorpio_control.dataSize;
+                * commandCallBack = READ_MODE;
+                return HANDLER_SCORPIO_NO_ERROR;
+            }
+            break;
+
         case LINK_DELETING_MTR:
             
             if (scorpio_control.fcn == HANDLER_SCORPIO_ESPFCN_TYPE_REPLYDATA_HIGH_VALUE){ 

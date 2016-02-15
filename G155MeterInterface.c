@@ -25,7 +25,10 @@ COMMAND_ID_FUNCTION G155MeterInterface_CommandIdFunctionList [] =
         G155MeterInterface_SendAssignModbusId },    /* Meter CommandIdFunction_Callback     */
         
     {   REQUEST_SERIAL_NUMBER_MTR ,                 /* Meter Common Command Id              */
-        G155MeterInterface_RequestSerialNumber },   /* Meter CommandIdFunction_Callback     */    
+        G155MeterInterface_RequestSerialNumber },   /* Meter CommandIdFunction_Callback     */  
+        
+    {   LINK_DELETING_MTR ,                         /* Meter Common Command Id              */
+        G155MeterInterface_RequestSerialNumber },   /* Meter CommandIdFunction_Callback     */
         
     COMMAND_ID_FUNCTION_NULL        
 };

@@ -19,7 +19,7 @@
 // KITRON METER HANDLER DEFINES
 //******************************************************************************
 
-#define KITRON_METER_TYPE                                               (0x85)
+#define KITRON_METER_TYPE                                               (0x93)
 #define KITRON_METER_HANDLER_CRC_BASE                                   (0xFFFF)
 #define KITRON_METER_HANDLER_READ_COMMAND_FUNCTION                      (0x03)
 #define KITRON_MAX_DATA_SIZE                                            (50)

@@ -6,7 +6,7 @@ METER_COMMAND_ID_FUNCTION_API meterCommandIdFunctionAPIList [] =
         0x00,                                                   /*  Broadcast Id                                         */
         NULL,                                                   /*  SerialNumber Broadcast                               */
         0,                                                      /*  SerialNumber Broadcast Len                           */
-        _2200_MSEC_,                                            /*  Stabilization Time Value                             */
+        _3000_MSEC_,                                            /*  Stabilization Time Value                             */
         G155MeterInterface_CommandIdFunctionList,               /*  Pointer to Command Id Function List per Meter Type   */
         API_G155_Meter_response_handler,                        /*  Pointer to Meter Response Handler                    */
         API_G155_Recieve_handler,                               /*  Pointer to Meter Receive  Handler                    */
