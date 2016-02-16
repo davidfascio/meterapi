@@ -98,12 +98,6 @@ DWORD ComSerialInterface_WritePort( HANDLE hSerial, BYTE * buffer, DWORD buffers
     return dwBytesRead;
 }
 
-#define COM_SERIAL_INTERFACE_HANDLER_PORT                       "\\\\.\\COM45" //"\\\\.\\COM30"
-#define COM_SERIAL_INTERFACE_HANDLER_BAUDRATE                   (9600) //(19200)
-#define COM_SERIAL_INTERFACE_HANDLER_BYTE_SIZE                  (8)
-#define COM_SERIAL_INTERFACE_HANDLER_STOP_BITS                  (ONESTOPBIT)
-#define COM_SERIAL_INTERFACE_HANDLER_PARITY                     (NOPARITY)//(EVENPARITY)
-
 
 HANDLE ComSerialInterfaceHandler = NULL;
 
@@ -150,14 +144,27 @@ BYTE ComSerialInterfaceBufferUsed = 0;
 
 void ComSerialInterface_Init(void){
     
-    ComSerialInterfaceHandler = ComSerialInterface_OpenHandler( COM_SERIAL_INTERFACE_HANDLER_PORT,
-                                                                COM_SERIAL_INTERFACE_HANDLER_BAUDRATE,
-                                                                COM_SERIAL_INTERFACE_HANDLER_BYTE_SIZE,
-                                                                COM_SERIAL_INTERFACE_HANDLER_STOP_BITS,
-                                                                COM_SERIAL_INTERFACE_HANDLER_PARITY);
+    ComSerialInterface_Setup( COM_SERIAL_INTERFACE_HANDLER_9600_BAUDRATE, 
+                              COM_SERIAL_INTERFACE_HANDLER_BYTE_7_SIZE, 
+                              COM_SERIAL_INTERFACE_HANDLER_ONE_STOP_BIT, 
+                              COM_SERIAL_INTERFACE_HANDLER_EVEN_PARITY);
     
-    ComSerialInterface_CleanBuffer();
+
+
+    
+    //ComSerialInterface_CleanBuffer();
     //memset(ComSerialInterfaceBuffer, 0 , sizeof(ComSerialInterfaceBuffer));
+}
+
+VOID ComSerialInterface_Setup(DWORD   baudRate, DWORD   byteSize, DWORD   stopBits, BYTE    parity  ){
+    ComSerialInterface_CloseHandler(ComSerialInterfaceHandler);
+    ComSerialInterfaceHandler = ComSerialInterface_OpenHandler( COM_SERIAL_INTERFACE_HANDLER_PORT,
+                                                                baudRate,
+                                                                byteSize,
+                                                                stopBits,
+                                                                parity);
+    
+    ComSerialInterface_CleanBuffer();    
 }
 
 void ComSerialInterface_CleanBuffer(void){

@@ -46,7 +46,7 @@ const sPeriodicTimers taPeriodicTimers[] =
 {
     {vfnToogling, _500_MSEC_ },
     //{vfnLED_TOGGLE_NWK_ON_PeriodTask,_500_MSEC_},
-    {vfnGO_TO_READ_MTR_PeriodTask,_5000_MSEC_ },
+    {vfnGO_TO_READ_MTR_PeriodTask, _1000_MSEC_ },
     {NULL,_1000_MSEC_ }
 };
 
@@ -212,6 +212,16 @@ int main(int argc, char** argv) {
     vfnPeriodicTimerEnable(LED_TOGGLE_MAIN_PERTASK);
     vfnPeriodicTimerEnable(GO_TO_READ_MTR_PERTASK);    //Crea la rutina de leer medidores
     
+    BYTE arrdata[]={ 0x3F, 0x37, 0x33, 0x31, 0x30, 0x31, 0x30, 0x30, 0x31, 0x30, 0x30, 0x30, 0x34, 0x21, 0x0D, 0x0A  };
+    BYTE index = 0;
+    BYTE bcc = 0x00;
+    
+    for (index = 0; index < sizeof(arrdata); index++)
+        bcc = bcc ^ arrdata[index];
+    
+    print_debug("BCC: %X", bcc); // 67
+        
+    
     //MeterControl_Setup( METER_CONTROL_NO_METER_ID, G155_TYPE, REQUEST_SERIAL_NUMBER_MTR, 0);    
     //handler = API_SCORPIO_Recieve_handler(meter_metering_answer, sizeof(meter_metering_answer), &meterDescriptor, &commandCallback );
     //API_SCORPIO_Recieve_handler(meter_metering_answer, sizeof(meter_metering_answer), &meterDescriptor, &commandCallback );
@@ -225,6 +235,7 @@ int main(int argc, char** argv) {
     }*/
    
     //!KitronMeterInterface_ReadAllVoltageData(0x04,NULL, 0, NULL, 0);
+    
     while(TRUE){
         
         vfnEventsEngine();
@@ -243,6 +254,64 @@ BYTE command[] = {Dis_MTR,Dis_MTR, Con_MTR,Con_MTR, Res_MTR, Res_MTR};
 
 BYTE AppModbusId = 1;
 void vfnGO_TO_READ_MTR_PeriodTask(void){
+    
+    BYTE error_code;
+    
+    switch(counter){
+        
+        case 0:        
+            
+            KitronMeterInterface_OBISSendRequestMessageFrame(   KITRON_METER_INTERFACE_OBIS_START_CHARACTER, 
+                                                                KITRON_METER_INTERFACE_OBIS_REQUEST_COMMAND_CHARACTER, 
+                                                                "731010010004",
+                                                                12,
+                                                                KITRON_METER_INTERFACE_OBIS_END_CHARACTER,
+                                                                KITRON_METER_INTERFACE_OBIS_COMPLETION_CHARACTERS);                    
+            break;
+            
+        case 1:
+            
+            KitronMeterInterface_OBISSendOptionSelectMessageFrame(  KITRON_METER_INTERFACE_OBIS_ACK_CHARACTER, 
+                                                                    KITRON_METER_INTERFACE_OBIS_PROTOCOL_CONTROL_NORMAL_PROCEDURE_CHARACTER,
+                                                                    KITRON_METER_INTERFACE_OBIS_BAUDRATE_IDENTIFICATION_9600_CHARACTER, 
+                                                                    KITRON_METER_INTERFACE_OBIS_MODE_CONTROL_PROGRAMMING_END_CHARACTER,
+                                                                    KITRON_METER_INTERFACE_OBIS_COMPLETION_CHARACTERS);
+            break;
+        
+        case 2:
+            
+            KitronMeterInterface_OBISSendCommandMessageFrame(KITRON_METER_INTERFACE_OBIS_START_OF_HEADER_CHARACTER, 
+                                                            KITRON_METER_INTERFACE_OBIS_COMMAND_MESSAGE_READ_CHARACTER,
+                                                            KITRON_METER_INTERFACE_OBIS_COMMAND_TYPE_READ_ASCII_CODE_DATA_CHARACTER, 
+                                                            KITRON_METER_INTERFACE_OBIS_FRAME_START_CHARACTER, 
+                                                            "1-0:0.0.0()", 
+                                                            11,
+                                                            KITRON_METER_INTERFACE_OBIS_FRAME_END_CHARACTER);
+                 
+            break;
+            
+        case 3:
+            
+            KitronMeterInterface_OBISSendCommandMessageFrame(KITRON_METER_INTERFACE_OBIS_START_OF_HEADER_CHARACTER, 
+                                                            KITRON_METER_INTERFACE_OBIS_COMMAND_MESSAGE_EXIT_CHARACTER,
+                                                            KITRON_METER_INTERFACE_OBIS_COMMAND_TYPE_COMPLETE_SIGN_OFF_CHARACTER, 
+                                                            KITRON_METER_INTERFACE_OBIS_NULL_CHARACTER, 
+                                                            NULL, 
+                                                            0,
+                                                            KITRON_METER_INTERFACE_OBIS_FRAME_END_CHARACTER);
+                 
+            break;
+            
+        case 4:
+            
+            error_code = API_MeterControl_SendCommand(1, READ_MODE);
+            break;
+            
+        default:
+            break;
+    }
+    
+    counter++;
  
     /*BYTE error_code;
     
@@ -260,9 +329,9 @@ void vfnGO_TO_READ_MTR_PeriodTask(void){
     //G155MeterInterface_RequestSerialNumber(AppModbusId++, NULL, 0, NULL, 0);
     //(void)CMD_To_Scorpio ((BYTE)NULL,READ_MODE); 
     
-    BYTE error_code;
     
-    error_code = API_MeterControl_SendCommand(1, READ_MODE);
+    
+    //!error_code = API_MeterControl_SendCommand(1, READ_MODE);
     
     if (error_code != METER_CONTROL_NO_ERROR_CODE)
         print_debug ("Meter Error Code: %d", error_code);
