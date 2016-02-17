@@ -256,49 +256,53 @@ BYTE AppModbusId = 1;
 void vfnGO_TO_READ_MTR_PeriodTask(void){
     
     BYTE error_code;
-    
+    BYTE serialNumber[] = "0000731010010004";
+    BYTE serialNumberLen = strlen(serialNumber);
     switch(counter){
         
         case 0:        
-            
-            KitronMeterInterface_OBISSendRequestMessageFrame(   KITRON_METER_INTERFACE_OBIS_START_CHARACTER, 
+            KitronMeterInterface_OBISRequestMessage(0, serialNumber, serialNumberLen, NULL, 0 );
+            /*KitronMeterInterface_OBISSendRequestMessageFrame(   KITRON_METER_INTERFACE_OBIS_START_CHARACTER, 
                                                                 KITRON_METER_INTERFACE_OBIS_REQUEST_COMMAND_CHARACTER, 
                                                                 "731010010004",
                                                                 12,
                                                                 KITRON_METER_INTERFACE_OBIS_END_CHARACTER,
-                                                                KITRON_METER_INTERFACE_OBIS_COMPLETION_CHARACTERS);                    
+                                                                KITRON_METER_INTERFACE_OBIS_COMPLETION_CHARACTERS);*/
             break;
             
         case 1:
             
-            KitronMeterInterface_OBISSendOptionSelectMessageFrame(  KITRON_METER_INTERFACE_OBIS_ACK_CHARACTER, 
+            KitronMeterInterface_OBISOptionSelectMessage(0, serialNumber, serialNumberLen, NULL, 0 );
+            /*KitronMeterInterface_OBISSendOptionSelectMessageFrame(  KITRON_METER_INTERFACE_OBIS_ACK_CHARACTER, 
                                                                     KITRON_METER_INTERFACE_OBIS_PROTOCOL_CONTROL_NORMAL_PROCEDURE_CHARACTER,
                                                                     KITRON_METER_INTERFACE_OBIS_BAUDRATE_IDENTIFICATION_9600_CHARACTER, 
                                                                     KITRON_METER_INTERFACE_OBIS_MODE_CONTROL_PROGRAMMING_END_CHARACTER,
-                                                                    KITRON_METER_INTERFACE_OBIS_COMPLETION_CHARACTERS);
+                                                                    KITRON_METER_INTERFACE_OBIS_COMPLETION_CHARACTERS);*/
             break;
         
         case 2:
             
-            KitronMeterInterface_OBISSendCommandMessageFrame(KITRON_METER_INTERFACE_OBIS_START_OF_HEADER_CHARACTER, 
+            KitronMeterInterface_OBISReadMeterNumberMessage(0, serialNumber, serialNumberLen, NULL, 0 );
+            /*KitronMeterInterface_OBISSendCommandMessageFrame(KITRON_METER_INTERFACE_OBIS_START_OF_HEADER_CHARACTER, 
                                                             KITRON_METER_INTERFACE_OBIS_COMMAND_MESSAGE_READ_CHARACTER,
                                                             KITRON_METER_INTERFACE_OBIS_COMMAND_TYPE_READ_ASCII_CODE_DATA_CHARACTER, 
                                                             KITRON_METER_INTERFACE_OBIS_FRAME_START_CHARACTER, 
                                                             "1-0:0.0.0()", 
                                                             11,
-                                                            KITRON_METER_INTERFACE_OBIS_FRAME_END_CHARACTER);
+                                                            KITRON_METER_INTERFACE_OBIS_FRAME_END_CHARACTER);*/
                  
             break;
             
         case 3:
             
-            KitronMeterInterface_OBISSendCommandMessageFrame(KITRON_METER_INTERFACE_OBIS_START_OF_HEADER_CHARACTER, 
+            KitronMeterInterface_OBISBreakMessage(0, serialNumber, serialNumberLen, NULL, 0 );
+            /*KitronMeterInterface_OBISSendCommandMessageFrame(KITRON_METER_INTERFACE_OBIS_START_OF_HEADER_CHARACTER, 
                                                             KITRON_METER_INTERFACE_OBIS_COMMAND_MESSAGE_EXIT_CHARACTER,
                                                             KITRON_METER_INTERFACE_OBIS_COMMAND_TYPE_COMPLETE_SIGN_OFF_CHARACTER, 
                                                             KITRON_METER_INTERFACE_OBIS_NULL_CHARACTER, 
                                                             NULL, 
                                                             0,
-                                                            KITRON_METER_INTERFACE_OBIS_FRAME_END_CHARACTER);
+                                                            KITRON_METER_INTERFACE_OBIS_FRAME_END_CHARACTER);*/
                  
             break;
             

@@ -86,8 +86,10 @@ void KitronMeterInterface_OBISSendRequestMessageFrame(  BYTE startCharacter,
                                                                     frame,              /* frame            */
                                                                     &frameLen);         /* frameLen         */
     
-    if(framebuilt == FALSE)
+    if(framebuilt == FALSE){     
+        print_error("It could not build OBIS RequestMessage frame");
         return;
+    }
     
     KitronMeterInterface_OBISSendData(frame, frameLen);         
 }
@@ -140,8 +142,10 @@ void KitronMeterInterface_OBISSendOptionSelectMessageFrame( BYTE acknowledgeChar
                                                                          frame,              /* frame            */
                                                                          &frameLen);         /* frameLen         */
     
-    if(framebuilt == FALSE)
+    if(framebuilt == FALSE){
+        print_error("It could not build OBIS OptionSelectMessage frame");
         return;
+    }
     
     KitronMeterInterface_OBISSendData(frame, frameLen);     
 }
@@ -213,8 +217,10 @@ void KitronMeterInterface_OBISSendCommandMessageFrame(  BYTE startOfHeader,
                                                                     frame,              /* frame            */
                                                                     &frameLen);         /* frameLen         */
     
-    if(framebuilt == FALSE)
+    if(framebuilt == FALSE){
+        print_error("It could not build OBIS CommandMessage frame");
         return;
+    }
     
     KitronMeterInterface_OBISSendData(frame, frameLen);        
 }
@@ -293,8 +299,11 @@ void KitronMeterInterface_ModbusSendFrame( BYTE modbusId,
                                                     frame,              /* frame            */
                                                     &frameLen);         /* frameLen         */
     
-    if(framebuilt == FALSE)
+    if(framebuilt == FALSE){
+     
+        print_error("It could not build MODBUS frame");
         return;
+    }
     //!print_info("Sent Data: ");   
     //! ComSerialInterface_PrintData(frame, frameLen);        
     KitronMeterInterface_ModbusSendData(frame, frameLen);        
@@ -308,6 +317,250 @@ void KitronMeterInterface_ModbusSendData(BYTE * frame, WORD frameLen){
                               COM_SERIAL_INTERFACE_HANDLER_NO_PARITY);
     //print_message(frame);
     ComSerialInterface_SendData(frame, frameLen);        
+}
+
+
+void KitronMeterInterface_OBISRequestMessage(BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE * data, WORD dataLen){
+    
+    BYTE * obisSerialNumber = serialNumber;
+    WORD obisSerialNumberLen = serialNumberLen;
+    
+    if(serialNumberLen == Lenght_Meter_ID){
+     
+        obisSerialNumber +=  KITRON_METER_INTERFACE_OBIS_SERIAL_NUMBER_OFFSET;
+        obisSerialNumberLen -= KITRON_METER_INTERFACE_OBIS_SERIAL_NUMBER_OFFSET;
+    }
+        
+    print_info("Requesting OBIS SIGN ON Message");
+    KitronMeterInterface_OBISSendRequestMessageFrame(   KITRON_METER_INTERFACE_OBIS_START_CHARACTER, 
+                                                        KITRON_METER_INTERFACE_OBIS_REQUEST_COMMAND_CHARACTER, 
+                                                        obisSerialNumber,
+                                                        obisSerialNumberLen,
+                                                        KITRON_METER_INTERFACE_OBIS_END_CHARACTER,
+                                                        KITRON_METER_INTERFACE_OBIS_COMPLETION_CHARACTERS);                    
+    
+}
+
+void KitronMeterInterface_OBISOptionSelectMessage(BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE * data, WORD dataLen){
+    
+    print_info("Sending OBIS ACKNOWLEDGEMENT WITH OPTION SELECT Message");
+    
+    KitronMeterInterface_OBISSendOptionSelectMessageFrame(  KITRON_METER_INTERFACE_OBIS_ACK_CHARACTER,
+                                                            KITRON_METER_INTERFACE_OBIS_PROTOCOL_CONTROL_NORMAL_PROCEDURE_CHARACTER,
+                                                            KITRON_METER_INTERFACE_OBIS_BAUDRATE_IDENTIFICATION_9600_CHARACTER,
+                                                            KITRON_METER_INTERFACE_OBIS_MODE_CONTROL_PROGRAMMING_END_CHARACTER,
+                                                            KITRON_METER_INTERFACE_OBIS_COMPLETION_CHARACTERS );
+}
+
+void KitronMeterInterface_OBISReadMeterNumberMessage(BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE * data, WORD dataLen){
+   
+    BYTE medium                 = KITRON_METER_INTERFACE_OBIS_ELECTRICITY_MEDIUM_CHARACTER; 
+    BYTE channel                = KITRON_METER_INTERFACE_OBIS_NO_CHANNEL_SPECIFIED_CHARACTER;
+    BYTE meteringType           = KITRON_METER_INTERFACE_OBIS_GENERAL_PURPOSE_OBJECTS_METERING_TYPE_CHARACTER;
+    BYTE measuringVariable      = KITRON_METER_INTERFACE_OBIS_NO_MEASURING_VARIABLE_SPECIFIED_CHARACTER;
+    BYTE tariffRate             = KITRON_METER_INTERFACE_OBIS_TOTAL_TARIFF_RATE_CHARACTER;
+        
+    print_info("Requesting OBIS READ METER NUMBER Message");
+    
+    KitronMeterInterface_OBISSendCommandReadMessage(    medium,                     /* BYTE medium              */
+                                                        &channel,                   /* BYTE * channel           */
+                                                        sizeof(channel),            /* WORD  channelLen         */
+                                                        &meteringType,              /* BYTE * meteringType      */
+                                                        sizeof(meteringType),       /* WORD meteringTypeLen     */
+                                                        &measuringVariable,         /* BYTE * measuringVariable */
+                                                        sizeof(measuringVariable),  /* WORD measuringVariableLen */
+                                                        &tariffRate,                /* BYTE * tariffRate        */
+                                                        sizeof(tariffRate),         /* WORD tariffRateLen,      */
+                                                        NULL,                       /* BYTE * historicalValues, */
+                                                        0);                         /* WORD historicalValuesLen */
+}
+
+void KitronMeterInterface_OBISBreakMessage(BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE * data, WORD dataLen){
+   
+    print_info("Sending OBIS EXIT Message");
+    
+    KitronMeterInterface_OBISSendCommandMessageFrame(   KITRON_METER_INTERFACE_OBIS_START_OF_HEADER_CHARACTER, 
+                                                        KITRON_METER_INTERFACE_OBIS_COMMAND_MESSAGE_EXIT_CHARACTER,
+                                                        KITRON_METER_INTERFACE_OBIS_COMMAND_TYPE_COMPLETE_SIGN_OFF_CHARACTER, 
+                                                        KITRON_METER_INTERFACE_OBIS_NULL_CHARACTER, 
+                                                        NULL, 
+                                                        0,
+                                                        KITRON_METER_INTERFACE_OBIS_FRAME_END_CHARACTER);    
+}
+
+BOOL KitronMeterInterface_OBISGetDataSetMessage(BYTE  medium, 
+                                                BYTE * channel, 
+                                                WORD  channelLen, 
+                                                BYTE * meteringType, 
+                                                WORD meteringTypeLen, 
+                                                BYTE * measuringVariable, 
+                                                WORD measuringVariableLen, 
+                                                BYTE * tariffRate,
+                                                WORD tariffRateLen,
+                                                BYTE * historicalValues, 
+                                                WORD historicalValuesLen, 
+                                                BYTE * data,
+                                                WORD dataLen,
+                                                BYTE * dataSet, 
+                                                WORD * dataSetLen ){
+    BYTE * dataSet_ptr = dataSet;
+    
+    //***************************************************************************
+    //* GROUP A: Medium
+    //***************************************************************************
+    memcpy(dataSet_ptr, &medium, KITRON_METER_INTERFACE_OBIS_MEDIUM_CHARACTER_SIZE);
+    dataSet_ptr += KITRON_METER_INTERFACE_OBIS_MEDIUM_CHARACTER_SIZE;
+    
+    //***************************************************************************
+    //* SEPARATOR: '-'
+    //***************************************************************************
+    * dataSet_ptr = KITRON_METER_INTERFACE_OBIS_SEPARATOR_MEDIUM_CHARACTER;
+    dataSet_ptr += KITRON_METER_INTERFACE_OBIS_MEDIUM_CHARACTER_SIZE;
+    
+    //***************************************************************************
+    //* GROUP B: Channel
+    //***************************************************************************
+    if(channelLen > KITRON_METER_INTERFACE_OBIS_CHANNEL_CHARACTER_MAX_SIZE)
+        return FALSE;
+    
+    memcpy(dataSet_ptr, (BYTE *) channel, channelLen);
+    dataSet_ptr += channelLen;
+    
+    //***************************************************************************
+    //* SEPARATOR: ':'
+    //***************************************************************************
+    * dataSet_ptr = KITRON_METER_INTERFACE_OBIS_SEPARATOR_CHANNEL_CHARACTER;
+    dataSet_ptr += KITRON_METER_INTERFACE_OBIS_SEPARATOR_CHANNEL_CHARACTER_SIZE;
+    
+    //***************************************************************************
+    //* GROUP C: Measuring Type
+    //***************************************************************************
+    if(meteringTypeLen > KITRON_METER_INTERFACE_OBIS_METERING_TYPE_CHARACTER_MAX_SIZE)
+        return FALSE;
+    
+    memcpy(dataSet_ptr, (BYTE *) meteringType, meteringTypeLen);
+    dataSet_ptr += meteringTypeLen;
+    
+    //***************************************************************************
+    //* SEPARATOR: '.'
+    //***************************************************************************    
+    * dataSet_ptr = KITRON_METER_INTERFACE_OBIS_DOT_SEPARATOR_CHARACTER;
+    dataSet_ptr += KITRON_METER_INTERFACE_OBIS_DOT_SEPARATOR_CHARACTER_SIZE;
+    
+    //***************************************************************************
+    //* GROUP D: Measuring Variable
+    //***************************************************************************
+    if(meteringTypeLen > KITRON_METER_INTERFACE_OBIS_MEASURING_VARIABLE_CHARACTER_MAX_SIZE)
+        return FALSE;
+    
+    memcpy(dataSet_ptr, (BYTE *) measuringVariable, measuringVariableLen);
+    dataSet_ptr += measuringVariableLen;
+    
+    //***************************************************************************
+    //* SEPARATOR: '.'
+    //***************************************************************************    
+    * dataSet_ptr = KITRON_METER_INTERFACE_OBIS_DOT_SEPARATOR_CHARACTER;
+    dataSet_ptr += KITRON_METER_INTERFACE_OBIS_DOT_SEPARATOR_CHARACTER_SIZE;
+    
+    //***************************************************************************
+    //* GROUP E: Measuring Variable
+    //***************************************************************************
+    if(tariffRateLen > KITRON_METER_INTERFACE_OBIS_TARIFF_RATES_CHARACTER_MAX_SIZE)
+        return FALSE;
+    
+    memcpy(dataSet_ptr, (BYTE *) tariffRate, tariffRateLen);
+    dataSet_ptr += tariffRateLen;
+    
+    if(historicalValues != NULL){
+        
+        if(historicalValuesLen != KITRON_METER_INTERFACE_OBIS_HISTORICAL_VALUES_CHARACTER_SIZE)
+            return FALSE;
+        
+        //***************************************************************************
+        //* SEPARATOR: '*'
+        //***************************************************************************    
+        * dataSet_ptr = KITRON_METER_INTERFACE_OBIS_SEPARATOR_CHARACTER;
+        dataSet_ptr += KITRON_METER_INTERFACE_OBIS_SEPARATOR_CHARACTER_SIZE;
+        
+        //***************************************************************************
+        //* GROUP F: Historical Values
+        //***************************************************************************
+        memcpy(dataSet_ptr, (BYTE *) historicalValues, historicalValuesLen);
+        dataSet_ptr += historicalValuesLen;        
+    }
+    
+    //***************************************************************************
+    //* SEPARATOR: '('
+    //***************************************************************************    
+    * dataSet_ptr = KITRON_METER_INTERFACE_OBIS_FRONT_BOUNDARY_CHARACTER;
+    dataSet_ptr += KITRON_METER_INTERFACE_OBIS_FRONT_BOUNDARY_CHARACTER_SIZE;
+    
+    //***************************************************************************
+    //* DATA
+    //***************************************************************************    
+    if(data != NULL){
+    
+        memcpy(dataSet_ptr, (BYTE *) data, dataLen);
+        dataSet_ptr += dataLen;        
+    }
+    
+    //***************************************************************************
+    //* SEPARATOR: ')'
+    //***************************************************************************    
+    * dataSet_ptr = KITRON_METER_INTERFACE_OBIS_REAR_BOUNDARY_CHARACTER;
+    dataSet_ptr += KITRON_METER_INTERFACE_OBIS_REAR_BOUNDARY_CHARACTER_SIZE;
+    
+    * dataSetLen = (dataSet_ptr - dataSet);
+    return TRUE;
+}
+
+void KitronMeterInterface_OBISSendCommandReadMessage(   BYTE  medium, 
+                                                        BYTE * channel, 
+                                                        WORD  channelLen, 
+                                                        BYTE * meteringType, 
+                                                        WORD meteringTypeLen, 
+                                                        BYTE * measuringVariable, 
+                                                        WORD measuringVariableLen, 
+                                                        BYTE * tariffRate,
+                                                        WORD tariffRateLen,
+                                                        BYTE * historicalValues, 
+                                                        WORD historicalValuesLen){
+    
+    BYTE dataSet[KITRON_METER_INTERFACE_MAX_DATA_SET_BUFFER_SIZE];
+    WORD dataSetLen;
+    BOOL dataSetBuilt;
+    
+    memset(dataSet, 0, KITRON_METER_INTERFACE_MAX_DATA_SET_BUFFER_SIZE);
+    dataSetBuilt = KitronMeterInterface_OBISGetDataSetMessage(  medium, 
+                                                                channel, 
+                                                                channelLen, 
+                                                                meteringType, 
+                                                                meteringTypeLen, 
+                                                                measuringVariable, 
+                                                                measuringVariableLen, 
+                                                                tariffRate,
+                                                                tariffRateLen,
+                                                                historicalValues, 
+                                                                historicalValuesLen, 
+                                                                NULL,
+                                                                0,
+                                                                dataSet, 
+                                                                &dataSetLen );
+    
+    if(dataSetBuilt == FALSE){
+        print_error("It could not build OBIS Dataset frame");
+        return;
+    }
+    
+    print_debug("OBIS Dataset: %s", dataSet);
+    
+    KitronMeterInterface_OBISSendCommandMessageFrame(   KITRON_METER_INTERFACE_OBIS_START_OF_HEADER_CHARACTER, 
+                                                        KITRON_METER_INTERFACE_OBIS_COMMAND_MESSAGE_READ_CHARACTER,
+                                                        KITRON_METER_INTERFACE_OBIS_COMMAND_TYPE_READ_ASCII_CODE_DATA_CHARACTER, 
+                                                        KITRON_METER_INTERFACE_OBIS_FRAME_START_CHARACTER, 
+                                                        dataSet, 
+                                                        dataSetLen,
+                                                        KITRON_METER_INTERFACE_OBIS_FRAME_END_CHARACTER);    
 }
 
 void KitronMeterInterface_ReadImportedActiveEnergyData(BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE * data, WORD dataLen){
@@ -406,15 +659,3 @@ void KitronMeterInterface_ReadActivePowerData(BYTE modbusId, BYTE * serialNumber
                                     NULL,
                                     0);      
 }
-
-/*void KitronMeterInterface_ReadAllApparentPowerData(BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE * data, WORD dataLen){
-    
-    print_info("Requesting READ ALL APPARENT POWER DATA Command");
-    
-    KitronMeterInterface_SendFrame( modbusId,                                     
-                                    KITRON_METER_INTERFACE_READ_COMMAND_FUNCTION,
-                                    KITRON_METER_INTERFACE_ALL_APPARENT_POWER_PHASE_REGISTER_ADDRESS,
-                                    KITRON_METER_INTERFACE_ALL_APPARENT_POWER_PHASE_REGISTER_ADDRESS_SIZE,
-                                    NULL,
-                                    0);      
-}*/

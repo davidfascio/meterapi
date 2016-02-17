@@ -15,6 +15,11 @@
 #include "MeterCommons.h"
 #include "ComSerialInterface.h"
 
+#define KITRON_METER_INTERFACE_OBIS_SERIAL_NUMBER_OFFSET                    (4)
+#define KITRON_METER_INTERFACE_MAX_DATA_SET_BUFFER_SIZE                     (50)
+#define KITRON_METER_INTERFACE_MAX_FRAME_BUFFER_SIZE                       ((50) +\
+                                                                            KITRON_METER_INTERFACE_MAX_DATA_SET_BUFFER_SIZE )
+
 //******************************************************************************
 //                      O B I S  P R O T O C O L
 //******************************************************************************
@@ -36,8 +41,8 @@
 #define KITRON_METER_INTERFACE_OBIS_ACK_CHARACTER                           (0x06)  // 'ACK'
 #define KITRON_METER_INTERFACE_OBIS_ACK_CHARACTER_SIZE                      (1)     // 'ACK'
 
-#define KITRON_METER_INTERFACE_OBIS_NACK_CHARACTER                          (0x15) // 'NACK'
-#define KITRON_METER_INTERFACE_OBIS_NACK_CHARACTER_SIZE                     (1) // 'NACK'
+#define KITRON_METER_INTERFACE_OBIS_NACK_CHARACTER                          (0x15)  // 'NACK'
+#define KITRON_METER_INTERFACE_OBIS_NACK_CHARACTER_SIZE                     (1)     // 'NACK'
 
 #define KITRON_METER_INTERFACE_OBIS_NULL_CHARACTER                          (0x00)  // 'NULL'
 
@@ -50,12 +55,17 @@
 #define KITRON_METER_INTERFACE_OBIS_FRAME_END_CHARACTER                     (0x03)  // 'ETX'
 #define KITRON_METER_INTERFACE_OBIS_FRAME_END_CHARACTER_SIZE                (1)     // 'ETX'
 
-#define KITRON_METER_INTERFACE_OBIS_END_OF_TEXT_CHARACTER                   (0x04) // 'EOT'
-#define KITRON_METER_INTERFACE_OBIS_END_OF_TEXT_CHARACTER_SIZE              (1) // 'EOT'
+#define KITRON_METER_INTERFACE_OBIS_END_OF_TEXT_CHARACTER                   (0x04)  // 'EOT'
+#define KITRON_METER_INTERFACE_OBIS_END_OF_TEXT_CHARACTER_SIZE              (1)     // 'EOT'
 
-#define KITRON_METER_INTERFACE_OBIS_FRONT_BOUNDARY_CHARACTER                (0x28) // '('
-#define KITRON_METER_INTERFACE_OBIS_SEPARATOR_CHARACTER                     (0x2A) // '*'
-#define KITRON_METER_INTERFACE_OBIS_REAR_BOUNDARY_CHARACTER                 (0x29) // ')'
+#define KITRON_METER_INTERFACE_OBIS_FRONT_BOUNDARY_CHARACTER                (0x28)  // '('
+#define KITRON_METER_INTERFACE_OBIS_FRONT_BOUNDARY_CHARACTER_SIZE           (1)     // '('
+
+#define KITRON_METER_INTERFACE_OBIS_SEPARATOR_CHARACTER                     (0x2A)  // '*'
+#define KITRON_METER_INTERFACE_OBIS_SEPARATOR_CHARACTER_SIZE                (1)     // '*'
+
+#define KITRON_METER_INTERFACE_OBIS_REAR_BOUNDARY_CHARACTER                 (0x29)  // ')'
+#define KITRON_METER_INTERFACE_OBIS_REAR_BOUNDARY_CHARACTER_SIZE            (1)     // ')'
 
 
 // Protocol mode C and E with baud rate changeover:
@@ -118,25 +128,38 @@
 #define KITRON_METER_INTERFACE_OBIS_ELECTRICITY_MEDIUM_CHARACTER                        (0x31)  // '1'
 #define KITRON_METER_INTERFACE_OBIS_SEPARATOR_MEDIUM_CHARACTER                          (0x2D)  // '-'
 
+#define KITRON_METER_INTERFACE_OBIS_MEDIUM_CHARACTER_SIZE                               (1)     // (1)
+
 // Channel Group Value
+#define KITRON_METER_INTERFACE_OBIS_NO_CHANNEL_SPECIFIED_CHARACTER                      (0x30)  // '0'
 #define KITRON_METER_INTERFACE_OBIS_ELECTRICITY_CHANNEL_CHARACTER                       (0x31)  // '1'
 #define KITRON_METER_INTERFACE_OBIS_SEPARATOR_CHANNEL_CHARACTER                         (0x3A)  // ':'
+
+#define KITRON_METER_INTERFACE_OBIS_SEPARATOR_CHANNEL_CHARACTER_SIZE                    (1)     // (2)
+#define KITRON_METER_INTERFACE_OBIS_CHANNEL_CHARACTER_MAX_SIZE                          (2)     // (2)
 
 
 // Metering Group Value
 #define KITRON_METER_INTERFACE_OBIS_GENERAL_PURPOSE_OBJECTS_METERING_TYPE_CHARACTER     (0x30)  // '0'
 
+#define KITRON_METER_INTERFACE_OBIS_METERING_TYPE_CHARACTER_MAX_SIZE                    (2)     // (2)
+
 // Measuring Variable Group Value
-#define KITRON_METER_INTERFACE_OBIS_GENERAL_PURPOSE_METERING_VARIABLE_CHARACTER         (0x30)  // '0'
+#define KITRON_METER_INTERFACE_OBIS_NO_MEASURING_VARIABLE_SPECIFIED_CHARACTER           (0x30)  // '0'
+
+#define KITRON_METER_INTERFACE_OBIS_MEASURING_VARIABLE_CHARACTER_MAX_SIZE               (2)     // (2)
 
 // Tariff Rates Group Value
 #define KITRON_METER_INTERFACE_OBIS_TOTAL_TARIFF_RATE_CHARACTER                         (0x30)  // '0'
 
-// Billing Periods(Historical Values) Group Value
+#define KITRON_METER_INTERFACE_OBIS_TARIFF_RATES_CHARACTER_MAX_SIZE                     (2)     // (2)
 
+// Billing Periods(Historical Values) Group Value
+#define KITRON_METER_INTERFACE_OBIS_HISTORICAL_VALUES_CHARACTER_SIZE                    (2)     // (2)
 
 
 #define KITRON_METER_INTERFACE_OBIS_DOT_SEPARATOR_CHARACTER                             (0x2E)  // '.'
+#define KITRON_METER_INTERFACE_OBIS_DOT_SEPARATOR_CHARACTER_SIZE                        (1)
 
 
 //******************************************************************************
@@ -153,8 +176,6 @@
 
 #define KITRON_METER_INTERFACE_READ_COMMAND_FUNCTION                      (0x03)
 #define KITRON_METER_INTERFACE_CRC_BASE                                   (0xFFFF)
-
-#define KITRON_METER_INTERFACE_MAX_FRAME_BUFFER_SIZE                        (50)
 
 //******************************************************************************
 // KITRON METER INTERFACE REGISTER ADDRESSES
@@ -254,7 +275,7 @@
                                                                                KITRON_METER_INTERFACE_APPARENT_POWER_PHASE_B_REGISTER_ADDRESS_SIZE +\
                                                                                KITRON_METER_INTERFACE_APPARENT_POWER_PHASE_C_REGISTER_ADDRESS_SIZE)*/
 //******************************************************************************
-// G155 Meter Interface API
+// KITRON Meter Interface API
 //******************************************************************************
 BOOL KitronMeterInterface_OBISBuildRequestMessageFrame( BYTE startCharacter, 
                                                         BYTE requestCommand, 
@@ -325,6 +346,40 @@ void KitronMeterInterface_ModbusSendFrame( BYTE modbusId,
                                      BYTE dataLen );
 
 void KitronMeterInterface_ModbusSendData(BYTE * frame, WORD frameLen);
+
+void KitronMeterInterface_OBISRequestMessage(BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE * data, WORD dataLen);
+void KitronMeterInterface_OBISOptionSelectMessage(BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE * data, WORD dataLen);
+void KitronMeterInterface_OBISReadMeterNumberMessage(BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE * data, WORD dataLen);
+void KitronMeterInterface_OBISBreakMessage(BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE * data, WORD dataLen);
+
+BOOL KitronMeterInterface_OBISGetDataSetMessage(BYTE  medium, 
+                                                BYTE * channel, 
+                                                WORD  channelLen, 
+                                                BYTE * meteringType, 
+                                                WORD meteringTypeLen, 
+                                                BYTE * measuringVariable, 
+                                                WORD measuringVariableLen, 
+                                                BYTE * tariffRate,
+                                                WORD tariffRateLen,
+                                                BYTE * historicalValues, 
+                                                WORD historicalValuesLen, 
+                                                BYTE * data,
+                                                WORD dataLen,
+                                                BYTE * dataSet, 
+                                                WORD * dataSetLen );
+
+
+void KitronMeterInterface_OBISSendCommandReadMessage(   BYTE  medium, 
+                                                        BYTE * channel, 
+                                                        WORD  channelLen, 
+                                                        BYTE * meteringType, 
+                                                        WORD meteringTypeLen, 
+                                                        BYTE * measuringVariable, 
+                                                        WORD measuringVariableLen, 
+                                                        BYTE * tariffRate,
+                                                        WORD tariffRateLen,
+                                                        BYTE * historicalValues, 
+                                                        WORD historicalValuesLen);
 
 void KitronMeterInterface_ReadImportedActiveEnergyData(BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE * data, WORD dataLen);
 void KitronMeterInterface_ReadExportedActiveEnergyData(BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE * data, WORD dataLen);
