@@ -37,6 +37,24 @@
 #define KITRON_METER_HANDLER_CRC_OK                                          (0)
 #define KITRON_METER_HANDLER_INVALID_MODBUS_ID                               (0)
 
+// OBIS
+#define KITRON_METER_HANDLER_OBIS_BCC_HEADER_SIZE                            (1)
+#define KITRON_METER_HANDLER_OBIS_START_CHARACTER_HEADER_SIZE                (1)
+#define KITRON_METER_HANDLER_OBIS_MANUFACTURES_IDENTIFICATION_HEADER_SIZE    (3)
+#define KITRON_METER_HANDLER_OBIS_BAUD_RATE_IDENTIFICATION_HEADER_SIZE       (1)
+#define KITRON_METER_HANDLER_OBIS_COMMAND_MESSAGE_IDENTIFIER_HEADER_SIZE     (1)
+#define KITRON_METER_HANDLER_OBIS_COMMAND_TYPE_IDENTIFIER_HEADER_SIZE        (1)
+#define KITRON_METER_HANDLER_OBIS_BOUNDARY_CHARACTER_HEADER_SIZE             (1)
+
+
+#define KITRON_METER_HANDLER_OBIS_START_CHARACTER                          (0x2F)
+#define KITRON_METER_HANDLER_OBIS_START_OF_HEADER_CHARACTER                (0x01)
+#define KITRON_METER_HANDLER_OBIS_FRAME_START_CHARACTER                    (0x02)
+#define KITRON_METER_HANDLER_OBIS_FIRST_COMPLETION_CHARACTER               (0x0D) // CR
+
+#define KITRON_METER_HANDLER_OBIS_FRONT_BOUNDARY_CHARACTER                (0x28)  // '('
+#define KITRON_METER_HANDLER_OBIS_REAR_BOUNDARY_CHARACTER                 (0x29)  // ')'
+
 //******************************************************************************
 // KITRON METER HANDLER ERROR CODES
 //******************************************************************************
@@ -47,10 +65,45 @@
 #define KITRON_METER_HANDLER_COMMAND_FUNCTION_NOT_SUPPORTED_ERROR_CODE      (-3)
 #define KITRON_METER_HANDLER_WRONG_DATA_SIZE_ERROR_CODE                     (-4)
 
+#define KITRON_METER_HANDLER_OBIS_WRONG_BCC_ERROR_CODE                      (-5)
+#define KITRON_METER_HANDLER_OBIS_MESSAGE_IS_NOT_SUPPORTED_ERROR_CODE       (-6)
+#define KITRON_METER_HANDLER_OBIS_NULL_PTR_ERROR_CODE                       (-7)
+#define KITRON_METER_HANDLER_OBIS_IS_NOT_IDENTIFICATION_MESSAGE_ERROR_CODE  (-8)
+#define KITRON_METER_HANDLER_OBIS_IS_NOT_COMMAND_MESSAGE_ERROR_CODE         (-9)
+#define KITRON_METER_HANDLER_OBIS_IS_NOT_DATA_MESSAGE_ERROR_CODE            (-10)
+#define KITRON_METER_HANDLER_OBIS_WRONG_BOUNDARY_CHARACTER_ERROR_SIZE       (-11)
 
 //******************************************************************************
 // Kitron Meter Handler Data types
 //******************************************************************************
+#define KITRON_HANDLER_OBIS_MANUFACTURES_IDENTIFICATION_MAX_SIZE             (3)
+#define KITRON_HANDLER_OBIS_IDENTIFICATION_MAX_SIZE                         (16)
+#define KITRON_HANDLER_OBIS_DATA_MESSAGE_MAX_SIZE                           (50)
+
+typedef struct {
+    BYTE manufacturesIdentification[KITRON_HANDLER_OBIS_MANUFACTURES_IDENTIFICATION_MAX_SIZE];
+    WORD manufacturesIdentificationLen;
+    BYTE baudrateIdentification;
+    BYTE identification[KITRON_HANDLER_OBIS_IDENTIFICATION_MAX_SIZE]; 
+    WORD identificationLen;    
+} KITRON_METER_HANDLER_OBIS_IDENTIFICATION, * KITRON_METER_HANDLER_OBIS_IDENTIFICATION_PTR;
+
+typedef struct{
+    BYTE dataSet[KITRON_HANDLER_OBIS_DATA_MESSAGE_MAX_SIZE];
+    WORD dataSetLen;
+} KITRON_METER_HANDLER_OBIS_DATA_MESSAGE, * KITRON_METER_HANDLER_OBIS_DATA_MESSAGE_PTR;
+
+typedef struct{
+    BYTE commandMessageIdentifier;
+    BYTE commandTypeIdentifier;
+    KITRON_METER_HANDLER_OBIS_DATA_MESSAGE dataMessage;    
+} KITRON_METER_HANDLER_OBIS_COMMAND_MESSAGE, * KITRON_METER_HANDLER_OBIS_COMMAND_MESSAGE_PTR;
+
+typedef struct{
+    KITRON_METER_HANDLER_OBIS_IDENTIFICATION identification;    
+    KITRON_METER_HANDLER_OBIS_COMMAND_MESSAGE commandMessage;
+}KITRON_METER_HANDLER_OBIS, * KITRON_METER_HANDLER_OBIS_PTR;
+
 
 typedef struct {
     BYTE modbusId;
@@ -148,9 +201,16 @@ typedef struct{
 // Kitron Meter Handler API
 //******************************************************************************
 
-void KitronMeterHandler_Setup(BYTE modbusId, BYTE functionCommand, BYTE dataSize, BYTE * data);
+void KitronMeterHandler_ModbusSetup(BYTE modbusId, BYTE functionCommand, BYTE dataSize, BYTE * data);
 
 WORD API_KitronMeterHandler_ReceiveHandler( BYTE * buffer, WORD  buffersize, METER_DESCRIPTOR_PTR meterDescriptor, BYTE * commandCallBack);
+WORD API_KitronMeterHandler_ModbusReceiveHandler( BYTE * buffer, WORD  buffersize, METER_DESCRIPTOR_PTR meterDescriptor, BYTE * commandCallBack);
+
+WORD API_KitronMeterHandler_OBISReceiveHandler( BYTE * buffer, WORD  buffersize, METER_DESCRIPTOR_PTR meterDescriptor, BYTE * commandCallBack);
+WORD KitronMeterHandler_OBISReceiveIdentificationMessage(BYTE * buffer, WORD buffersize);
+WORD KitronMeterHandler_OBISReceiveCommandMessage(BYTE * buffer, WORD buffersize);
+WORD KitronMeterHandler_OBISReceiveDataMessage(BYTE * buffer, WORD buffersize);
+
 WORD API_KitronmeterHandler_ResponseHandler( BYTE modbusId, BYTE * serialNumber, WORD serialNumberLen, BYTE command, BYTE * response, WORD maxResponseLen, WORD * responseLen, BYTE * commandCallBack);
 BYTE API_KitronMeterHandler_GetInvokeFunctionId(BYTE commandId);
 

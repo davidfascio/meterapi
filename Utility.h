@@ -12,6 +12,7 @@
 
 #define MAC_SIZE                                             (8)
 #define SHORT_MAC_SIZE                                       (4)
+#define UTILITY_FRAME_BCC_START_INDEX                                       (1)
 
 typedef struct {
     
@@ -22,6 +23,7 @@ typedef struct {
 } sSM;
 
 WORD wfnCRC_CALC (BYTE *ptFRAME, WORD wSizeFrame, WORD wCRCStart);
+BYTE wfnBCC_CALC (BYTE * frame, WORD frameLen, BYTE bccStart);
 void inverted_memcpy(BYTE * data1, BYTE * data2, WORD data_size);
 
 extern BYTE macLongAddrByteInverse[MAC_SIZE];

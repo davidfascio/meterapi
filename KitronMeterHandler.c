@@ -1,8 +1,9 @@
 #include "KitronMeterHandler.h"
 
 KITRON_METER_HANDLER kitronMeterHandlerControl;
+KITRON_METER_HANDLER_OBIS kitronMeterHandlerOBISControl;
 
-void KitronMeterHandler_Setup(BYTE modbusId, BYTE functionCommand, BYTE dataSize, BYTE * data){
+void KitronMeterHandler_ModbusSetup(BYTE modbusId, BYTE functionCommand, BYTE dataSize, BYTE * data){
     
     kitronMeterHandlerControl.modbusId = modbusId;
     kitronMeterHandlerControl.functionCommand = functionCommand;
@@ -10,7 +11,7 @@ void KitronMeterHandler_Setup(BYTE modbusId, BYTE functionCommand, BYTE dataSize
     memcpy(kitronMeterHandlerControl.data, data, dataSize);
 }
 
-WORD API_KitronMeterHandler_ReceiveHandler( BYTE * buffer, WORD  buffersize, METER_DESCRIPTOR_PTR meterDescriptor, BYTE * commandCallBack){
+WORD API_KitronMeterHandler_ModbusReceiveHandler( BYTE * buffer, WORD  buffersize, METER_DESCRIPTOR_PTR meterDescriptor, BYTE * commandCallBack){
     
     BYTE * buffer_ptr = buffer;
     BYTE modbusId;
@@ -48,7 +49,7 @@ WORD API_KitronMeterHandler_ReceiveHandler( BYTE * buffer, WORD  buffersize, MET
     
     data = buffer_ptr;
     
-    KitronMeterHandler_Setup(modbusId, functionCommand, dataSize, data);
+    KitronMeterHandler_ModbusSetup(modbusId, functionCommand, dataSize, data);
     
     MeterDescriptor_Setup(meterDescriptor, modbusId, NULL, 0, KITRON_METER_TYPE);    
     * commandCallBack = API_KitronMeterHandler_GetInvokeFunctionId(functionCommand);
@@ -395,3 +396,164 @@ void KitronMeterHandler_PrintPowerFactorData(KitronMeter_PowerFactor_DataReading
     print_message("\n\r\t\tApparentPowerPhase (B): %f", apparentPower->ApparentPowerPhaseB);
     print_message("\n\r\t\tApparentPowerPhase (C): %f", apparentPower->ApparentPowerPhaseC);
 }*/
+
+WORD API_KitronMeterHandler_OBISReceiveHandler( BYTE * buffer, WORD  buffersize, METER_DESCRIPTOR_PTR meterDescriptor, BYTE * commandCallBack){
+    
+    BYTE * buffer_ptr = buffer;
+    BYTE startCharacter;
+    WORD error_code;
+    
+    BYTE modbusId;
+    BYTE functionCommand;
+    BYTE dataSize;
+    BYTE * data;
+    BYTE bcc;
+    
+    bcc = wfnBCC_CALC(buffer, buffersize - KITRON_METER_HANDLER_OBIS_BCC_HEADER_SIZE, 0);
+        
+    if (memcmp(buffer + buffersize - KITRON_METER_HANDLER_OBIS_BCC_HEADER_SIZE, 
+                &bcc, 
+                KITRON_METER_HANDLER_OBIS_BCC_HEADER_SIZE))    
+        return KITRON_METER_HANDLER_OBIS_WRONG_BCC_ERROR_CODE;
+    
+    memcpy(&startCharacter, buffer_ptr, KITRON_METER_HANDLER_OBIS_START_CHARACTER_HEADER_SIZE );
+    buffer_ptr += KITRON_METER_HANDLER_OBIS_START_CHARACTER_HEADER_SIZE;
+    
+    switch(startCharacter){
+        
+        // OBIS Identification Message
+        case KITRON_METER_HANDLER_OBIS_START_CHARACTER:
+            
+            error_code = KitronMeterHandler_OBISReceiveIdentificationMessage(buffer, buffersize);
+            break;
+            
+        // OBIS Command Message    
+        case KITRON_METER_HANDLER_OBIS_START_OF_HEADER_CHARACTER:
+            
+            error_code = KitronMeterHandler_OBISReceiveCommandMessage(buffer, buffersize);
+            break;
+        
+        // OBIS Data Message    
+        case KITRON_METER_HANDLER_OBIS_FRAME_START_CHARACTER:
+            
+            error_code = KitronMeterHandler_OBISReceiveDataMessage(buffer, buffersize);
+            break;
+            
+        default:
+            return KITRON_METER_HANDLER_OBIS_MESSAGE_IS_NOT_SUPPORTED_ERROR_CODE;
+    }
+    
+    KitronMeterHandler_ModbusSetup(modbusId, functionCommand, dataSize, data);
+    
+    MeterDescriptor_Setup(meterDescriptor, modbusId, NULL, 0, KITRON_METER_TYPE);    
+    * commandCallBack = API_KitronMeterHandler_GetInvokeFunctionId(functionCommand);
+    
+    return KITRON_METER_HANDLER_NO_ERROR_CODE;
+}
+
+WORD KitronMeterHandler_OBISReceiveIdentificationMessage(BYTE * buffer, WORD buffersize){
+    
+    BYTE * buffer_ptr = buffer;
+    BYTE startCharacter;
+    
+    memcpy(&startCharacter, buffer_ptr, KITRON_METER_HANDLER_OBIS_START_CHARACTER_HEADER_SIZE);
+    buffer_ptr += KITRON_METER_HANDLER_OBIS_START_CHARACTER_HEADER_SIZE;
+    
+    if (startCharacter != KITRON_METER_HANDLER_OBIS_START_CHARACTER)
+        return KITRON_METER_HANDLER_OBIS_IS_NOT_IDENTIFICATION_MESSAGE_ERROR_CODE;    
+    
+    kitronMeterHandlerOBISControl.identification.manufacturesIdentificationLen = 
+            KITRON_METER_HANDLER_OBIS_MANUFACTURES_IDENTIFICATION_HEADER_SIZE;            
+            
+    memcpy(kitronMeterHandlerOBISControl.identification.manufacturesIdentification, 
+           buffer_ptr, kitronMeterHandlerOBISControl.identification.manufacturesIdentificationLen);                        
+
+
+    buffer_ptr += KITRON_METER_HANDLER_OBIS_MANUFACTURES_IDENTIFICATION_HEADER_SIZE;
+
+
+    kitronMeterHandlerOBISControl.identification.baudrateIdentification = * buffer_ptr;            
+    buffer_ptr += KITRON_METER_HANDLER_OBIS_BAUD_RATE_IDENTIFICATION_HEADER_SIZE;
+
+
+    BYTE * identification_end_ptr = memchr( buffer_ptr, 
+                                            KITRON_METER_HANDLER_OBIS_FIRST_COMPLETION_CHARACTER, 
+                                            buffersize - (buffer_ptr - buffer));
+
+    if(identification_end_ptr == NULL)
+        return KITRON_METER_HANDLER_OBIS_NULL_PTR_ERROR_CODE;
+
+    kitronMeterHandlerOBISControl.identification.identificationLen = identification_end_ptr - buffer_ptr;
+
+    memcpy( kitronMeterHandlerOBISControl.identification.identification, 
+            buffer_ptr, 
+            kitronMeterHandlerOBISControl.identification.identificationLen);     
+    
+    return KITRON_METER_HANDLER_NO_ERROR_CODE;
+}
+
+WORD KitronMeterHandler_OBISReceiveCommandMessage(BYTE * buffer, WORD buffersize){
+    
+    BYTE * buffer_ptr = buffer;
+    BYTE startCharacter;
+    
+    
+    startCharacter = * buffer_ptr;
+    buffer_ptr += KITRON_METER_HANDLER_OBIS_START_CHARACTER_HEADER_SIZE;
+    
+    if (startCharacter != KITRON_METER_HANDLER_OBIS_START_OF_HEADER_CHARACTER)
+        return KITRON_METER_HANDLER_OBIS_IS_NOT_COMMAND_MESSAGE_ERROR_CODE;    
+    
+    kitronMeterHandlerOBISControl.commandMessage.commandMessageIdentifier = * buffer_ptr;
+    buffer_ptr += KITRON_METER_HANDLER_OBIS_COMMAND_MESSAGE_IDENTIFIER_HEADER_SIZE;
+    
+    kitronMeterHandlerOBISControl.commandMessage.commandTypeIdentifier = * buffer_ptr;
+    buffer_ptr += KITRON_METER_HANDLER_OBIS_COMMAND_TYPE_IDENTIFIER_HEADER_SIZE;  
+        
+    return KitronMeterHandler_OBISReceiveDataMessage(buffer_ptr, buffersize - (buffer_ptr - buffer));
+}
+
+WORD KitronMeterHandler_OBISReceiveDataMessage(BYTE * buffer, WORD buffersize){
+    
+    BYTE * buffer_ptr = buffer;
+    BYTE frameStartCharacter;
+    BYTE frontBoundaryCharacter;
+    BYTE rearBoundaryCharacter;
+    
+    frameStartCharacter = * buffer_ptr;
+    buffer_ptr += KITRON_METER_HANDLER_OBIS_START_CHARACTER_HEADER_SIZE;
+    
+    if (frameStartCharacter != KITRON_METER_HANDLER_OBIS_FRAME_START_CHARACTER)
+        return KITRON_METER_HANDLER_OBIS_IS_NOT_DATA_MESSAGE_ERROR_CODE;
+    
+    frontBoundaryCharacter = * buffer_ptr;
+    buffer_ptr += KITRON_METER_HANDLER_OBIS_BOUNDARY_CHARACTER_HEADER_SIZE;
+    
+    if (frontBoundaryCharacter != KITRON_METER_HANDLER_OBIS_FRONT_BOUNDARY_CHARACTER)
+        return KITRON_METER_HANDLER_OBIS_WRONG_BOUNDARY_CHARACTER_ERROR_SIZE;
+    
+    BYTE * dataSet_end_ptr = memchr(buffer_ptr, KITRON_METER_HANDLER_OBIS_REAR_BOUNDARY_CHARACTER, buffersize - (buffer_ptr - buffer));
+    
+    if(dataSet_end_ptr == NULL)
+        return KITRON_METER_HANDLER_OBIS_NULL_PTR_ERROR_CODE;
+
+    kitronMeterHandlerOBISControl.commandMessage.dataMessage.dataSetLen = dataSet_end_ptr - buffer_ptr;
+    
+    memcpy( kitronMeterHandlerOBISControl.commandMessage.dataMessage.dataSet, 
+            buffer_ptr,
+            kitronMeterHandlerOBISControl.commandMessage.dataMessage.dataSetLen);
+    
+    return KITRON_METER_HANDLER_NO_ERROR_CODE;
+}
+
+WORD API_KitronMeterHandler_ReceiveHandler( BYTE * buffer, WORD  buffersize, METER_DESCRIPTOR_PTR meterDescriptor, BYTE * commandCallBack){
+    
+    WORD error_code;
+    
+    error_code = API_KitronMeterHandler_ModbusReceiveHandler( buffer, buffersize, meterDescriptor, commandCallBack);
+    
+    if (error_code == KITRON_METER_HANDLER_NO_ERROR_CODE)
+        return error_code;
+    
+    return API_KitronMeterHandler_OBISReceiveHandler( buffer, buffersize, meterDescriptor, commandCallBack);
+}

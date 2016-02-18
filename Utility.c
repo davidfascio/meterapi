@@ -22,6 +22,20 @@ WORD wfnCRC_CALC (BYTE *ptFRAME, WORD wSizeFrame, WORD wCRCStart){
 }
 
 
+BYTE wfnBCC_CALC (BYTE * frame, WORD frameLen, BYTE bccStart){
+    
+    WORD index;    
+    frame += UTILITY_FRAME_BCC_START_INDEX;
+    
+    for(index = UTILITY_FRAME_BCC_START_INDEX; index < frameLen; index++){
+     
+        bccStart ^= (* frame);
+        frame++;
+    }
+    
+    return bccStart;
+}
+
 void inverted_memcpy(BYTE * data1, BYTE * data2, WORD data_size){
     
     while (data_size){
